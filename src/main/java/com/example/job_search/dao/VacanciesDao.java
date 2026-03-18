@@ -20,4 +20,16 @@ public class VacanciesDao {
         String sql = "SELECT * FROM vacancies WHERE is_active = TRUE";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancies.class));
     }
+
+    public Optional<Vacancies> getVacancyById(int id) {
+        String sql = "SELECT * FROM vacancies WHERE id = ?";
+        List<Vacancies> list = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancies.class), id);
+        return Optional.ofNullable(DataAccessUtils.singleResult(list));
+    }
+
+    public List<Vacancies> getVacanciesByCategory(int categoryId){
+        String sql = "SELECT * FROM vacancies WHERE category_id = ? AND is_active = TRUE";
+
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancies.class), categoryId);
+    }
 }

@@ -34,4 +34,9 @@ public class VacanciesDao {
 
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancies.class), categoryId);
     }
+    
+    public List<Vacancies> getVacanciesRespondedByUser(int applicantId) {
+        String sql = "SELECT * FROM vacancies v JOIN responded_aplicants ra ON ra.vacancy_id=v.id JOIN resumes r ON r.id = ra.resume_id WHERE r.applicant_id = ?";
+        return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancies.class), applicantId);
+    }
 }

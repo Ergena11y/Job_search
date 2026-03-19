@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,7 +38,48 @@ public class VacanciesDao {
     }
     
     public List<Vacancies> getVacanciesRespondedByUser(int applicantId) {
-        String sql = "SELECT * FROM vacancies v JOIN responded_aplicants ra ON ra.vacancy_id=v.id JOIN resumes r ON r.id = ra.resume_id WHERE r.applicant_id = ?";
+        String sql = "SELECT * FROM vacancies v JOIN responded_applicants ra ON ra.vacancy_id=v.id JOIN resumes r ON r.id = ra.resume_id WHERE r.applicant_id = ?";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Vacancies.class), applicantId);
+    }
+
+    public void createVacancy(Vacancies vacancy) {
+        String sql = " INSERT INTO vacancies (name, description, category_id, salary, exp_from, exp_to,\n" +
+                "                                       is_active, author_id, created_date, update_time)\n" +
+                "                VALUES (:name, :description, :categoryId, :salary, :expFrom, :expTo,\n" +
+                "                        :isActive, :authorId, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", vacancy.getName())
+                .addValue("description", vacancy.getDescription())
+                .addValue("categoryId", vacancy.getCategoryId() != null ? vacancy.getCategoryId().getId() : null)
+                .addValue("salary", vacancy.getSalary())
+                .addValue("expFrom", vacancy.getExpFrom())
+                .addValue("expTo", vacancy.getExpTo())
+                .addValue("isActive", vacancy.isActive())
+                .addValue("authorId", vacancy.getAuthorId() != null ? vacancy.getAuthorId().getId() : null);
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public void updateVacancy(int id, Vacancies vacancy) {
+        String sql = " UPDATE vacancies\n" +
+                "                SET name = :name, description = :description, category_id = :categoryId,\n" +
+                "                    salary = :salary, exp_from = :expFrom, exp_to = :expTo,\n" +
+                "                    is_active = :isActive, update_time = CURRENT_TIMESTAMP\n" +
+                "                WHERE id = :id";
+        SqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("name", vacancy.getName())
+                .addValue("description", vacancy.getDescription())
+                .addValue("categoryId", vacancy.getCategoryId() != null ? vacancy.getCategoryId().getId() : null)
+                .addValue("salary", vacancy.getSalary())
+                .addValue("expFrom", vacancy.getExpFrom())
+                .addValue("expTo", vacancy.getExpTo())
+                .addValue("isActive", vacancy.isActive());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
+    public void deleteVacancy(int id) {
+        String sql = "DELETE FROM vacancies WHERE id = ?";
+        jdbcTemplate.update(sql, id);
     }
 }

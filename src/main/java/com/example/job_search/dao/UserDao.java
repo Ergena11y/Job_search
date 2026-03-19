@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -52,4 +54,40 @@ public class UserDao {
         List<User> users = namedParameterJdbcTemplate.query(sql, params, new BeanPropertyRowMapper<>(User.class));
         return Optional.ofNullable(DataAccessUtils.singleResult(users));
     }
+
+    public boolean existsByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM users WHERE email = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        return count != null && count > 0;
+    }
+
+
+    public User createUser(User user) {
+        String sql = "INSERT INTO users (name, surname, age, email, password, phone_number, avatar, account_type)\n" +
+                "                VALUES (:name, :surname, :age, :email, :password, :phoneNumber, :avatar, :accountType)"   ;
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("name", user.getName())
+                .addValue("surname", user.getSurname())
+                .addValue("age", user.getAge())
+                .addValue("email", user.getEmail())
+                .addValue("password", user.getPassword())
+                .addValue("phoneNumber", user.getPhoneNumber())
+                .addValue("avatar", user.getAvatar())
+                .addValue("accountType", user.getAccountType());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        namedParameterJdbcTemplate.update(sql, params, keyHolder);
+
+        Number generatedId = keyHolder.getKey();
+        if (generatedId != null) {
+            user.setId(generatedId.intValue());
+        }
+        return user;
+    }
+
+    public void updateAvatar(int userId, String avatarPath) {
+        String sql = "UPDATE users SET avatar = ? WHERE id = ?";
+        jdbcTemplate.update(sql, avatarPath, userId);
+    }
+
 }

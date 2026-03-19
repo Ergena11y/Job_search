@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS messages (
     );
 
 
-INSERT INTO  users (name, surnmae, age, email, password, phone_number, account_type)
+INSERT INTO  users (name, surname, age, email, password, phone_number, account_type)
 values ('Tony', 'Saprano', 32, 'tonysap@gamil.com', 'trrrrwerrsap34', '+996777888',
         'APPLICANT'),
     ('ООО ТехКомпания', 'Somthing', 23, 'employer@techcorp.com', 'hardpassword',

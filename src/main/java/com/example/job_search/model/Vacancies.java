@@ -8,15 +8,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class Vacancies {
-    private int id;
+    private Boolean id;
     private String name;
     private String description;
-    private Category categoryId;
+    private Integer categoryId;
     private float salary;
-    private int expFrom;
-    private int expTo;
-    private boolean isActive;
-    private User authorId;
+    private Integer expFrom;
+    private Integer expTo;
+    private Boolean isActive;
+    private Integer authorId;
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
 }

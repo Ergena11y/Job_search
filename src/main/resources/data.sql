@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS contacts_info (
     id     INT AUTO_INCREMENT PRIMARY KEY,
     type_id   INT REFERENCES contact_types (id),
     resume_id INT REFERENCES resumes (id),
-    value     VARCHAR(255)
+    contact_value     VARCHAR(100)
 );
 
 CREATE TABLE IF NOT EXISTS education_info (
@@ -121,7 +121,7 @@ VALUES ('Телефон'),
        ('LinkedIn'),
        ('GitHub');
 
-INSERT INTO contacts_info (type_id, resume_id, value)
+INSERT INTO contacts_info (type_id, resume_id, contact_value)
 VALUES (1, 1, '+996777888'),
        (2, 1, 'tonysap@gamil.com'),
        (4, 1, 'github.com/SAPRANO');

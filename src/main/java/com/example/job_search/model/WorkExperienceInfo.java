@@ -6,9 +6,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class WorkExperienceInfo {
-    private int id;
-    private Resumes resumeId;
-    private int years;
+    private Integer id;
+    private Integer resumeId;
+    private Integer years;
     private String companyName;
     private String position;
     private String responsibilities;

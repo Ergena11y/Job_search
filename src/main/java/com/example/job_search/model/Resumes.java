@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 
 public class Resumes {
-    private int id;
+    private Integer id;
     private String name;
     private float salary;
-    private boolean isActive;
+    private Boolean isActive;
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
     private Category categoryId;

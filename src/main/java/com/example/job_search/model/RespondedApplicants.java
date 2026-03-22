@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RespondedApplicants {
-    private int id;
+    private Integer id;
     private Resumes resumeId;
     private Vacancies vacancyId;
     private boolean confirmation;

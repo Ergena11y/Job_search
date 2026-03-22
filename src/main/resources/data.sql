@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS contacts_info (
 );
 
 CREATE TABLE IF NOT EXISTS education_info (
-    id   INT AUTO_INCREMENT PRIMARY ,
+    id   INT AUTO_INCREMENT PRIMARY KEY ,
     resume_id   INT REFERENCES resumes (id),
     institution VARCHAR(200),
     program     VARCHAR(200),

@@ -1,14 +1,17 @@
-package com.example.job_search.model;
+package com.example.job_search.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
-
-public class Vacancies {
-    private Integer id;
+@NoArgsConstructor
+@Builder
+public class VacanciesDto {
     private String name;
     private String description;
     private Integer categoryId;

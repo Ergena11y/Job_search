@@ -85,6 +85,19 @@ public class UserDao {
         return user;
     }
 
+    public void updateUser(int id, User user) {
+        String sql = "UPDATE users SET name = :name, surname = :surname, age = :age, " +
+                "email = :email, phone_number = :phoneNumber WHERE id = :id";
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("id", id)
+                .addValue("name", user.getName())
+                .addValue("surname", user.getSurname())
+                .addValue("age", user.getAge())
+                .addValue("email", user.getEmail())
+                .addValue("phoneNumber", user.getPhoneNumber());
+        namedParameterJdbcTemplate.update(sql, params);
+    }
+
     public void updateAvatar(int userId, String avatarPath) {
         String sql = "UPDATE users SET avatar = ? WHERE id = ?";
         jdbcTemplate.update(sql, avatarPath, userId);

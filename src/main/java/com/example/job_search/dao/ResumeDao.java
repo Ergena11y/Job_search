@@ -52,9 +52,9 @@ public class ResumeDao {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", resume.getName())
                 .addValue("salary", resume.getSalary())
-                .addValue("isActive", resume.isActive())
-                .addValue("categoryId", resume.getCategoryId() != null ? resume.getCategoryId().getId() : null)
-                .addValue("applicantId", resume.getApplicantId() != null ? resume.getApplicantId().getId() : null);
+                .addValue("isActive", resume.getIsActive())
+                .addValue("categoryId", resume.getCategoryId() != null ? resume.getCategoryId() : null)
+                .addValue("applicantId", resume.getApplicantId() != null ? resume.getApplicantId() : null);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
@@ -68,8 +68,8 @@ public class ResumeDao {
                 .addValue("id", id)
                 .addValue("name", resume.getName())
                 .addValue("salary", resume.getSalary())
-                .addValue("isActive", resume.isActive())
-                .addValue("categoryId", resume.getCategoryId() != null ? resume.getCategoryId().getId() : null);
+                .addValue("isActive", resume.getIsActive())
+                .addValue("categoryId", resume.getCategoryId() != null ? resume.getCategoryId() : null);
         namedParameterJdbcTemplate.update(sql, params);
     }
 

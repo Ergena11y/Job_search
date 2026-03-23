@@ -43,7 +43,7 @@ public class ResumeController {
 
     }
     @GetMapping("category/{categoryId}")
-    public List<Resumes> getByCategory(@PathVariable int categoryId) {
+    public List<ResumeDto> getByCategory(@PathVariable int categoryId) {
         return resumeService.getByCategory(categoryId);
     }
 }

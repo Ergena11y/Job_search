@@ -2,9 +2,11 @@ package com.example.job_search.controller;
 
 
 
+import com.example.job_search.dto.UserDto;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,42 +21,53 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("register")
-    public User register(@RequestBody  User user){
-        return userService.register(user);
+    public ResponseEntity<UserDto> register(@RequestBody User user) {
+        return ResponseEntity.ok(userService.register(user));
+    }
+
+    @GetMapping("/applicant/{email}")
+    public ResponseEntity<UserDto> findApplicant(@PathVariable String email){
+        return ResponseEntity.ok(userService.findApplicant(email));
+    }
+
+    @GetMapping("/employer/{email}")
+    public ResponseEntity<UserDto> findEmployer(@PathVariable String email){
+        return ResponseEntity.ok(userService.findEmployer(email));
     }
 
     @GetMapping
-    public List<User> getAll(){
+    public List<UserDto> getAll(){
         return userService.getAllUsers();
     }
 
     @GetMapping("{id}")
-    public User getById(@PathVariable int id){
-        return userService.getById(id);
+    public ResponseEntity<UserDto> getById(@PathVariable int id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @GetMapping("search/name")
-    public List<User> getByName(@RequestParam String name) {
-        return userService.getByName(name);
+    public ResponseEntity<List<UserDto>> getByName(@RequestParam String name) {
+        return ResponseEntity.ok(userService.getByName(name));
     }
 
     @GetMapping("search/email")
-    public Optional<User> getByEmail(@RequestParam String email) {
-        return userService.getByEmail(email);
+    public ResponseEntity<UserDto> getByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.getByEmail(email));
     }
 
     @GetMapping("search/phone")
-    public Optional<User> getByPhone(@RequestParam String phone) {
-        return userService.getByPhoneNumber(phone);
+    public ResponseEntity<UserDto> getByPhone(@RequestParam String phone) {
+        return ResponseEntity.ok(userService.getByPhoneNumber(phone));
     }
 
     @GetMapping("exists")
-    public boolean existsByEmail(@RequestParam String email) {
-        return userService.existsByEmail(email);
+    public ResponseEntity<Boolean> existsByEmail(@RequestParam String email) {
+        return ResponseEntity.ok(userService.existsByEmail(email));
     }
 
-    @PostMapping("{id}/avatar")
-    public void uploadAvatar(@PathVariable int id, MultipartFile file){
+    @PostMapping("/{id}/avatar")
+    public ResponseEntity<Void> uploadAvatar(@PathVariable int id, @RequestParam("file") MultipartFile file) {
         userService.uploadAvatar(id, file);
+        return ResponseEntity.ok().build();
     }
 }

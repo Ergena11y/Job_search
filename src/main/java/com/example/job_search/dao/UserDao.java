@@ -90,4 +90,16 @@ public class UserDao {
         jdbcTemplate.update(sql, avatarPath, userId);
     }
 
+    public Optional<User> findApplicantByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ? AND account_type = 'APPLICANT'";
+        List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), email);
+        return Optional.ofNullable(DataAccessUtils.singleResult(users));
+    }
+
+    public Optional<User> findEmployerByEmail(String email) {
+        String sql = "SELECT * FROM users WHERE email = ? AND account_type = 'EMPLOYER'";
+        List<User> users = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(User.class), email);
+        return Optional.ofNullable(DataAccessUtils.singleResult(users));
+    }
+
 }

@@ -2,18 +2,24 @@ package com.example.job_search.service;
 
 
 import com.example.job_search.dto.UserDto;
+import com.example.job_search.exception.UserNotFoundException;
+import com.example.job_search.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
-    UserDto register(UserDto user);
+    UserDto register(User user);
     List<UserDto> getAllUsers();
-    UserDto  getById(int id);
+    UserDto  getById(int id) throws  UserNotFoundException;
     void uploadAvatar(int id, MultipartFile file);
     List<UserDto> getByName (String name);
-    Optional<UserDto> getByEmail(String email);
-    Optional<UserDto> getByPhoneNumber(String phone);
+    UserDto getByEmail(String email) throws  UserNotFoundException;
+    UserDto getByPhoneNumber(String phone) throws  UserNotFoundException;
     boolean existsByEmail(String email);
+
+    UserDto findApplicant(String email) throws UserNotFoundException;
+
+    UserDto findEmployer(String email) throws  UserNotFoundException;
 }

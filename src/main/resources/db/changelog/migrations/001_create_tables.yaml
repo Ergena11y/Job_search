@@ -1,0 +1,378 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-users-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: surname
+                  type: varchar(65)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: age
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(150)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: phone_number
+                  type: varchar(11)
+              - column:
+                  name: avatar
+                  type: varchar(150)
+              - column:
+                  name: account_type
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 002-create-categories-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: categories
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_categories_parent
+                    references: categories(id)
+
+  - changeSet:
+      id: 003-create-resumes-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: resumes
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: salary
+                  type: real
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_resumes_category
+                    references: categories(id)
+              - column:
+                  name: applicant_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_resumes_applicant
+                    references: users(id)
+
+  - changeSet:
+      id: 004-create-vacancies-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: vacancies
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: text
+              - column:
+                  name: category_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_vacancies_category
+                    references: categories(id)
+              - column:
+                  name: salary
+                  type: real
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exp_from
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: exp_to
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_active
+                  type: boolean
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: int
+                  constraints:
+                    foreignKeyName: fk_vacancies_author
+                    references: users(id)
+              - column:
+                  name: created_date
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 005-create-responded-applicants-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: responded_applicants
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: resume_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_responded_resume
+                    references: resumes(id)
+              - column:
+                  name: vacancy_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_responded_vacancy
+                    references: vacancies(id)
+              - column:
+                  name: confirmation
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 006-create-contact-types-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: contact_types
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type
+                  type: text
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 007-create-contacts-info-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: contacts_info
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: type_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_contacts_type
+                    references: contact_types(id)
+              - column:
+                  name: resume_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_contacts_resume
+                    references: resumes(id)
+              - column:
+                  name: contact_value
+                  type: text
+
+  - changeSet:
+      id: 008-create-education-info-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: education_info
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: resume_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_education_resume
+                    references: resumes(id)
+              - column:
+                  name: institution
+                  type: text
+              - column:
+                  name: program
+                  type: text
+              - column:
+                  name: start_date
+                  type: date
+              - column:
+                  name: end_date
+                  type: date
+              - column:
+                  name: degree
+                  type: text
+
+  - changeSet:
+      id: 009-create-work-experience-info-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: work_experience_info
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: resume_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_work_resume
+                    references: resumes(id)
+              - column:
+                  name: years
+                  type: integer
+              - column:
+                  name: company_name
+                  type: text
+              - column:
+                  name: position
+                  type: text
+              - column:
+                  name: responsibilities
+                  type: text
+
+  - changeSet:
+      id: 010-create-messages-table
+      author: Ergen
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: responded_applicant_id
+                  type: integer
+                  constraints:
+                    foreignKeyName: fk_messages_responded
+                    references: responded_applicants(id)
+              - column:
+                  name: content
+                  type: text
+              - column:
+                  name: time_stamp
+                  type: timestamp
+                  constraints:
+                    nullable: false

@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class Messages {
-    private int id;
-    private RespondedApplicants respondedApplicants;
+    private Integer id;
+    private Integer respondedApplicants;
     private String content;
     private LocalDateTime timeStamp;
 }

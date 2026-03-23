@@ -1,14 +1,14 @@
 package com.example.job_search.service;
 
-import com.example.job_search.model.Resumes;
+import com.example.job_search.dto.ResumeDto;
 
 import java.util.List;
 
 public interface ResumeService {
-    List<Resumes> getAllResumes();
-    void createResumes(Resumes  resume);
-    void updateResumes(int id, Resumes resume);
+    List<ResumeDto> getAllResumes();
+    void createResumes(ResumeDto resumeDto);
+    void updateResumes(int id, ResumeDto resumeDto);
     void deleteResumes(int id);
-    List<Resumes> getByCategory(int categoryId);
-    List<Resumes> getByApplicant(int applicantId);
+    List<ResumeDto> getByCategory(int categoryId);
+    List<ResumeDto> getByApplicant(int applicantId);
 }

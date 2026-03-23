@@ -7,7 +7,7 @@ import lombok.Data;
 @AllArgsConstructor
 
 public class Category {
-    private int id;
+    private Integer id;
     private String name;
-    private Category parentId;
+    private Integer parentId;
 }

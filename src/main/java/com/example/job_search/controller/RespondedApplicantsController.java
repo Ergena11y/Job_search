@@ -2,7 +2,10 @@ package com.example.job_search.controller;
 
 
 
+import com.example.job_search.dto.RespondedDto;
+import com.example.job_search.dto.UserDto;
 import com.example.job_search.model.RespondedApplicants;
+import com.example.job_search.model.User;
 import com.example.job_search.service.RespondedApplicantsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +20,13 @@ public class RespondedApplicantsController {
     private final RespondedApplicantsService respondedApplicantsService;
 
     @GetMapping
-    public List<RespondedApplicants> getAll(){
+    public List<RespondedDto> getAll(){
         return respondedApplicantsService.getAll();
     }
 
     @GetMapping("vacancy/{vacancyId}")
-    public List<RespondedApplicants> getByVacancy(@PathVariable int vacancyId){
-        return respondedApplicantsService.getByVacancyId(vacancyId);
+    public List<UserDto> getByVacancy(@PathVariable int vacancyId){
+        return respondedApplicantsService.getApplicantsByVacancyId(vacancyId);
     }
 
     @PostMapping

@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ContactTypes {
-    private int id;
+    private Integer id;
     private String type;
 }

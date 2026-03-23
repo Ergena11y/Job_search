@@ -51,12 +51,12 @@ public class VacanciesDao {
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("name", vacancy.getName())
                 .addValue("description", vacancy.getDescription())
-                .addValue("categoryId", vacancy.getCategoryId() != null ? vacancy.getCategoryId().getId() : null)
+                .addValue("categoryId", vacancy.getCategoryId() != null ? vacancy.getCategoryId() : null)
                 .addValue("salary", vacancy.getSalary())
                 .addValue("expFrom", vacancy.getExpFrom())
                 .addValue("expTo", vacancy.getExpTo())
-                .addValue("isActive", vacancy.isActive())
-                .addValue("authorId", vacancy.getAuthorId() != null ? vacancy.getAuthorId().getId() : null);
+                .addValue("isActive", vacancy.getIsActive())
+                .addValue("authorId", vacancy.getAuthorId() != null ? vacancy.getAuthorId() : null);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
@@ -70,11 +70,11 @@ public class VacanciesDao {
                 .addValue("id", id)
                 .addValue("name", vacancy.getName())
                 .addValue("description", vacancy.getDescription())
-                .addValue("categoryId", vacancy.getCategoryId() != null ? vacancy.getCategoryId().getId() : null)
+                .addValue("categoryId", vacancy.getCategoryId() != null ? vacancy.getCategoryId(): null)
                 .addValue("salary", vacancy.getSalary())
                 .addValue("expFrom", vacancy.getExpFrom())
                 .addValue("expTo", vacancy.getExpTo())
-                .addValue("isActive", vacancy.isActive());
+                .addValue("isActive", vacancy.getIsActive());
         namedParameterJdbcTemplate.update(sql, params);
     }
 

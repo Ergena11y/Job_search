@@ -2,21 +2,22 @@ package com.example.job_search.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
-
+@NoArgsConstructor
 public class Vacancies {
-    private int id;
+    private Integer id;
     private String name;
     private String description;
-    private Category categoryId;
+    private Integer categoryId;
     private float salary;
-    private int expFrom;
-    private int expTo;
-    private boolean isActive;
-    private User authorId;
+    private Integer expFrom;
+    private Integer expTo;
+    private Boolean isActive;
+    private Integer authorId;
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
 }

@@ -1,6 +1,8 @@
 package com.example.job_search.service.impl;
 
 import com.example.job_search.dao.UserDao;
+import com.example.job_search.dto.UserDto;
+import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,22 +27,27 @@ public class UserServiceImpl implements UserService {
     private final UserDao userDao;
 
     @Override
-    public User register(User user) {
+    public UserDto register(User user) {
         if (userDao.existsByEmail(user.getEmail())) {
             throw new IllegalArgumentException("Пользователь с email " + user.getEmail() + " уже существует");
         }
-        return userDao.createUser(user);
+        User savedUser = userDao.createUser(user);
+        return convertToDto(savedUser);
     }
 
     @Override
-    public List<User> getAllUsers() {
-        return userDao.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        return userDao.getAllUsers().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User getById(int id) {
-        return userDao.getUserById(id)
-                .orElseThrow(() -> new NoSuchElementException("Пользователь не найден с id: " + id));
+    public UserDto getById(int id) throws UserNotFoundException {
+       User user = userDao.getUserById(id)
+                .orElseThrow(UserNotFoundException::new);
+
+        return convertToDto(user);
     }
 
     @Override
@@ -63,22 +71,55 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getByName(String name) {
-        return userDao.getUsersByName(name);
+    public List<UserDto> getByName(String name) {
+        return userDao.getUsersByName(name)
+                .stream().map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<User> getByEmail(String email) {
-        return userDao.getUserByEmail(email);
+    public UserDto getByEmail(String email) throws UserNotFoundException {
+        User user = userDao.getUserByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+    return convertToDto(user);
     }
 
     @Override
-    public Optional<User> getByPhoneNumber(String phone) {
-        return userDao.getUserByPhoneNumber(phone);
+    public UserDto getByPhoneNumber(String phone) throws UserNotFoundException{
+        User user = userDao.getUserByPhoneNumber(phone)
+                .orElseThrow(UserNotFoundException::new);
+        return  convertToDto(user);
     }
 
     @Override
     public boolean existsByEmail(String email) {
         return userDao.existsByEmail(email);
+    }
+
+    @Override
+    public UserDto findApplicant(String email) throws UserNotFoundException {
+        User user = userDao.findApplicantByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        return convertToDto(user);
+    }
+
+    @Override
+    public UserDto findEmployer(String email) throws  UserNotFoundException{
+        User user = userDao.findEmployerByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        return convertToDto(user);
+    }
+
+
+    private UserDto convertToDto(User user) {
+        UserDto dto = new UserDto();
+        dto.setId(user.getId());
+        dto.setName(user.getName());
+        dto.setSurname(user.getSurname());
+        dto.setEmail(user.getEmail());
+        dto.setPhoneNumber(user.getPhoneNumber());
+        dto.setAvatar(user.getAvatar());
+        dto.setAccountType(user.getAccountType());
+        return dto;
     }
 }

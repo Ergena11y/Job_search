@@ -1,18 +1,21 @@
-package com.example.job_search.model;
+package com.example.job_search.dto;
+
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
-
-public class User {
+@NoArgsConstructor
+@Builder
+public class UserDto {
     private Integer id;
     private String name;
     private String surname;
     private Integer age;
     private String email;
-    private String password;
     private String phoneNumber;
     private String avatar;
     private String accountType;

@@ -7,7 +7,7 @@ import com.example.job_search.model.User;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
+
 
 public interface UserService {
     UserDto register(User user);

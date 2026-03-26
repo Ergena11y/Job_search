@@ -1,3 +1,0 @@
-databaseChangeLog:
-  - includeAll:
-    path: db/changelog/migrations/001_create_tables.yaml

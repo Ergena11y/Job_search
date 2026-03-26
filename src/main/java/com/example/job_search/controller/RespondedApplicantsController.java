@@ -5,8 +5,8 @@ package com.example.job_search.controller;
 import com.example.job_search.dto.RespondedDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.model.RespondedApplicants;
-import com.example.job_search.model.User;
 import com.example.job_search.service.RespondedApplicantsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +30,7 @@ public class RespondedApplicantsController {
     }
 
     @PostMapping
-    public void  respond(@RequestBody RespondedApplicants responded){
+    public void  respond(@Valid  @RequestBody RespondedApplicants responded){
         respondedApplicantsService.respond(responded);
     }
 }

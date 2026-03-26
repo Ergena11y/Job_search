@@ -1,10 +1,11 @@
 package com.example.job_search.controller;
 
 
-import com.example.job_search.dao.ResumeDao;
+
 import com.example.job_search.dto.ResumeDto;
-import com.example.job_search.model.Resumes;
+
 import com.example.job_search.service.ResumeService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,12 +29,12 @@ public class ResumeController {
 
 
     @PostMapping
-    public void create(@RequestBody ResumeDto resume){
+    public void create(@Valid @RequestBody ResumeDto resume){
         resumeService.createResumes(resume);
     }
 
     @PutMapping("{id}")
-    public void update (@PathVariable int id,@RequestBody ResumeDto resume){
+    public void update ( @PathVariable int id, @Valid @RequestBody ResumeDto resume){
         resumeService.updateResumes(id, resume);
     }
 

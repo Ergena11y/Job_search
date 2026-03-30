@@ -2,6 +2,7 @@ package com.example.job_search.service.impl;
 
 import com.example.job_search.dao.UserDao;
 import com.example.job_search.dto.UserDto;
+import com.example.job_search.exception.AvatarImageNotFoundException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
@@ -14,8 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -51,8 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void uploadAvatar(int id, MultipartFile file) {
-        getById(id);
+    public void uploadAvatar(int id, MultipartFile file) throws AvatarImageNotFoundException{
 
         String upload = "uploads/avatars/";
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();

@@ -7,15 +7,13 @@ import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Optional;
+
 
 @RestController
 @RequestMapping("users")

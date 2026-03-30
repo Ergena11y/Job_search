@@ -34,3 +34,4 @@ build/
 /db/test.lock.db
 /db/test.mv.db
 /db/test.trace.db
+/logs/

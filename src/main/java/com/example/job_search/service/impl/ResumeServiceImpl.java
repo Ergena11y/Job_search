@@ -6,12 +6,13 @@ import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.model.Resumes;
 import com.example.job_search.service.ResumeService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 
@@ -28,21 +29,28 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public void createResumes(ResumeDto resumeDto) {
+        log.info("Создание нового резюме: {}", resumeDto.getName());
         resumeDao.createResume(mapToModel(resumeDto));
+        log.info("Резюме '{}' успешно создано", resumeDto.getName());
     }
 
     @Override
     public void updateResumes(int id, ResumeDto resumeDto) {
+        log.info("Обновление резюме с id: {}", id);
         resumeDao.updateResume(id, mapToModel(resumeDto));
+        log.info("Резюме с id {} успешно обновлено", id);
     }
 
     @Override
     public void deleteResumes(int id) {
+        log.warn("Удаление резюме с id: {}", id);
         resumeDao.deleteResumes(id);
+        log.info("Резюме с id {} удалено", id);
     }
 
     @Override
     public List<ResumeDto> getByCategory(int categoryId) {
+        log.debug("Получение резюме по категории id: {}", categoryId);
         return resumeDao.getResumesByCategory(categoryId).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
@@ -50,6 +58,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public List<ResumeDto> getByApplicant(int applicantId) {
+        log.debug("Получение резюме соискателя id: {}", applicantId);
         return resumeDao.getResumesByApplicant(applicantId).stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());

@@ -7,12 +7,13 @@ import com.example.job_search.dto.UserDto;
 import com.example.job_search.model.RespondedApplicants;
 import com.example.job_search.service.RespondedApplicantsService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RespondedApplicantsServiceImpl implements RespondedApplicantsService {
@@ -28,6 +29,7 @@ public class RespondedApplicantsServiceImpl implements RespondedApplicantsServic
 
     @Override
     public List<UserDto> getApplicantsByVacancyId(int vacancyId) {
+        log.debug("Получение соискателей по вакансии id: {}", vacancyId);
         return respondedApplicantsDao.getUsersByVacancyId(vacancyId).stream()
                 .map(user -> UserDto.builder()
                         .id(user.getId())
@@ -41,7 +43,10 @@ public class RespondedApplicantsServiceImpl implements RespondedApplicantsServic
 
     @Override
     public void respond(RespondedApplicants responded) {
+        log.info("Отклик на вакансию id: {} с резюме id: {}",
+                responded.getVacancyId(), responded.getResumeId());
         respondedApplicantsDao.respond(responded);
+        log.info("Отклик успешно создан");
     }
 
     private RespondedDto mapToRespondedDto(RespondedApplicants model) {

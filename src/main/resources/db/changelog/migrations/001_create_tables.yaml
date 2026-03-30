@@ -41,7 +41,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: phone_number
-                  type: varchar(11)
+                  type: varchar(20)
               - column:
                   name: avatar
                   type: varchar(150)

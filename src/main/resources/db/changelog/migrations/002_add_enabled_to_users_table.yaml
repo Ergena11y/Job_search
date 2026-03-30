@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002_add_enabled_to_users_table
+      author: Ergen
+      changes:
+        - addColumn:
+             tableName: users
+             columns:
+               - column:
+                   name: enabled
+                   type: boolean
+                   defaultValueBoolean: true
+                   constraints:
+                     nullable: false

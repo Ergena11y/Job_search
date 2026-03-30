@@ -68,7 +68,7 @@ public class UserController {
     }
 
     @PostMapping("/{id}/avatar")
-    public ResponseEntity<Void> uploadAvatar( @PathVariable int id,@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<Void> uploadAvatar( @PathVariable int id,@RequestParam("file") MultipartFile file) throws AvatarImageNotFoundException {
         userService.uploadAvatar(id, file);
         return ResponseEntity.ok().build();
     }

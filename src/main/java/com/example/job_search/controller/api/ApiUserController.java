@@ -1,4 +1,4 @@
-package com.example.job_search.controller;
+package com.example.job_search.controller.api;
 
 
 
@@ -17,9 +17,9 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("api/users")
 @RequiredArgsConstructor
-public class UserController {
+public class ApiUserController {
 
     private final UserService userService;
 

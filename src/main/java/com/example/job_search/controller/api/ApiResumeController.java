@@ -1,4 +1,4 @@
-package com.example.job_search.controller;
+package com.example.job_search.controller.api;
 
 
 
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("resumes")
+@RequestMapping("api/resumes")
 @RequiredArgsConstructor
-public class ResumeController {
+public class ApiResumeController {
     private final ResumeService resumeService;
 
     @GetMapping

@@ -18,6 +18,6 @@ public class VacanciesController {
 
     @GetMapping
     public String vacancies(Model model){
-        return  "vacancies";
+        return  "vacancies/vacancies";
     }
 }

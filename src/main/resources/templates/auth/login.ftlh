@@ -1,3 +1,5 @@
+<#import "../layout.ftlh" as main>
+<@main.layout>
 <section class=" text-center text-lg-start">
 
     <style>
@@ -91,3 +93,4 @@
     </div>
 
 </section>
+</@main.layout>

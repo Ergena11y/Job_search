@@ -39,7 +39,7 @@ public class SecurityConfig {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         String userQuery = "select email, password, enabled " +
-                "from usr " +
+                "from users " +
                 "where email = ?";
 
         String authQuery = "select email, account_type " +
@@ -69,7 +69,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
 
-                        .requestMatchers(HttpMethod.POST, "/users/register").permitAll()
+                        .requestMatchers("/auth/register", "/auth/login").permitAll()
+
+                        .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
                         .requestMatchers(HttpMethod.GET, "/vacancies").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()

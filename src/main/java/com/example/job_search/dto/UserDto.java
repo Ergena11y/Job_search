@@ -24,6 +24,22 @@ public class UserDto {
     @Email
     @NotBlank
     private String email;
+
+
+
+    @NotBlank
+    @Size(
+            min = 4,
+            max = 25,
+            message = "Length must be >= 4 and <= 25"
+    )
+
+    @Pattern(
+            regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).+$",
+            message = "Should contain at least one uppercase letter, one number"
+    )
+    private String password;
+
     private String phoneNumber;
     private String avatar;
     private String accountType;

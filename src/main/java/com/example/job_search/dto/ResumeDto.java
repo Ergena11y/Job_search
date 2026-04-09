@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ResumeDto {
+    private Integer id;
     @NotBlank
     private String name;
     @Positive
-    private float salary;
+    private Float salary;
     @NotNull
     private Boolean isActive;
 

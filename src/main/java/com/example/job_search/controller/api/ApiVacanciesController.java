@@ -1,9 +1,7 @@
-package com.example.job_search.controller;
+package com.example.job_search.controller.api;
 
 
-import com.example.job_search.dao.VacanciesDao;
 import com.example.job_search.dto.VacanciesDto;
-import com.example.job_search.model.Vacancies;
 import com.example.job_search.service.VacancyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("vacancies")
+@RequestMapping("api/vacancies")
 @RequiredArgsConstructor
-public class VacanciesController {
+public class ApiVacanciesController {
 
     private final VacancyService vacancyService;
 

@@ -6,9 +6,10 @@ spring:
     import: optional:file:.env[.properties]
   application:
     name: Job_search
+  mvc:
+    static-path-pattern: /static/**
 
-
-# DB
+  # DB
   datasource:
     url: jdbc:h2:./db/test;AUTO_SERVER=TRUE
     username: ${DB_USERNAME}

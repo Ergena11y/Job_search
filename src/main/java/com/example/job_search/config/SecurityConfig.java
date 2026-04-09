@@ -56,15 +56,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-                .formLogin(Customizer.withDefaults())
-                .logout(login -> login
+                .formLogin(login -> login
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
                         .defaultSuccessUrl("/")
                         .failureUrl("/auth/login?error=true")
-                        .peritAll())
+                        .permitAll())
                 .logout(logout -> logout
-                        .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/authlogout")))
+                        .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/authlogout"))
+                        .permitAll())
                 .httpBasic(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request

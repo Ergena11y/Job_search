@@ -32,7 +32,6 @@ public class RespondedApplicantsServiceImpl implements RespondedApplicantsServic
         log.debug("Получение соискателей по вакансии id: {}", vacancyId);
         return respondedApplicantsDao.getUsersByVacancyId(vacancyId).stream()
                 .map(user -> UserDto.builder()
-                        .id(user.getId())
                         .name(user.getName())
                         .email(user.getEmail())
                         .phoneNumber(user.getPhoneNumber())

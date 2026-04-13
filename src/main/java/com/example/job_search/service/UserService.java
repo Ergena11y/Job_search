@@ -1,10 +1,12 @@
 package com.example.job_search.service;
 
 
+import com.example.job_search.dto.UpdateProfileDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.AvatarImageNotFoundException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.User;
+import org.jspecify.annotations.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,4 +25,6 @@ public interface UserService {
     UserDto findApplicant(String email) throws UserNotFoundException;
 
     UserDto findEmployer(String email) throws  UserNotFoundException;
+
+    void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar);
 }

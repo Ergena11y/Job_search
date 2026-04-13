@@ -1,6 +1,7 @@
 package com.example.job_search.service;
 
 import com.example.job_search.dto.ResumeDto;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -11,4 +12,6 @@ public interface ResumeService {
     void deleteResumes(int id);
     List<ResumeDto> getByCategory(int categoryId);
     List<ResumeDto> getByApplicant(int applicantId);
+
+    ResumeDto getById(int id);
 }

@@ -1,4 +1,4 @@
 <#import "./layout.ftlh" as main>
-<@main.main>
-    <h1>Hello ${World}</h1>
-</@main.main>
+<@main.layout>
+    <h1>Hello ${world}</h1>
+</@main.layout>

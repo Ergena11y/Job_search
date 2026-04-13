@@ -10,7 +10,7 @@
                         <p class="text-muted">${user.email}</p>
                         <form action="/profile/profile-edit" method="post">
                             <input type="hidden" name="userId" value="${user.id}">
-                            <button type="submit" class="btn btn-outline-primary btn-sm">Редактировать профиль</button>
+                            <a href="/profile/edit?userId=${user.id}" class="btn btn-outline-primary btn-sm">Редактировать профиль</a>
                         </form>
                     </div>
                 </div>

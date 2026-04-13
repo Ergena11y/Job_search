@@ -5,8 +5,7 @@
             <div class="card mt-4">
                 <div class="card-header"><h4>Редактирование профиля</h4></div>
                 <div class="card-body">
-                    <form action="/profile/update" method="post">
-                        <input type="hidden" name="id" value="${edit.id}">
+                    <form action="/profile/update?userId=${edit.id}" method="post" enctype="multipart/form-data">
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label">Имя</label>
@@ -21,7 +20,11 @@
                             <label class="form-label">Телефон</label>
                             <input type="text" name="phoneNumber" class="form-control" value="${edit.phoneNumber!''}">
                         </div>
-                        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+                        <div class="mb-3">
+                            <label class="form-label">Фото профиля</label>
+                            <input type="file" name="avatar" class="form-control" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Сохранить</button>
                         <a href="/profile?userId=${edit.id}" class="btn btn-link">Отмена</a>
                     </form>
                 </div>

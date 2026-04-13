@@ -64,6 +64,13 @@ public class VacancyServiceImpl implements VacancyService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public VacanciesDto getById(int id) {
+        return vacanciesDao.getVacancyById(id)
+                .map(this::mapToDto)
+                .orElseThrow();
+    }
+
 
     private VacanciesDto mapToDto(Vacancies v) {
         return VacanciesDto.builder()

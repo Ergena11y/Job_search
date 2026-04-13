@@ -1,11 +1,13 @@
 package com.example.job_search.service.impl;
 
 import com.example.job_search.dao.UserDao;
+import com.example.job_search.dto.UpdateProfileDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.AvatarImageNotFoundException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
+import com.google.gson.internal.LazilyParsedNumber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -126,6 +128,24 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
         log.warn("Работодатель с email {} не найден", email);
         return convertToDto(user);
+    }
+
+    @Override
+    public void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar) {
+        User user = userDao.getUserById(userId).orElseThrow();
+        user.setName(dto.getName());
+        user.setSurname(dto.getSurname());
+        user.setPhoneNumber(dto.getPhoneNumber());
+        userDao.updateUser(userId, user);
+
+        if (avatar != null && !avatar.isEmpty()){
+            try {
+                uploadAvatar(userId, avatar);
+            } catch (AvatarImageNotFoundException e){
+                log.error("error avatar");
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 

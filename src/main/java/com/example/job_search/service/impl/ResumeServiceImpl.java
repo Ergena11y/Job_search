@@ -64,6 +64,13 @@ public class ResumeServiceImpl implements ResumeService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ResumeDto getById(int id) {
+        return resumeDao.getResumeById(id)
+                .map(this::mapToDto)
+                .orElseThrow();
+    }
+
     private ResumeDto mapToDto(Resumes resume) {
         return ResumeDto.builder()
                 .name(resume.getName())

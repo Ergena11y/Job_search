@@ -1,3 +1,10 @@
+INSERT INTO categories (name, parent_id)
+VALUES ('IT', NULL),
+       ('Backend разработка', 1),
+       ('Frontend разработка', 1),
+       ('Финансы', NULL),
+       ('Бухгалтерия', 4);
+
 INSERT INTO users (name, surname, age, email, password, phone_number, account_type, enabled)
 VALUES
     ('ООО Альфа', 'Компания', 30, 'alpha@corp.com', '$2a$12$WB2YUbFcCN0tm44SBcKUjua9yiFBsfB3vW02IjuwzY7HGtlQIKzy2', '+996700001', 'EMPLOYER', true),

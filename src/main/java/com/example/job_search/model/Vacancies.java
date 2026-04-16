@@ -20,8 +20,9 @@ public class Vacancies {
 
     private String description;
 
-    @Column(name = "category_id")
-    private Integer categoryId;
+   @ManyToOne
+   @JoinColumn(name = "category_id")
+    private Category category;
 
 
     private float salary;

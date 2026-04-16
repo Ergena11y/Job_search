@@ -7,7 +7,6 @@ import com.example.job_search.exception.AvatarImageNotFoundException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
-import com.google.gson.internal.LazilyParsedNumber;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

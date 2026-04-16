@@ -35,8 +35,8 @@ public class RespondedApplicantsDao {
         String sql = "INSERT INTO responded_applicants (resume_id, vacancy_id, confirmation) VALUES (:resumeId, :vacancyId, :confirmation)";
 
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("resumeId", responded.getResumeId() != null ? responded.getResumeId() : null)
-                .addValue("vacancyId", responded.getVacancyId() != null ? responded.getVacancyId(): null)
+                .addValue("resumeId", responded.getResume() != null ? responded.getResume().getId() : null)
+                .addValue("vacancyId", responded.getVacancy() != null ? responded.getVacancy().getId(): null)
                 .addValue("confirmation", responded.isConfirmation());
         namedParameterJdbcTemplate.update(sql, params);
     }

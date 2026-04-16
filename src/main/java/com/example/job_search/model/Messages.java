@@ -1,14 +1,27 @@
 package com.example.job_search.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-@Data
-@AllArgsConstructor
+
+@Getter
+@Setter
+@Entity
+@Table(name = "messages")
 public class Messages {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer respondedApplicants;
+
+    @ManyToOne
+    @JoinColumn(name = "responded_applicant_id")
+    private RespondedApplicants respondedApplicants;
+
+
     private String content;
+
+    @Column(name = "time_stamp")
     private LocalDateTime timeStamp;
 }

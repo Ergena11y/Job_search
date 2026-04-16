@@ -56,7 +56,7 @@ public class VacanciesDao {
                 .addValue("expFrom", vacancy.getExpFrom())
                 .addValue("expTo", vacancy.getExpTo())
                 .addValue("isActive", vacancy.getIsActive())
-                .addValue("authorId", vacancy.getAuthorId() != null ? vacancy.getAuthorId() : null);
+                .addValue("authorId", vacancy.getAuthor() != null ? vacancy.getAuthor().getId() : null);
         namedParameterJdbcTemplate.update(sql, params);
     }
 

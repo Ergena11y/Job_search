@@ -83,7 +83,7 @@ public class VacancyServiceImpl implements VacancyService {
                 .createdDate(v.getCreatedDate())
                 .updateTime(v.getUpdateTime())
                 .categoryId(v.getCategoryId() != null ? v.getCategoryId() : null)
-                .authorId(v.getAuthorId() != null ? v.getAuthorId() : null)
+                .authorId(v.getAuthor() != null ? v.getAuthor().getId() : null)
                 .build();
     }
 

@@ -43,15 +43,15 @@ public class RespondedApplicantsServiceImpl implements RespondedApplicantsServic
     @Override
     public void respond(RespondedApplicants responded) {
         log.info("Отклик на вакансию id: {} с резюме id: {}",
-                responded.getVacancyId(), responded.getResumeId());
+                responded.getVacancy(), responded.getResume());
         respondedApplicantsDao.respond(responded);
         log.info("Отклик успешно создан");
     }
 
     private RespondedDto mapToRespondedDto(RespondedApplicants model) {
         return RespondedDto.builder()
-                .resumeId(model.getResumeId())
-                .vacancyId(model.getVacancyId())
+                .resumeId(model.getResume().getId())
+                .vacancyId(model.getVacancy().getId())
                 .confirmation(model.isConfirmation())
                 .build();
     }

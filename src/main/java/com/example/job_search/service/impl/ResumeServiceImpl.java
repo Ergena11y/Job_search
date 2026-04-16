@@ -78,7 +78,7 @@ public class ResumeServiceImpl implements ResumeService {
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateTime())
-                .categoryId(resume.getCategoryId() != null ? resume.getCategoryId() : null)
+                .categoryId(resume.getCategory() != null ? resume.getCategory().getId() : null)
                 .build();
     }
 

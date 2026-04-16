@@ -1,19 +1,41 @@
 package com.example.job_search.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+import java.util.List;
+
+@Setter
+@Getter
+@Entity
+@Table (name = "users")
+
 
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+
     private String name;
     private String surname;
     private Integer age;
     private String email;
     private String password;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
     private String avatar;
+
+    @Column(name = "account_type")
     private String accountType;
+
+    private boolean enabled ;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
+    private List<Vacancies> vacancies;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "applicant")
+    private List<Resumes> resumes;
 }

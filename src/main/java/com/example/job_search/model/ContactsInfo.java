@@ -1,13 +1,25 @@
 package com.example.job_search.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "contacts_info")
 public class ContactsInfo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer typeId;
-    private Integer resumeId;
+
+    @ManyToOne
+    @JoinColumn(name = "type_id")
+    private ContactTypes type;
+
+    @ManyToOne
+    @JoinColumn(name = "resume_id")
+    private Resumes resume;
+
+    @Column(name = "contact_value")
     private String value;
 }

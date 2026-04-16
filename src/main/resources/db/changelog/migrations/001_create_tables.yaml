@@ -67,7 +67,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: text
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -93,7 +93,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: text
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -146,12 +146,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: name
-                  type: text
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: description
-                  type: text
+                  type: varchar(1000)
               - column:
                   name: category_id
                   type: integer
@@ -245,7 +245,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: type
-                  type: text
+                  type: varchar(100)
                   constraints:
                     nullable: false
 
@@ -277,7 +277,7 @@ databaseChangeLog:
                     references: resumes(id)
               - column:
                   name: contact_value
-                  type: text
+                  type: varchar(100)
 
   - changeSet:
       id: 008-create-education-info-table
@@ -301,10 +301,10 @@ databaseChangeLog:
                     references: resumes(id)
               - column:
                   name: institution
-                  type: text
+                  type: varchar(100)
               - column:
                   name: program
-                  type: text
+                  type: varchar(100)
               - column:
                   name: start_date
                   type: date
@@ -313,7 +313,7 @@ databaseChangeLog:
                   type: date
               - column:
                   name: degree
-                  type: text
+                  type: varchar(100)
 
   - changeSet:
       id: 009-create-work-experience-info-table
@@ -340,13 +340,13 @@ databaseChangeLog:
                   type: integer
               - column:
                   name: company_name
-                  type: text
+                  type: varchar(100)
               - column:
                   name: position
-                  type: text
+                  type: varchar(100)
               - column:
                   name: responsibilities
-                  type: text
+                  type: varchar(1000)
 
   - changeSet:
       id: 010-create-messages-table
@@ -370,7 +370,7 @@ databaseChangeLog:
                     references: responded_applicants(id)
               - column:
                   name: content
-                  type: text
+                  type: varchar(300)
               - column:
                   name: time_stamp
                   type: timestamp

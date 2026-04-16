@@ -1,25 +1,24 @@
 server:
   port: 8090
 
+
 spring:
   config:
     import: optional:file:.env[.properties]
   application:
-    name: Job_search
+    name: movie_review
   mvc:
     static-path-pattern: /static/**
 
-  # DB
+  #  DB
   datasource:
-    url: jdbc:h2:./db/test;AUTO_SERVER=TRUE
+    url: jdbc:h2:./db/movie_review;AUTO_SERVER=TRUE
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.h2.Driver
-
-#  sql:
-#    init:
-#      mode: always
-
+  #  sql:
+  #    init:
+  #      mode: always
   jpa:
     hibernate:
       ddl-auto: validate
@@ -29,9 +28,12 @@ spring:
 
 logging:
   file:
-   path: logs
+    path: logs
   level:
-    com.example.job_search: debug
+    org:
+      springframework:
+        security: debug
+    kg.attractor.movie_review: debug
     com.zaxxer.hikari: error
     org.apache.tomcat: error
     liquibase: error

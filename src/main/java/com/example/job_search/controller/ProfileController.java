@@ -3,7 +3,6 @@ package com.example.job_search.controller;
 import com.example.job_search.dto.UpdateProfileDto;
 import com.example.job_search.exception.UserNotFoundException;
 import org.springframework.ui.Model;
-import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;

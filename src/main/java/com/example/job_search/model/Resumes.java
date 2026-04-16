@@ -1,21 +1,38 @@
 package com.example.job_search.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+
+@Setter
+@Getter
+@Entity
+@Table(name = "resumes")
 
 public class Resumes {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+
     private String name;
     private float salary;
+
+    @Column(name = "is_active")
     private Boolean isActive;
+
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
+
+    @Column(name = "update_time")
     private LocalDateTime updateTime;
-    private Integer categoryId;
-    private Integer applicantId;
+
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "applicant_id")
+    private User applicant;
 }

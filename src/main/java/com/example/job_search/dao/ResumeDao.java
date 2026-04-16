@@ -55,8 +55,8 @@ public class ResumeDao {
                 .addValue("name", resume.getName())
                 .addValue("salary", resume.getSalary())
                 .addValue("isActive", resume.getIsActive())
-                .addValue("categoryId", resume.getCategoryId() != null ? resume.getCategoryId() : null)
-                .addValue("applicantId", resume.getApplicantId() != null ? resume.getApplicantId() : null);
+                .addValue("categoryId", resume.getCategory() != null ? resume.getCategory().getId() : null)
+                .addValue("applicantId", resume.getApplicant() != null ? resume.getApplicant().getId() : null);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
@@ -71,7 +71,7 @@ public class ResumeDao {
                 .addValue("name", resume.getName())
                 .addValue("salary", resume.getSalary())
                 .addValue("isActive", resume.getIsActive())
-                .addValue("categoryId", resume.getCategoryId() != null ? resume.getCategoryId() : null);
+                .addValue("categoryId", resume.getCategory() != null ? resume.getCategory().getId() : null);
         namedParameterJdbcTemplate.update(sql, params);
     }
 
@@ -85,7 +85,7 @@ public class ResumeDao {
         String sql = "INSERT INTO education_info (resume_id, institution, program, start_date, end_date, degree) " +
                 "VALUES (:resumeId, :institution, :program, :startDate, :endDate, :degree)";
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("resumeId", education.getResumeId())
+                .addValue("resumeId", education.getResume().getId())
                 .addValue("institution", education.getInstitution())
                 .addValue("program", education.getProgram())
                 .addValue("startDate", education.getStartDate())
@@ -119,7 +119,7 @@ public class ResumeDao {
         String sql = "INSERT INTO work_experience_info (resume_id, years, company_name, position, responsibilities) " +
                 "VALUES (:resumeId, :years, :companyName, :position, :responsibilities)";
         SqlParameterSource params = new MapSqlParameterSource()
-                .addValue("resumeId", workExperience.getResumeId())
+                .addValue("resumeId", workExperience.getResume().getId())
                 .addValue("years", workExperience.getYears())
                 .addValue("companyName", workExperience.getCompanyName())
                 .addValue("position", workExperience.getPosition())

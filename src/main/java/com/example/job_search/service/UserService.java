@@ -5,26 +5,34 @@ import com.example.job_search.dto.UpdateProfileDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.AvatarImageNotFoundException;
 import com.example.job_search.exception.UserNotFoundException;
+import com.example.job_search.exception.UserProfileNotFoundException;
 import com.example.job_search.model.User;
-import org.jspecify.annotations.Nullable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 
 public interface UserService {
+
     UserDto register(User user);
+
     List<UserDto> getAllUsers();
+
     UserDto  getById(int id) throws  UserNotFoundException;
-    void uploadAvatar(int id, MultipartFile file) throws AvatarImageNotFoundException;
+
+    String  uploadAvatar(int id, MultipartFile file) throws AvatarImageNotFoundException;
+
     List<UserDto> getByName (String name);
+
     UserDto getByEmail(String email) throws  UserNotFoundException;
+
     UserDto getByPhoneNumber(String phone) throws  UserNotFoundException;
+
     boolean existsByEmail(String email);
 
     UserDto findApplicant(String email) throws UserNotFoundException;
 
     UserDto findEmployer(String email) throws  UserNotFoundException;
 
-    void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar);
+    void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar) throws UserProfileNotFoundException;
 }

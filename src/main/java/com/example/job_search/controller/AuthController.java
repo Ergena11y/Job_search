@@ -32,6 +32,6 @@ public class AuthController {
     public String registerUser(User user, @RequestParam String accountType) {
         user.setAccountType(accountType);
         userService.register(user);
-        return "redirect:auth/login";
+        return "auth/login";
     }
 }

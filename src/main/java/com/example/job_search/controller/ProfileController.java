@@ -35,6 +35,7 @@ public class ProfileController {
                            @RequestParam(defaultValue = "5") int size,
                            Model model) throws UserNotFoundException {
         UserDto user = userService.getById(userId);
+        model.addAttribute("user", user);
 
         //Employer -> его вакансии
         if ("EMPLOYER".equals(user.getAccountType())){
@@ -53,7 +54,9 @@ public class ProfileController {
 
     @GetMapping("edit")
     public  String ProfileEdit(@RequestParam int userId,  Model model) throws UserNotFoundException {
-        model.addAttribute("user", userService.getById(userId));
+        UserDto user = userService.getById(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("edit", user);
         model.addAttribute("updateProfileDto", new UpdateProfileDto());
         return "profile/profile-edit";
     }

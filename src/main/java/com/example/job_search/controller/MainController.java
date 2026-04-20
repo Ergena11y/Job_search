@@ -26,6 +26,7 @@ public class MainController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancies.getTotalPages());
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("user", null);
         return "index";
     }
 

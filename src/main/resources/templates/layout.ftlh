@@ -12,9 +12,20 @@
             <a class="navbar-brand" href="/">Job Search</a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/resumes">Резюме</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/auth/login">Войти</a></li>
+                    <#if user??>
+                        <#if user.accountType == "EMPLOYER">
+
+                            <li class="nav-item"><a class="nav-link" href="/profile?userId=${user.id}">Мои вакансии</a></li>
+                        <#else>
+                            <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile?userId=${user.id}">Мои резюме</a></li>
+                        </#if>
+                        <li class="nav-item"><a class="nav-link" href="/auth/logout">Выход</a></li>
+                    <#else>
+                        <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/resumes">Резюме</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/auth/login">Войти</a></li>
+                    </#if>
                 </ul>
             </div>
         </div>

@@ -28,7 +28,7 @@ public class User {
 
     private String avatar;
 
-    @Column(name = "account_type")
+    @Column(name = "account_type", nullable = false)
     private String accountType;
 
     private boolean enabled ;

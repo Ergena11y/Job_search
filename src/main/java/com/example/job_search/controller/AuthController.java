@@ -6,9 +6,7 @@ import com.example.job_search.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,8 +29,9 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String registerUser(User user) {
+    public String registerUser(User user, @RequestParam String accountType) {
+        user.setAccountType(accountType);
         userService.register(user);
-        return "auth/login";
+        return "redirect:auth/login";
     }
 }

@@ -30,14 +30,16 @@
                             <label class="form-label">Пароль</label>
                             <input type="password" name="password" class="form-control" required>
                         </div>
+
                         <div class="mb-3">
                             <label class="form-label">Тип учетной записи</label>
-                            <select name="role" class="form-select">
+                            <select name="accountType" class="form-select" required>
                                 <option value="APPLICANT">Соискатель</option>
                                 <option value="EMPLOYER">Работодатель</option>
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+                        <a href="login.ftlh" class="btn btn-link">У меня уже есть аккаунт</a>
                     </form>
                 </div>
             </div>

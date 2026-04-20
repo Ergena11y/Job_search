@@ -2,9 +2,12 @@ package com.example.job_search.controller;
 
 import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.dto.UpdateProfileDto;
+import com.example.job_search.dto.UserDto;
+import com.example.job_search.dto.VacanciesDto;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.exception.UserProfileNotFoundException;
 import com.example.job_search.service.ResumeService;
+import com.example.job_search.service.VacancyService;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 import com.example.job_search.service.UserService;
@@ -23,19 +26,28 @@ public class ProfileController {
 
     private final UserService userService;
     private final ResumeService resumeService;
+    private final VacancyService vacancyService;
 
     @GetMapping
     public String profile( @RequestParam int userId,
+                           @RequestParam (defaultValue = "0") int vacancyPage,
                            @RequestParam(defaultValue = "0") int resumePage,
-                           @RequestParam(defaultValue = "5") int resumeSize,
+                           @RequestParam(defaultValue = "5") int size,
                            Model model) throws UserNotFoundException {
-        model.addAttribute("user", userService.getById(userId));
+        UserDto user = userService.getById(userId);
 
-        Page<ResumeDto> resumes = resumeService.getByApplicant(userId, resumePage, resumeSize);
-        model.addAttribute("resumes", resumes.getContent());
-        model.addAttribute("currentResumePage", resumePage);
-        model.addAttribute("totalResumePages", resumes.getTotalPages());
-
+        //Employer -> его вакансии
+        if ("EMPLOYER".equals(user.getAccountType())){
+            Page<VacanciesDto> vacancies = vacancyService.getByAuthor(userId, vacancyPage, size);
+            model.addAttribute("vacancies", vacancies.getContent());
+            model.addAttribute("currentVacancyPage", vacancyPage);
+            model.addAttribute("totalVacancyPages", vacancies.getTotalPages());
+        }else { // Applicant
+            Page<ResumeDto> resumes = resumeService.getByApplicant(userId, resumePage, size);
+            model.addAttribute("resumes",  resumes.getContent());
+            model.addAttribute("currentResumesPage",  resumePage);
+            model.addAttribute("totalResPage",  resumes.getTotalPages());
+        }
         return "profile/profile";
     }
 

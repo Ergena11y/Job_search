@@ -7,6 +7,8 @@ import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.service.ResumeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,13 +20,18 @@ public class ApiResumeController {
     private final ResumeService resumeService;
 
     @GetMapping
-    public List<ResumeDto> getAll(){
-        return resumeService.getAllResumes();
+    public ResponseEntity<Page<ResumeDto>> getAll(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(resumeService.getAllResumes(page, size));
     }
 
     @GetMapping("applicant/{applicantId}")
-    public List<ResumeDto> getByApplicant(@PathVariable int applicantId) {
-        return resumeService.getByApplicant(applicantId);
+    public ResponseEntity<Page<ResumeDto>> getByApplicant(
+            @PathVariable int applicantId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(resumeService.getByApplicant(applicantId, page, size));
     }
 
 
@@ -43,8 +50,12 @@ public class ApiResumeController {
         resumeService.deleteResumes(id);
 
     }
+
     @GetMapping("category/{categoryId}")
-    public List<ResumeDto> getByCategory(@PathVariable int categoryId) {
-        return resumeService.getByCategory(categoryId);
+    public ResponseEntity<Page<ResumeDto>> getByCategory(
+            @PathVariable int categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(resumeService.getByCategory(categoryId, page, size));
     }
 }

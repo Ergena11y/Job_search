@@ -9,7 +9,7 @@
                         <div class="row mb-3">
                             <div class="col">
                                 <label class="form-label">Имя</label>
-                                <input type="text" name="name" class="form-control" value="${edit.name}">
+                                <input type="text" name="name" class="form-control" value="${edit.name!''}">
                             </div>
                             <div class="col">
                                 <label class="form-label">Фамилия</label>

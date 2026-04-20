@@ -2,7 +2,9 @@ package com.example.job_search.service.impl;
 
 
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.model.Category;
 import com.example.job_search.model.Resumes;
+import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.repository.ResumeRepository;
 import com.example.job_search.service.ResumeService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.time.LocalDateTime;
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeRepository resumeRepository;
+    private final CategoryRepository categoryRepository;
 
     @Override
     public Page<ResumeDto> getAllResumes(int page, int size) {
@@ -47,10 +50,17 @@ public class ResumeServiceImpl implements ResumeService {
         log.info("Обновление резюме с id: {}", id);
         Resumes existing = resumeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Resume not found: " + id));
+
         existing.setName(resumeDto.getName());
         existing.setSalary(resumeDto.getSalary());
         existing.setIsActive(resumeDto.getIsActive());
-        existing.setCategory(resumeDto.getCategoryId());
+
+        if (resumeDto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(resumeDto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Категория не найдена"));
+            existing.setCategory(category);
+        }
+
         existing.setUpdateTime(LocalDateTime.now());
         resumeRepository.save(existing);
         log.info("Резюме с id {} успешно обновлено", id);
@@ -79,6 +89,13 @@ public class ResumeServiceImpl implements ResumeService {
 
         return resumeRepository.findByApplicantId(applicantId, pageable)
                 .map(this::mapToDto);
+    }
+
+    @Override
+    public ResumeDto getById(int id) {
+        return resumeRepository.findById(id)
+                .map(this::mapToDto)
+                .orElseThrow(() -> new RuntimeException("Resume not found"));
     }
 
     private ResumeDto mapToDto(Resumes resume) {

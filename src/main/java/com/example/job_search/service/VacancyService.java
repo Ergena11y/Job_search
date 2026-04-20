@@ -16,6 +16,8 @@ public interface VacancyService {
 
     Page<VacanciesDto> getByAuthor(int authorId, int page, int size);
 
+    VacanciesDto getById(int id);
+
     void createVacancy(VacanciesDto vacanciesDto);
 
     void updateVacancy(int id, VacanciesDto vacanciesDto);

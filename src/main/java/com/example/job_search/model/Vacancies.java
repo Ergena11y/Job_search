@@ -47,9 +47,8 @@ public class Vacancies {
     @Column(name = "update_time")
     private LocalDateTime updateTime;
 
-    @OneToMany(mappedBy = "vacancyId", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "vacancy", fetch = FetchType.LAZY)
     private List<RespondedApplicants> responses;
 
-    public void setCategory(Integer categoryId) {
-    }
+
 }

@@ -2,7 +2,9 @@ package com.example.job_search.service.impl;
 
 
 import com.example.job_search.dto.VacanciesDto;
+import com.example.job_search.model.Category;
 import com.example.job_search.model.Vacancies;
+import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.repository.VacancyRepository;
 import com.example.job_search.service.VacancyService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VacancyServiceImpl implements VacancyService {
 
+    private final CategoryRepository categoryRepository;
     private final VacancyRepository vacancyRepository;
 
 
@@ -61,14 +64,23 @@ public class VacancyServiceImpl implements VacancyService {
         log.info("Обновление вакансии с id: {}", id);
        Vacancies existing = vacancyRepository.findById(id)
                        .orElseThrow(RuntimeException::new);
+
        existing.setName(dto.getName());
        existing.setDescription(dto.getDescription());
        existing.setSalary(dto.getSalary());
        existing.setExpFrom(dto.getExpFrom());
        existing.setExpTo(dto.getExpTo());
        existing.setIsActive(dto.getIsActive());
-       existing.setCategory(dto.getCategoryId());
-       existing.setUpdateTime(dto.getUpdateTime());
+
+        if (dto.getCategoryId() != null) {
+            Category category = categoryRepository.findById(dto.getCategoryId())
+                    .orElseThrow(() -> new RuntimeException("Категория не найдена"));
+            existing.setCategory(category);
+        }
+
+       existing.setUpdateTime(LocalDateTime.now());
+
+
        vacancyRepository.save(existing);
         log.info("Вакансия с id {} успешно обновлена", id);
     }
@@ -99,6 +111,13 @@ public class VacancyServiceImpl implements VacancyService {
                 .map(this::mapToDto);
     }
 
+    @Override
+    public VacanciesDto getById(int id) {
+        log.debug("Получение вакансии по id: {}", id);
+        return vacancyRepository.findById(id)
+                .map(this::mapToDto)
+                .orElseThrow(() -> new RuntimeException("Vacancy not found"));
+    }
 
     private VacanciesDto mapToDto(Vacancies v) {
         return VacanciesDto.builder()

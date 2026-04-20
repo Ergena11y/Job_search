@@ -1,10 +1,10 @@
 package com.example.job_search.controller;
 
 import com.example.job_search.dto.VacanciesDto;
-import com.example.job_search.service.UserService;
 import com.example.job_search.service.VacancyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -18,8 +18,16 @@ public class VacanciesController {
     private final VacancyService vacancyService;
 
     @GetMapping
-    public String vacancies(Model model){
-        model.addAttribute("vacancies", vacancyService.getAllVacancies());
+    public String vacancies(@RequestParam(defaultValue = "0") int page,
+                            @RequestParam(defaultValue = "10") int size,
+                            @RequestParam(defaultValue = "date") String sortBy,
+                            Model model){
+        Page<VacanciesDto> vacancyPage = vacancyService.getAllVacancies(page, size, sortBy);
+        model.addAttribute("vacancies", vacancyPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", vacancyPage.getTotalPages());
+        model.addAttribute("totalItems", vacancyPage.getTotalElements());
+        model.addAttribute("sortBy", sortBy);
         return  "vacancies/vacancies";
     }
 
@@ -61,5 +69,12 @@ public class VacanciesController {
     public String delete(@PathVariable int id) {
         vacancyService.deleteVacancy(id);
         return "redirect:/vacancies";
+    }
+
+
+    @GetMapping("/{id}")
+    public  String getById(@PathVariable int id, Model model){
+        model.addAttribute("vacancy", vacancyService.getById(id));
+        return "vacancies/detail";
     }
 }

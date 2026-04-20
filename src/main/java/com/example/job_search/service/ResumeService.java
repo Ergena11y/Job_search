@@ -10,6 +10,8 @@ public interface ResumeService {
 
     Page<ResumeDto> getAllResumes(int page, int size);
 
+    ResumeDto getById(int id);
+
     void createResumes(ResumeDto resumeDto);
 
     void updateResumes(int id, ResumeDto resumeDto);

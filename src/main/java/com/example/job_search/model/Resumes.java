@@ -37,6 +37,4 @@ public class Resumes {
     @JoinColumn(name = "applicant_id")
     private User applicant;
 
-    public void setCategory(@Positive Integer categoryId) {
-    }
 }

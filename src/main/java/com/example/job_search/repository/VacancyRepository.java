@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface VacancyRepository extends JpaRepository<Vacancies, Integer> {
 
@@ -20,10 +22,10 @@ public interface VacancyRepository extends JpaRepository<Vacancies, Integer> {
     @Query("SELECT v FROM Vacancies v " +
            "JOIN RespondedApplicants ra ON ra.vacancy = v " +
            "WHERE ra.resume.applicant.id = :applicantId")
-    Page<Vacancies> findRespondedByApplicant(@Param("applicantId") int applicantId);
+    List<Vacancies> findRespondedByApplicant(@Param("applicantId") int applicantId);
 
     @Query(nativeQuery = true,
-            value = "SELECT v.* FROM vacancies v" +
+            value = "SELECT v.* FROM vacancies v " +
             "            LEFT JOIN responded_applicants ra ON ra.vacancy_id = v.id" +
             "            WHERE v.is_active = TRUE" +
             "            GROUP BY v.id" +

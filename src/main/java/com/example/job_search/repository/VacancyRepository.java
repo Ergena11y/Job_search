@@ -20,7 +20,7 @@ public interface VacancyRepository extends JpaRepository<Vacancies, Integer> {
     @Query("SELECT v FROM Vacancies v " +
            "JOIN RespondedApplicants ra ON ra.vacancy = v " +
            "WHERE ra.resume.applicant.id = :applicantId")
-    Page<Vacancies> findRespondedByApplicant(@Param("applicantId") int applicantId, Pageable pageable);
+    Page<Vacancies> findRespondedByApplicant(@Param("applicantId") int applicantId);
 
     @Query(nativeQuery = true,
             value = "SELECT v.* FROM vacancies v" +

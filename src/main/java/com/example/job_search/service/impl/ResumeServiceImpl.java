@@ -1,16 +1,19 @@
 package com.example.job_search.service.impl;
 
 
-import com.example.job_search.dao.ResumeDao;
 import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.model.Resumes;
+import com.example.job_search.repository.ResumeRepository;
 import com.example.job_search.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Service
@@ -18,57 +21,64 @@ import java.util.stream.Collectors;
 
 public class ResumeServiceImpl implements ResumeService {
 
-    private final ResumeDao resumeDao;
+    private final ResumeRepository resumeRepository;
 
     @Override
-    public List<ResumeDto> getAllResumes() {
-        return resumeDao.getAllResumes().stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+    public Page<ResumeDto> getAllResumes(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
+
+
+        return resumeRepository.findByIsActiveTrue(pageable)
+                .map(this::mapToDto);
     }
 
     @Override
     public void createResumes(ResumeDto resumeDto) {
         log.info("Создание нового резюме: {}", resumeDto.getName());
-        resumeDao.createResume(mapToModel(resumeDto));
+        Resumes r = mapToModel(resumeDto);
+        r.setCreatedDate(LocalDateTime.now());
+        r.setUpdateTime(LocalDateTime.now());
+        resumeRepository.save(r);
         log.info("Резюме '{}' успешно создано", resumeDto.getName());
     }
 
     @Override
     public void updateResumes(int id, ResumeDto resumeDto) {
         log.info("Обновление резюме с id: {}", id);
-        resumeDao.updateResume(id, mapToModel(resumeDto));
+        Resumes existing = resumeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Resume not found: " + id));
+        existing.setName(resumeDto.getName());
+        existing.setSalary(resumeDto.getSalary());
+        existing.setIsActive(resumeDto.getIsActive());
+        existing.setCategory(resumeDto.getCategoryId());
+        existing.setUpdateTime(LocalDateTime.now());
+        resumeRepository.save(existing);
         log.info("Резюме с id {} успешно обновлено", id);
     }
 
     @Override
     public void deleteResumes(int id) {
         log.warn("Удаление резюме с id: {}", id);
-        resumeDao.deleteResumes(id);
+        resumeRepository.deleteById(id);
         log.info("Резюме с id {} удалено", id);
     }
 
     @Override
-    public List<ResumeDto> getByCategory(int categoryId) {
+    public Page<ResumeDto> getByCategory(int categoryId, int page, int size) {
         log.debug("Получение резюме по категории id: {}", categoryId);
-        return resumeDao.getResumesByCategory(categoryId).stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
+
+        return resumeRepository.findByCategoryIdAndIsActiveTrue(categoryId,  pageable)
+                .map(this::mapToDto);
     }
 
     @Override
-    public List<ResumeDto> getByApplicant(int applicantId) {
+    public Page<ResumeDto> getByApplicant(int applicantId, int page, int size) {
         log.debug("Получение резюме соискателя id: {}", applicantId);
-        return resumeDao.getResumesByApplicant(applicantId).stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
-    }
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
 
-    @Override
-    public ResumeDto getById(int id) {
-        return resumeDao.getResumeById(id)
-                .map(this::mapToDto)
-                .orElseThrow();
+        return resumeRepository.findByApplicantId(applicantId, pageable)
+                .map(this::mapToDto);
     }
 
     private ResumeDto mapToDto(Resumes resume) {

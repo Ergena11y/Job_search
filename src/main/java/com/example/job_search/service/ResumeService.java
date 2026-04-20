@@ -20,5 +20,4 @@ public interface ResumeService {
 
     Page<ResumeDto> getByApplicant(int applicantId, int page, int size);
 
-    ResumeDto getById(int id);
 }

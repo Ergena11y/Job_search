@@ -16,5 +16,5 @@ public interface RespondedApplicantsRepository extends JpaRepository<RespondedAp
 
     @Query("SELECT ra.resume.applicant FROM RespondedApplicants ra" +
             " WHERE ra.vacancy.id = :vacancyId")
-    List<User> findApplicantsByVacancyId(@Param("vacancyId") Integer vacancyId);
+    List<User> findUsersByVacancyId(@Param("vacancyId") Integer vacancyId);
 }

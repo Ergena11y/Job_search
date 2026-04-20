@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VacancyService {
 
-    List<VacanciesDto> getAllVacancies(int page, int size, String sortBy);
+    Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy);
 
     Page<VacanciesDto> getByCategory(int categoryId, int page, int size);
 

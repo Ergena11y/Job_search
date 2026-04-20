@@ -1,6 +1,7 @@
 package com.example.job_search.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -35,4 +36,7 @@ public class Resumes {
     @ManyToOne
     @JoinColumn(name = "applicant_id")
     private User applicant;
+
+    public void setCategory(@Positive Integer categoryId) {
+    }
 }

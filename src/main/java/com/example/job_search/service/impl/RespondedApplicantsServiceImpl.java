@@ -1,10 +1,10 @@
 package com.example.job_search.service.impl;
 
 
-import com.example.job_search.dao.RespondedApplicantsDao;
 import com.example.job_search.dto.RespondedDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.model.RespondedApplicants;
+import com.example.job_search.repository.RespondedApplicantsRepository;
 import com.example.job_search.service.RespondedApplicantsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,11 +18,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RespondedApplicantsServiceImpl implements RespondedApplicantsService {
 
-    private final RespondedApplicantsDao respondedApplicantsDao;
+    private final RespondedApplicantsRepository respondedApplicantsRepository;
 
     @Override
     public List<RespondedDto> getAll()  {
-        return respondedApplicantsDao.getAll().stream()
+        return respondedApplicantsRepository.findAll().stream()
                 .map(this::mapToRespondedDto)
                 .collect(Collectors.toList());
     }
@@ -30,7 +30,7 @@ public class RespondedApplicantsServiceImpl implements RespondedApplicantsServic
     @Override
     public List<UserDto> getApplicantsByVacancyId(int vacancyId) {
         log.debug("Получение соискателей по вакансии id: {}", vacancyId);
-        return respondedApplicantsDao.getUsersByVacancyId(vacancyId).stream()
+        return respondedApplicantsRepository.findUsersByVacancyId(vacancyId).stream()
                 .map(user -> UserDto.builder()
                         .name(user.getName())
                         .email(user.getEmail())
@@ -44,7 +44,11 @@ public class RespondedApplicantsServiceImpl implements RespondedApplicantsServic
     public void respond(RespondedApplicants responded) {
         log.info("Отклик на вакансию id: {} с резюме id: {}",
                 responded.getVacancy(), responded.getResume());
-        respondedApplicantsDao.respond(responded);
+
+
+        respondedApplicantsRepository.save(responded);
+
+
         log.info("Отклик успешно создан");
     }
 

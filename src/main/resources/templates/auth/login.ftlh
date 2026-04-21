@@ -12,7 +12,6 @@
 
         }
 
-
         @media (min-width: 992px) {
 
             .rounded-tr-lg-0 {

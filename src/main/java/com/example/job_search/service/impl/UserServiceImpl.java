@@ -153,12 +153,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public int getUserIdByEmail(String email) throws UserNotFoundException {
+        return userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new)
+                .getId();
+    }
+
 
     private UserDto convertToDto(User user) {
         UserDto dto = new UserDto();
+        dto.setEmail(user.getEmail());
         dto.setName(user.getName());
         dto.setSurname(user.getSurname());
-        dto.setEmail(user.getEmail());
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setAvatar(user.getAvatar());
         dto.setAccountType(user.getAccountType());

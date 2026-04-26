@@ -6,6 +6,9 @@ import lombok.*;
 @Getter
 @Setter
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "contacts_info")
 public class ContactsInfo {
     @Id

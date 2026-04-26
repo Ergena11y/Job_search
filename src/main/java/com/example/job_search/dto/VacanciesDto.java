@@ -13,6 +13,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class VacanciesDto {
+
+    private  Long id;
+
     @NotBlank
     @Size(min = 6, max = 40)
     private String name;
@@ -20,17 +23,27 @@ public class VacanciesDto {
     @NotBlank
     @Size(min = 10, max = 150)
     private String description;
+
+    @NotNull
     private Integer categoryId;
 
-    @Positive
+    @NotNull
+    @PositiveOrZero(message =  "Salary must be >= 0")
     private float salary;
 
     @NotNull
     private Integer expFrom;
+
     @NotNull
+    @PositiveOrZero
     private Integer expTo;
+
     private Boolean isActive;
+
+    @NotNull
     private Integer authorId;
+
+
     private LocalDateTime createdDate;
     private LocalDateTime updateTime;
 }

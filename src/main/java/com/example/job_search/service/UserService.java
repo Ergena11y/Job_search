@@ -38,4 +38,7 @@ public interface UserService {
     UserDto findEmployer(String email) throws  UserNotFoundException;
 
     void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar) throws UserProfileNotFoundException;
+
+
+    int getUserIdByEmail(String email) throws  UserNotFoundException;
 }

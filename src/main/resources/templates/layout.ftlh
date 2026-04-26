@@ -22,6 +22,7 @@
                         </#if>
                         <li class="nav-item"><a class="nav-link" href="/auth/logout">Выход</a></li>
                     <#else>
+                        <li class="nav-item"><a class="nav-link" href="profile" > Профиль</a></li>
                         <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
                         <li class="nav-item"><a class="nav-link" href="/resumes">Резюме</a></li>
                         <li class="nav-item"><a class="nav-link" href="/auth/login">Войти</a></li>

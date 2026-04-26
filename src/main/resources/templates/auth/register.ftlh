@@ -45,7 +45,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
-                        <a href="auth/login" class="btn btn-link">У меня уже есть аккаунт</a>
+                        <a href="/auth/login" class="btn btn-link">У меня уже есть аккаунт</a>
                     </form>
                 </div>
             </div>

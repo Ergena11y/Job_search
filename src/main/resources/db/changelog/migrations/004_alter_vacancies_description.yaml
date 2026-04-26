@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004_alter_vacancies_description
+      author: Ergen
+      changes:
+        - modifyDataType:
+            tableName: vacancies
+            columnName: description
+            newDataType: text

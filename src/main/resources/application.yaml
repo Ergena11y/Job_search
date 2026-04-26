@@ -6,7 +6,7 @@ spring:
   config:
     import: optional:file:.env[.properties]
   application:
-    name: movie_review
+    name: job_search
   mvc:
     static-path-pattern: /static/**
   freemarker:
@@ -14,7 +14,7 @@ spring:
 
   #  DB
   datasource:
-    url: jdbc:h2:./db/movie_review;AUTO_SERVER=TRUE
+    url: jdbc:h2:./db/job_search;AUTO_SERVER=TRUE
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.h2.Driver
@@ -35,7 +35,8 @@ logging:
     org:
       springframework:
         security: debug
-    kg.attractor.movie_review: debug
+      liquibase: info
+    com.example.job_search: debug
     com.zaxxer.hikari: error
     org.apache.tomcat: error
     liquibase: error

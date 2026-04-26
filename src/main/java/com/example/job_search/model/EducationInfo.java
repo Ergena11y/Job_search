@@ -1,16 +1,16 @@
 package com.example.job_search.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "education_info")
 public class EducationInfo {
     @Id

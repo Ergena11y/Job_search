@@ -1,15 +1,15 @@
 package com.example.job_search.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 
 @Getter
 @Setter
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "work_experience_info")
 public class WorkExperienceInfo {
     @Id

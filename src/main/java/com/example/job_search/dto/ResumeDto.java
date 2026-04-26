@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class ResumeDto {
-    private Integer id;
+
+    private Long id;
     @NotBlank
     private String name;
     @Positive

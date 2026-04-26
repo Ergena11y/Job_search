@@ -38,7 +38,7 @@ public class AuthController {
     public String register(@Valid UserDto userDto,
                            BindingResult bindingResult,
                            Model model,
-                           HttpServletRequest request) throws Exception {
+                           HttpServletRequest request) throws UserDataCreateException {
         if (bindingResult.hasErrors()) {
             model.addAttribute("userDto", userDto);
             model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
@@ -46,6 +46,10 @@ public class AuthController {
         }
 
         User user = new User();
+        user.setName(userDto.getName());
+        user.setSurname(userDto.getSurname());
+        user.setAge(userDto.getAge());
+        user.setPhoneNumber(userDto.getPhoneNumber());
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setEnabled(true);

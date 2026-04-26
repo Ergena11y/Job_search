@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -40,4 +41,13 @@ public class Resumes {
     @JoinColumn(name = "applicant_id")
     private User applicant;
 
+
+    @OneToMany(mappedBy = "resume",fetch = FetchType.LAZY)
+    private List<EducationInfo> education;
+
+    @OneToMany(mappedBy = "resume",fetch = FetchType.LAZY)
+    private List<WorkExperienceInfo> workExperience;
+
+    @OneToMany(mappedBy = "resume",fetch = FetchType.LAZY)
+    private List<ContactsInfo> contacts;
 }

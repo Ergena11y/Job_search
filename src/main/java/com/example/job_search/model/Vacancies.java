@@ -22,6 +22,8 @@ public class Vacancies {
     private String name;
 
 
+    @Lob
+    @Column(columnDefinition = "TEXT")
     private String description;
 
    @ManyToOne
@@ -51,7 +53,7 @@ public class Vacancies {
     private LocalDateTime updateTime;
 
     @OneToMany(mappedBy = "vacancy", fetch = FetchType.LAZY)
-    private List<RespondedApplicants> responses;
+    private List<RespondedApplicants> respondedApplicants;
 
 
 }

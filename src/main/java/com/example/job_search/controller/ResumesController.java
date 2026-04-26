@@ -1,7 +1,9 @@
 package com.example.job_search.controller;
 
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.service.ResumeService;
+import com.example.job_search.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -10,15 +12,24 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("resumes")
 @RequiredArgsConstructor
 public class ResumesController {
 
     private final ResumeService resumeService;
+    private final UserService userService;
 
     @GetMapping
-    public String resumes(@RequestParam(defaultValue = "0") int page,  @RequestParam(defaultValue = "10") int size, Model model) {
+    public String resumes(@RequestParam(defaultValue = "0") int page,
+                          @RequestParam(defaultValue = "10") int size,
+                          Principal principal,
+                          Model model) throws UserNotFoundException {
+
+        int userId = userService.getUserIdByEmail(principal.getName());
+
         Page<ResumeDto> resumePage = resumeService.getAllResumes(page, size);
         model.addAttribute("resumes", resumePage.getContent());
         model.addAttribute("currentPage", page);

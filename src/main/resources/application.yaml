@@ -23,7 +23,7 @@ spring:
   #      mode: always
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
 
   liquibase:
     change-log: classpath:/db/changelog/master.yaml
@@ -35,6 +35,7 @@ logging:
     org:
       springframework:
         security: debug
+      liquibase: info
     kg.attractor.movie_review: debug
     com.zaxxer.hikari: error
     org.apache.tomcat: error

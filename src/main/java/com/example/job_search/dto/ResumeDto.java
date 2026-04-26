@@ -15,6 +15,12 @@ import java.time.LocalDateTime;
 public class ResumeDto {
 
     private Long id;
+
+    @NotNull
+    private Long applicantId;
+
+    private String applicantName;
+
     @NotBlank
     private String name;
     @Positive
@@ -27,4 +33,6 @@ public class ResumeDto {
 
     @Positive
     private Integer categoryId;
+
+    private String categoryName;
 }

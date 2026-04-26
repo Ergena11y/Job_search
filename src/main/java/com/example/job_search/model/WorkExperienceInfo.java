@@ -17,7 +17,7 @@ public class WorkExperienceInfo {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "resume_id")
+    @JoinColumn(name = "resume_id", nullable = false)
     private Resumes resume;
 
     private Integer years;

@@ -28,7 +28,7 @@
                     <#if vacancies?? && vacancies?has_content>
                         <ul class="list-group">
                             <#list vacancies as v>
-                                <li class="list-group-item">${v.name}</li>
+                                <li class="list-group-item">${v.name!'-'}</li>
                             </#list>
                         </ul>
                     <#else>
@@ -39,7 +39,15 @@
                     <#if resumes?? && resumes?has_content>
                         <ul class="list-group">
                             <#list resumes as r>
-                                <li class="list-group-item">${r.name}</li>
+                                <li class="list-group-item">
+                                    <strong>${r.name!'-'}</strong>
+                                    <br>
+                                    <small>Зарплата: ${r.salary?string["0.00"]!'не указана'} ⃀</small>
+                                    <#if r.createdDate??>
+                                        <br>
+                                        <small>Создано: ${r.createdDate}</small>
+                                    </#if>
+                                </li>
                             </#list>
                         </ul>
                     <#else>

@@ -6,6 +6,12 @@
                 <div class="card-body">
                     <h3 class="text-center">Регистрация</h3>
                     <form action="/auth/register" method="post">
+                        <#if _csrf??>
+                            <input type="hidden"
+                                   name="${(_csrf.parameterName)!'csrf-param-name'}"
+                                   value="${(_csrf.token)!'csrf-token'}">
+                        </#if>
+
                         <div class="mb-3">
                             <label class="form-label">Имя</label>
                             <input type="text" name="name" class="form-control" required>
@@ -39,7 +45,7 @@
                             </select>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
-                        <a href="login.ftlh" class="btn btn-link">У меня уже есть аккаунт</a>
+                        <a href="auth/login" class="btn btn-link">У меня уже есть аккаунт</a>
                     </form>
                 </div>
             </div>

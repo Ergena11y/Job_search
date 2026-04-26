@@ -13,26 +13,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <#if user??>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile">Мой профиль</a>
+                        </li>
+
                         <#if user.accountType == "EMPLOYER">
                             <li class="nav-item"><a class="nav-link" href="/profile?userId=${user.id}">Мои вакансии</a></li>
                         <#else>
                             <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile?userId=${user.id}">Мои резюме</a></li>
                         </#if>
+
                         <li class="nav-item">
                             <form action="/auth/logout" method="post" style="display:inline;">
                                 <#if _csrf??>
-                                    <input type="hidden"
-                                           name="${(_csrf.parameterName)!'csrf-param-name'}"
-                                           value="${(_csrf.token)!'csrf-token'}">
+                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                                 </#if>
-                                <button type="submit" class="nav-link btn btn-link" style="cursor:pointer;">Выход</button>
+                                <button type="submit" class="nav-link btn btn-link">Выход</button>
                             </form>
                         </li>
                     <#else>
-                        <li class="nav-item"><a class="nav-link" href="/profile">Профиль</a></li>
                         <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
                         <li class="nav-item"><a class="nav-link" href="/resumes">Резюме</a></li>
+                        <li class="nav-item"> <a class="nav-link" href="/auth/register"> Регистрация </a></li>
                         <li class="nav-item"><a class="nav-link" href="/auth/login">Войти</a></li>
                     </#if>
                 </ul>

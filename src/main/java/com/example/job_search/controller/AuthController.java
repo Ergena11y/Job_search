@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("auth")
 @RequiredArgsConstructor
@@ -45,6 +47,8 @@ public class AuthController {
             return "auth/register";
         }
 
+        log.info("Начало регистрации для email: {}", userDto.getEmail());
+
         User user = new User();
         user.setName(userDto.getName());
         user.setSurname(userDto.getSurname());
@@ -55,12 +59,25 @@ public class AuthController {
         user.setEnabled(true);
         user.setAccountType(userDto.getAccountType() != null ? userDto.getAccountType() : "APPLICANT");
 
-        userService.register(user);
+
+        log.debug("User объект перед сохранением: {}", user);
+
+        try{
+            userService.register(user);
+            log.info("Пользователь успешно зарегистрирован: {}", userDto.getEmail());
+        }catch (Exception e){
+            log.error("Ошибка при регистрации: {}", e.getMessage(), e);
+            model.addAttribute("error", "Ошибка регистрации: " + e.getMessage());
+            return "auth/register";
+        }
+
 
         try {
             request.login(userDto.getEmail(), userDto.getPassword());
+            log.info("Автологин успешен");
         } catch (ServletException e) {
             e.printStackTrace();
+            log.error("Ошибка автологина: {}", e.getMessage(), e);
         }
 
         return "redirect:/profile";

@@ -14,6 +14,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +26,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -163,12 +169,35 @@ public class UserServiceImpl implements UserService {
 
     private UserDto convertToDto(User user) {
         UserDto dto = new UserDto();
+        dto.setId((long)user.getId());
         dto.setEmail(user.getEmail());
         dto.setName(user.getName());
         dto.setSurname(user.getSurname());
+        dto.setAge(user.getAge());
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setAvatar(user.getAvatar());
         dto.setAccountType(user.getAccountType());
         return dto;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(UserNotFoundException::new);
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                user.isEnabled(),
+                true,true,true,
+                getAuthorities(user)
+        );
+    }
+
+    private Collection<? extends GrantedAuthority> getAuthorities(User user) {
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
+        String role = "ROLE_" + user.getAccountType();
+        authorities.add(new SimpleGrantedAuthority(role));
+        return authorities;
     }
 }

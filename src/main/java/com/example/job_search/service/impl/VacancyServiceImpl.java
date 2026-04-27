@@ -5,6 +5,7 @@ import com.example.job_search.dto.VacanciesDto;
 import com.example.job_search.model.Category;
 import com.example.job_search.model.Vacancies;
 import com.example.job_search.repository.CategoryRepository;
+import com.example.job_search.repository.UserRepository;
 import com.example.job_search.repository.VacancyRepository;
 import com.example.job_search.service.VacancyService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ public class VacancyServiceImpl implements VacancyService {
 
     private final CategoryRepository categoryRepository;
     private final VacancyRepository vacancyRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -52,9 +54,26 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public void createVacancy(VacanciesDto dto) {
         log.info("Создание новой вакансии: {}", dto.getName());
-        Vacancies v = mapToModel(dto);
+        Vacancies v = new Vacancies();
+        v.setName(dto.getName());
+        v.setDescription(dto.getDescription());
+        v.setSalary(dto.getSalary());
+        v.setExpFrom(dto.getExpFrom());
+        v.setExpTo(dto.getExpTo());
+        v.setIsActive(dto.getIsActive() != null ? dto.getIsActive() : true);
         v.setCreatedDate(LocalDateTime.now());
         v.setUpdateTime(LocalDateTime.now());
+
+        if (dto.getCategoryId() != null) {
+            categoryRepository.findById(dto.getCategoryId())
+                    .ifPresent(v::setCategory);
+        }
+
+        if (dto.getAuthorId() != null) {
+            userRepository.findById(dto.getAuthorId())
+                    .ifPresent(v::setAuthor);
+        }
+
         vacancyRepository.save(v);
         log.info("Вакансия '{}' успешно создана", dto.getName());
     }
@@ -121,6 +140,7 @@ public class VacancyServiceImpl implements VacancyService {
 
     private VacanciesDto mapToDto(Vacancies v) {
         return VacanciesDto.builder()
+                .id((long) v.getId())
                 .name(v.getName())
                 .description(v.getDescription())
                 .salary(v.getSalary())

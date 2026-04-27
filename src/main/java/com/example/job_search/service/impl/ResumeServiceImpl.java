@@ -6,6 +6,7 @@ import com.example.job_search.model.Category;
 import com.example.job_search.model.Resumes;
 import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.repository.ResumeRepository;
+import com.example.job_search.repository.UserRepository;
 import com.example.job_search.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeRepository resumeRepository;
     private final CategoryRepository categoryRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Page<ResumeDto> getAllResumes(int page, int size) {
@@ -38,9 +40,24 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public void createResumes(ResumeDto resumeDto) {
         log.info("Создание нового резюме: {}", resumeDto.getName());
-        Resumes r = mapToModel(resumeDto);
+        Resumes r = new Resumes();
+
+        r.setName(resumeDto.getName());
+        r.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0);
+        r.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : true);
         r.setCreatedDate(LocalDateTime.now());
         r.setUpdateTime(LocalDateTime.now());
+
+        if (resumeDto.getCategoryId() != null) {
+            categoryRepository.findById(resumeDto.getCategoryId())
+                    .ifPresent(r::setCategory);
+        }
+
+        if (resumeDto.getApplicantId() != null) {
+            userRepository.findById(resumeDto.getApplicantId().intValue())
+                    .ifPresent(r::setApplicant);
+        }
+
         resumeRepository.save(r);
         log.info("Резюме '{}' успешно создано", resumeDto.getName());
     }
@@ -100,12 +117,14 @@ public class ResumeServiceImpl implements ResumeService {
 
     private ResumeDto mapToDto(Resumes resume) {
         return ResumeDto.builder()
+                .id((long) resume.getId())
                 .name(resume.getName())
                 .salary(resume.getSalary())
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateTime())
                 .categoryId(resume.getCategory() != null ? resume.getCategory().getId() : null)
+                .applicantId(resume.getApplicant() != null ? (long) resume.getApplicant().getId() : null)
                 .build();
     }
 

@@ -46,13 +46,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/resumes").authenticated()
                         .requestMatchers(HttpMethod.GET, "/resumes/**").authenticated()
                         
-                        .requestMatchers(HttpMethod.POST, "/resumes").hasAuthority("APPLICANT")
-                        .requestMatchers(HttpMethod.PUT, "/resumes/**").hasAuthority("APPLICANT")
-                        .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasAuthority("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/resumes").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasRole("APPLICANT")
 
-                        .requestMatchers(HttpMethod.POST, "/vacancies").hasAuthority("EMPLOYER")
-                        .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasAuthority("EMPLOYER")
-                        .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasAuthority("EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/vacancies").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasRole("EMPLOYER")
 
                         //profile смотрят только авториз
                         .requestMatchers( "/profile/**").authenticated()

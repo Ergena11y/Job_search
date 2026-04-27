@@ -1,6 +1,8 @@
 package com.example.job_search.controller;
 
 import com.example.job_search.dto.VacanciesDto;
+import com.example.job_search.exception.UserNotFoundException;
+import com.example.job_search.service.UserService;
 import com.example.job_search.service.VacancyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +12,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 @Controller
 @RequestMapping("vacancies")
 @RequiredArgsConstructor
 public class VacanciesController {
 
     private final VacancyService vacancyService;
+    private final UserService userService;
 
     @GetMapping
     public String vacancies(@RequestParam(defaultValue = "0") int page,
@@ -38,11 +43,14 @@ public class VacanciesController {
     }
 
     @PostMapping("/create")
-    public String create(@Valid VacanciesDto dto, BindingResult br, Model model) {
+    public String create(@Valid VacanciesDto dto, BindingResult br,
+                         Model model, Principal principal) throws UserNotFoundException {
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
             return "vacancies/create_vacancies";
         }
+        int userId = userService.getUserIdByEmail(principal.getName());
+        dto.setAuthorId(userId);
         vacancyService.createVacancy(dto);
         return "redirect:/vacancies";
     }

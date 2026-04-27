@@ -8,18 +8,18 @@ import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.exception.UserProfileNotFoundException;
 import com.example.job_search.model.User;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 
-public interface UserService {
+public interface UserService extends UserDetailsService {
 
     UserDto register(User user);
 
     List<UserDto> getAllUsers();
 
-//    Page<UserDto> getEmployers(int page, int size);
 
     UserDto  getById(int id) throws  UserNotFoundException;
 

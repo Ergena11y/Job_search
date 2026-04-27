@@ -18,10 +18,10 @@
                         </li>
 
                         <#if user.accountType == "EMPLOYER">
-                            <li class="nav-item"><a class="nav-link" href="/profile?userId=${user.id}">Мои вакансии</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile">Мои вакансии</a></li>
                         <#else>
                             <li class="nav-item"><a class="nav-link" href="/vacancies">Вакансии</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/profile?userId=${user.id}">Мои резюме</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile">Мои резюме</a></li>
                         </#if>
 
                         <li class="nav-item">

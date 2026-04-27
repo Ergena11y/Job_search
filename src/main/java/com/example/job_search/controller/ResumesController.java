@@ -45,11 +45,14 @@ public class ResumesController {
     }
 
     @PostMapping("create")
-    public String create(Model model, ResumeDto resumeDto, BindingResult br){
-        if (br.hasErrors()){
+    public String create(Model model, @Valid ResumeDto resumeDto,
+                         BindingResult br, Principal principal) throws UserNotFoundException {
+        if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
             return "resumes/create_resumes";
         }
+        int userId = userService.getUserIdByEmail(principal.getName());
+        resumeDto.setApplicantId((long) userId);
         resumeService.createResumes(resumeDto);
         return "redirect:/resumes";
     }

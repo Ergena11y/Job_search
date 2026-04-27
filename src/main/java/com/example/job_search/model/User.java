@@ -36,6 +36,9 @@ public class User {
 
     private boolean enabled ;
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Vacancies> vacancies;
 

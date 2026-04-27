@@ -99,7 +99,7 @@ public class ResumesController {
     @GetMapping("/{id}")
     public  String getById(@PathVariable int id, Model model){
         model.addAttribute("resume", resumeService.getById(id));
-        return "resumes/detail";
+        return "resumes/resumes_info";
     }
 
 }

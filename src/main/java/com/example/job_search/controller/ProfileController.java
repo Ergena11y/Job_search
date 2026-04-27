@@ -48,6 +48,11 @@ public class ProfileController {
             model.addAttribute("vacancies", vacancies.getContent());
             model.addAttribute("currentVacancyPage", vacancyPage);
             model.addAttribute("totalVacancyPages", vacancies.getTotalPages());
+
+            var allResumes = resumeService.getAllResumes(resumePage, 5);
+            model.addAttribute("resumes", allResumes.getContent());
+            model.addAttribute("currentResumesPage", resumePage);
+            model.addAttribute("totalResPage", allResumes.getTotalPages());
         }else { // Applicant
             var resumes = resumeService.getByApplicant(userId, resumePage, 5);
             model.addAttribute("resumes",  resumes.getContent());

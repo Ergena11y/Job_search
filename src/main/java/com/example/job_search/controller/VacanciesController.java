@@ -101,6 +101,6 @@ public class VacanciesController {
     @GetMapping("/{id}")
     public  String getById(@PathVariable int id, Model model){
         model.addAttribute("vacancy", vacancyService.getById(id));
-        return "vacancies/detail";
+        return "vacancies/vacancies_info";
     }
 }

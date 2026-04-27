@@ -44,4 +44,14 @@ public class User {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "applicant")
     private List<Resumes> resumes;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("GUEST"));
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 }

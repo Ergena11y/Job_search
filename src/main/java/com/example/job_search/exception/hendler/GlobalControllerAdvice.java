@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -25,6 +26,24 @@ public class GlobalControllerAdvice {
     private String noSuchFileExceptionHandler(HttpServletRequest request, Model model) {
         model.addAttribute("status", HttpStatus.NOT_FOUND.value());
         model.addAttribute("reason", HttpStatus.NOT_FOUND.getReasonPhrase());
+        model.addAttribute("details", request);
+        return "errors/error";
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    private String usernameNotFoundHandler(HttpServletRequest request, Model model) {
+        model.addAttribute("status", HttpStatus.NOT_FOUND.value());
+        model.addAttribute("reason", "User not found");
+        model.addAttribute("details", request);
+        return "errors/error";
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    private String runtimeExceptionHandler(RuntimeException e,
+                                           HttpServletRequest request,
+                                           Model model) {
+        model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
+        model.addAttribute("reason", e.getMessage() != null ? e.getMessage() : "Internal error");
         model.addAttribute("details", request);
         return "errors/error";
     }

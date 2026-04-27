@@ -64,6 +64,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/profile").authenticated()
 
+                        .requestMatchers("/auth/forgot-password", "/auth/reset-password").permitAll()
+
                         .anyRequest().permitAll()
                 );
 

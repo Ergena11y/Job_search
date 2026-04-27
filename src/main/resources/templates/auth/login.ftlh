@@ -84,7 +84,9 @@
 
                             </button>
 
-
+                            <div class="text-center mt-2">
+                                <a href="/auth/forgot-password">Забыли пароль?</a>
+                            </div>
                         </form>
 
 

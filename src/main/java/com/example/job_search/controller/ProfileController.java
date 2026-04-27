@@ -48,6 +48,11 @@ public class ProfileController {
             model.addAttribute("vacancies", vacancies.getContent());
             model.addAttribute("currentVacancyPage", vacancyPage);
             model.addAttribute("totalVacancyPages", vacancies.getTotalPages());
+
+            var allResumes = resumeService.getAllResumes(resumePage, 5);
+            model.addAttribute("resumes", allResumes.getContent());
+            model.addAttribute("currentResumesPage", resumePage);
+            model.addAttribute("totalResPage", allResumes.getTotalPages());
         }else { // Applicant
             var resumes = resumeService.getByApplicant(userId, resumePage, 5);
             model.addAttribute("resumes",  resumes.getContent());
@@ -69,10 +74,10 @@ public class ProfileController {
     }
 
     @PostMapping("/update")
-    public String profileUpdate(Principal principal, @Valid UpdateProfileDto dto, @RequestParam(required = false)MultipartFile avatar) throws UserProfileNotFoundException, UserNotFoundException {
+    public String profileUpdate(Principal principal, @Valid UpdateProfileDto dto) throws UserProfileNotFoundException, UserNotFoundException {
 
         int userId = userService.getUserIdByEmail(principal.getName());
-        userService.updateUserProfile(userId, dto, avatar);
+        userService.updateUserProfile(userId, dto, dto.getAvatar());
         return "redirect:/profile";
     }
 }

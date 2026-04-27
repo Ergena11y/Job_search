@@ -18,6 +18,17 @@
                 <textarea name="description" class="form-control" rows="3" required></textarea>
             </div>
             <div class="mb-3">
+                <label class="form-label">Категория <span class="text-danger">*</span></label>
+                <select name="categoryId" class="form-control" required>
+                    <option value="">-- Выберите категорию --</option>
+                    <#if categories??>
+                        <#list categories as category>
+                            <option value="${category.id}">${category.name}</option>
+                        </#list>
+                    </#if>
+                </select>
+            </div>
+            <div class="mb-3">
                 <label class="form-label">Зарплата</label>
                 <input type="number" name="salary" class="form-control" required>
             </div>

@@ -38,27 +38,31 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
-                        //Вакансии читаю все
+                        //Вакансии читают все
                         .requestMatchers(HttpMethod.GET, "/vacancies").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
 
-                        // а резюме только полсе авторизации
+                        // Резюме только после авторизации
                         .requestMatchers(HttpMethod.GET, "/resumes").authenticated()
                         .requestMatchers(HttpMethod.GET, "/resumes/**").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/resumes").hasRole("EMPLOYER")
-                        
+
                         .requestMatchers(HttpMethod.POST, "/resumes").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasRole("APPLICANT")
 
+                        // Employer может создавать вакансии
                         .requestMatchers(HttpMethod.POST, "/vacancies/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/vacancies/create").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/vacancies").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasRole("EMPLOYER")
 
                         //profile смотрят только авториз
                         .requestMatchers(HttpMethod.POST, "/profile/update").authenticated()
-                        .requestMatchers( "/profile/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/profile/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
+                        .requestMatchers(HttpMethod.GET, "/profile").authenticated()
 
                         .anyRequest().permitAll()
                 );

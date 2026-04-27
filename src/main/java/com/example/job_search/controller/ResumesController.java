@@ -1,7 +1,9 @@
 package com.example.job_search.controller;
 
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.UserNotFoundException;
+import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.service.ResumeService;
 import com.example.job_search.service.UserService;
 import jakarta.validation.Valid;
@@ -21,26 +23,36 @@ public class ResumesController {
 
     private final ResumeService resumeService;
     private final UserService userService;
+    private final CategoryRepository categoryRepository;
 
     @GetMapping
     public String resumes(@RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size,
                           Principal principal,
-                          Model model) throws UserNotFoundException {
-
-        int userId = userService.getUserIdByEmail(principal.getName());
-
+                          Model model) {
         Page<ResumeDto> resumePage = resumeService.getAllResumes(page, size);
         model.addAttribute("resumes", resumePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", resumePage.getTotalPages());
         model.addAttribute("totalItems", resumePage.getTotalElements());
+
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        } else {
+            model.addAttribute("user", null);
+        }
+
         return "resumes/resumes";
     }
 
     @GetMapping("create")
     public String createF(Model model){
         model.addAttribute("resumeDto", new ResumeDto());
+        model.addAttribute("categories", categoryRepository.findAll());
         return "resumes/create_resumes";
     }
 
@@ -49,6 +61,7 @@ public class ResumesController {
                          BindingResult br, Principal principal) throws UserNotFoundException {
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("categories", categoryRepository.findAll());
             return "resumes/create_resumes";
         }
         int userId = userService.getUserIdByEmail(principal.getName());
@@ -86,7 +99,7 @@ public class ResumesController {
     @GetMapping("/{id}")
     public  String getById(@PathVariable int id, Model model){
         model.addAttribute("resume", resumeService.getById(id));
-        return "resumes/detail";
+        return "resumes/resumes_info";
     }
 
 }

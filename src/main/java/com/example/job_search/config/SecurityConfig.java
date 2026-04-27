@@ -45,16 +45,19 @@ public class SecurityConfig {
                         // а резюме только полсе авторизации
                         .requestMatchers(HttpMethod.GET, "/resumes").authenticated()
                         .requestMatchers(HttpMethod.GET, "/resumes/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/resumes").hasRole("EMPLOYER")
                         
                         .requestMatchers(HttpMethod.POST, "/resumes").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasRole("APPLICANT")
 
-                        .requestMatchers(HttpMethod.POST, "/vacancies").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/vacancies/create").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.GET, "/vacancies/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasRole("EMPLOYER")
 
                         //profile смотрят только авториз
+                        .requestMatchers(HttpMethod.POST, "/profile/update").authenticated()
                         .requestMatchers( "/profile/**").authenticated()
 
                         .anyRequest().permitAll()

@@ -60,14 +60,14 @@ public class VacanciesController {
     public String editForm(@PathVariable int id, Model model) {
         model.addAttribute("vacancyDto", vacancyService.getById(id));
         model.addAttribute("id", id);
-        return "vacancies/edit";
+        return "vacancies/edit_vacancies";
     }
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable int id, @Valid VacanciesDto dto, BindingResult br, Model model) {
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
-            return "vacancies/edit";
+            return "vacancies/edit_vacancies";
         }
         vacancyService.updateVacancy(id, dto);
         return "redirect:/vacancies";

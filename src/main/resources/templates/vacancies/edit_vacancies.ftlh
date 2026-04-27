@@ -3,6 +3,12 @@
     <div class="container mt-4">
         <h2>Редактировать вакансию</h2>
         <form action="/vacancies/update/${vacancy.id!''}" method="post">
+            <#if _csrf??>
+                <input type="hidden"
+                       name="${(_csrf.parameterName)!'csrf-param-name'}"
+                       value="${(_csrf.token)!'csrf-token'}">
+            </#if>
+
             <div class="mb-3">
                 <label class="form-label">Название вакансии</label>
                 <input type="text" name="name" class="form-control" value="${vacancy.name!''}" required>

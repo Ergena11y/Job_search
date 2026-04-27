@@ -63,7 +63,7 @@ public class ResumesController {
     public  String editF(@PathVariable int id, Model model){
         model.addAttribute("resume", resumeService.getById(id));
         model.addAttribute("id", id);
-        return "resume/edit";
+        return "resumes/edit_resume";
     }
 
 
@@ -71,7 +71,7 @@ public class ResumesController {
     public  String edit(@PathVariable int id, @Valid ResumeDto resumeDto, Model model ,BindingResult br){
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
-            return "resume/edit";
+            return "resumes/edit_resume";
         }
         resumeService.updateResumes(id, resumeDto);
         return "redirect:/resumes";

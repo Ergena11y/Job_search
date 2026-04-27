@@ -49,8 +49,9 @@ public class ResumeServiceImpl implements ResumeService {
         r.setUpdateTime(LocalDateTime.now());
 
         if (resumeDto.getCategoryId() != null) {
-            categoryRepository.findById(resumeDto.getCategoryId())
-                    .ifPresent(r::setCategory);
+            Category category = categoryRepository.findById(resumeDto.getCategoryId())
+                    .orElseThrow(() -> new IllegalArgumentException("Категория не найдена"));
+            r.setCategory(category);
         }
 
         if (resumeDto.getApplicantId() != null) {

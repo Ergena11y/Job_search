@@ -69,10 +69,10 @@ public class ProfileController {
     }
 
     @PostMapping("/update")
-    public String profileUpdate(Principal principal, @Valid UpdateProfileDto dto, @RequestParam(required = false)MultipartFile avatar) throws UserProfileNotFoundException, UserNotFoundException {
+    public String profileUpdate(Principal principal, @Valid UpdateProfileDto dto) throws UserProfileNotFoundException, UserNotFoundException {
 
         int userId = userService.getUserIdByEmail(principal.getName());
-        userService.updateUserProfile(userId, dto, avatar);
+        userService.updateUserProfile(userId, dto, dto.getAvatar());
         return "redirect:/profile";
     }
 }

@@ -2,7 +2,7 @@
 <@main.layout>
     <div class="container mt-4">
         <h2>Редактировать вакансию</h2>
-        <form action="/vacancies/update/${vacancy.id!''}" method="post">
+        <form action="/vacancies/edit/${vacancy.id!''}" method="post">
             <#if _csrf??>
                 <input type="hidden"
                        name="${(_csrf.parameterName)!'csrf-param-name'}"
@@ -16,6 +16,19 @@
             <div class="mb-3">
                 <label class="form-label">Описание</label>
                 <textarea name="description" class="form-control" rows="3" required>${vacancy.description!''}</textarea>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Категория <span class="text-danger">*</span></label>
+                <select name="categoryId" class="form-control" required>
+                    <option value="">-- Выберите категорию --</option>
+                    <#if categories??>
+                        <#list categories as category>
+                            <option value="${category.id}" <#if vacancy.categoryId?? && vacancy.categoryId == category.id>selected</#if>>
+                                ${category.name}
+                            </option>
+                        </#list>
+                    </#if>
+                </select>
             </div>
             <div class="mb-3">
                 <label class="form-label">Зарплата</label>

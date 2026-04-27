@@ -143,9 +143,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserProfileNotFoundException("Профиль не найден"));
 
-        user.setName(dto.getName());
-        user.setSurname(dto.getSurname());
-        user.setPhoneNumber(dto.getPhoneNumber());
+        if (dto.getName() != null && !dto.getName().isBlank()) {
+            user.setName(dto.getName());
+        }
+        if (dto.getSurname() != null && !dto.getSurname().isBlank()) {
+            user.setSurname(dto.getSurname());
+        }
+        if (dto.getPhoneNumber() != null) {
+            user.setPhoneNumber(dto.getPhoneNumber());
+        }
 
         if (avatar != null && !avatar.isEmpty()){
             try {

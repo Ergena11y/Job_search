@@ -24,7 +24,7 @@ public class VacanciesDto {
     @Size(min = 10, max = 150)
     private String description;
 
-    @NotNull
+
     private Integer categoryId;
 
     @NotNull
@@ -40,7 +40,7 @@ public class VacanciesDto {
 
     private Boolean isActive;
 
-    @NotNull
+
     private Integer authorId;
 
 

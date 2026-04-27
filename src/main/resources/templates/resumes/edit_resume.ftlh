@@ -2,7 +2,7 @@
 <@main.layout>
     <div class="container mt-4">
         <h2>Редактировать резюме</h2>
-        <form action="/resumes/update/${resume.id!''}" method="post">
+        <form action="/resumes/edit/${resume.id!''}" method="post">
             <#if _csrf??>
                 <input type="hidden"
                        name="${(_csrf.parameterName)!'csrf-param-name'}"
@@ -18,8 +18,17 @@
                 <input type="number" name="salary" class="form-control" value="${resume.salary!''}" required>
             </div>
             <div class="mb-3">
-                <label class="form-label">ID категории</label>
-                <input type="number" name="categoryId" class="form-control" value="${resume.categoryId!''}">
+                <label class="form-label">Категория <span class="text-danger">*</span></label>
+                <select name="categoryId" class="form-control" required>
+                    <option value="">-- Выберите категорию --</option>
+                    <#if categories??>
+                        <#list categories as category>
+                            <option value="${category.id}" <#if resume.categoryId?? && resume.categoryId == category.id>selected</#if>>
+                                ${category.name}
+                            </option>
+                        </#list>
+                    </#if>
+                </select>
             </div>
             <div class="form-check mb-3">
                 <input type="checkbox" name="isActive" value="true" class="form-check-input" <#if resume.isActive?? && resume.isActive>checked</#if>>

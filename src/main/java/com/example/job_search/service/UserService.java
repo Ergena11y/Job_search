@@ -20,7 +20,6 @@ public interface UserService extends UserDetailsService {
 
     List<UserDto> getAllUsers();
 
-
     UserDto  getById(int id) throws  UserNotFoundException;
 
     String  uploadAvatar(int id, MultipartFile file) throws AvatarImageNotFoundException;
@@ -38,7 +37,6 @@ public interface UserService extends UserDetailsService {
     UserDto findEmployer(String email) throws  UserNotFoundException;
 
     void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar) throws UserProfileNotFoundException;
-
 
     int getUserIdByEmail(String email) throws  UserNotFoundException;
 }

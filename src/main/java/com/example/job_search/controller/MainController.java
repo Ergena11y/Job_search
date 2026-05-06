@@ -4,6 +4,7 @@ import com.example.job_search.dto.VacanciesDto;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.service.UserService;
 import com.example.job_search.service.VacancyService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,7 @@ public class MainController {
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "date") String sortBy,
             Model model){
-        Page<VacanciesDto> vacancies = vacancyService.getAllVacancies(page, size, sortBy);
+        Page<@Valid VacanciesDto> vacancies = vacancyService.getAllVacancies(page, size, sortBy);
         model.addAttribute("vacancies", vacancies.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancies.getTotalPages());

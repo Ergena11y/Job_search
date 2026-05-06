@@ -30,7 +30,7 @@ public class ResumesController {
                           @RequestParam(defaultValue = "10") int size,
                           Principal principal,
                           Model model) {
-        Page<ResumeDto> resumePage = resumeService.getAllResumes(page, size);
+        Page<@Valid ResumeDto> resumePage = resumeService.getAllResumes(page, size);
         model.addAttribute("resumes", resumePage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", resumePage.getTotalPages());

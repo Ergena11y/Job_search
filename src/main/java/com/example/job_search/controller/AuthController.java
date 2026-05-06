@@ -2,7 +2,6 @@ package com.example.job_search.controller;
 
 
 import com.example.job_search.dto.UserDto;
-import com.example.job_search.exception.UserDataCreateException;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import jakarta.servlet.ServletException;
@@ -27,6 +26,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
+        model.addAttribute("userDto", new UserDto());
         model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
         return "auth/register";
     }
@@ -40,9 +40,10 @@ public class AuthController {
     public String register(@Valid UserDto userDto,
                            BindingResult bindingResult,
                            Model model,
-                           HttpServletRequest request) throws UserDataCreateException {
+                           HttpServletRequest request){
         if (bindingResult.hasErrors()) {
             model.addAttribute("userDto", userDto);
+            model.addAttribute("bindingRes", bindingResult);
             model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
             return "auth/register";
         }
@@ -60,13 +61,12 @@ public class AuthController {
         user.setAccountType(userDto.getAccountType() != null ? userDto.getAccountType() : "APPLICANT");
 
 
-        log.debug("User объект перед сохранением: {}", user);
-
         try{
             userService.register(user);
             log.info("Пользователь успешно зарегистрирован: {}", userDto.getEmail());
         }catch (Exception e){
             log.error("Ошибка при регистрации: {}", e.getMessage(), e);
+            model.addAttribute("userDto", userDto);
             model.addAttribute("error", "Ошибка регистрации: " + e.getMessage());
             return "auth/register";
         }
@@ -74,9 +74,7 @@ public class AuthController {
 
         try {
             request.login(userDto.getEmail(), userDto.getPassword());
-            log.info("Автологин успешен");
         } catch (ServletException e) {
-            e.printStackTrace();
             log.error("Ошибка автологина: {}", e.getMessage(), e);
         }
 

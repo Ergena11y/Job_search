@@ -30,7 +30,7 @@ public class VacanciesController {
                             @RequestParam(defaultValue = "date") String sortBy,
                             Principal principal,
                             Model model) {
-        Page<VacanciesDto> vacancyPage = vacancyService.getAllVacancies(page, size, sortBy);
+        Page<@Valid VacanciesDto> vacancyPage = vacancyService.getAllVacancies(page, size, sortBy);
         model.addAttribute("vacancies", vacancyPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancyPage.getTotalPages());

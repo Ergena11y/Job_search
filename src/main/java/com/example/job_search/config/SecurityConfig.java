@@ -42,10 +42,12 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vacancies").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
 
+                        .requestMatchers(HttpMethod.GET, "/companies").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/companies/**").permitAll()
+
                         // Резюме только после авторизации
                         .requestMatchers(HttpMethod.GET, "/resumes").authenticated()
                         .requestMatchers(HttpMethod.GET, "/resumes/**").authenticated()
-
                         .requestMatchers(HttpMethod.POST, "/resumes").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
@@ -63,6 +65,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/profile/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/profile").authenticated()
+
+                        .requestMatchers("/uploads/**").permitAll()
+                        .requestMatchers("/static/**").permitAll()
 
                         .requestMatchers("/auth/forgot-password", "/auth/reset-password").permitAll()
 

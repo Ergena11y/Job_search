@@ -1,102 +1,66 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
-    <section class=" text-center text-lg-start">
-
-        <style>
-
-            .rounded-t-5 {
-
-                border-top-left-radius: 0.5rem;
-
-                border-top-right-radius: 0.5rem;
-
-            }
-
-            @media (min-width: 992px) {
-
-                .rounded-tr-lg-0 {
-
-                    border-top-right-radius: 0;
-
-                }
-
-
-                .rounded-bl-lg-5 {
-
-                    border-bottom-left-radius: 0.5rem;
-
-                }
-
-            }
-
-        </style>
-
-        <div class="card m-3">
-
-            <div class="row g-0 d-flex align-items-center">
-
-                <div class="col-lg-4 d-none d-lg-flex">
-
-                    <img src="https://mdbootstrap.com/img/new/ecommerce/vertical/004.jpg" alt="Trendy Pants and Shoes"
-
-                         class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5"/>
-
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0">Вход в систему</h3>
                 </div>
-
-                <div class="col-lg-8">
-
-                    <div class="card-body py-5 px-md-5">
+                <div class="card-body p-4">
 
 
-                        <form id="login-form" action="/auth/login" method="post">
-                            <#if _csrf??>
-                                <input type="hidden"
-                                       name="${(_csrf.parameterName)!'csrf-param-name'}"
-                                       value="${(_csrf.token)!'csrf-token'}">
-                            </#if>
-
-                            <!-- Email input -->
-
-                            <div data-mdb-input-init class="form-outline mb-4">
-
-                                <input type="email" id="form2Example1" class="form-control" name="username"/>
-
-                                <label class="form-label" for="form2Example1">Email address</label>
-
-                            </div>
+                    <#if RequestParameters.error?? || errorMsg??>
+                        <div class="alert alert-danger" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                            Неверный email или пароль. Попробуйте ещё раз.
+                        </div>
+                    </#if>
 
 
-                            <!-- Password input -->
-
-                            <div data-mdb-input-init class="form-outline mb-4">
-
-                                <input type="password" id="form2Example2" class="form-control" name="password"/>
-
-                                <label class="form-label" for="form2Example2">Password</label>
-
-                            </div>
-
-                            <!-- Submit button -->
-
-                            <button type="submit" data-mdb-input-init data-mdb-ripple-init
-
-                                    class="btn btn-primary btn-block mb-4">Sign in
-
-                            </button>
-
-                            <div class="text-center mt-2">
-                                <a href="/auth/forgot-password">Забыли пароль?</a>
-                            </div>
-                        </form>
+                    <#if RequestParameters.logout??>
+                        <div class="alert alert-success" role="alert">
+                            <i class="bi bi-check-circle me-2"></i>
+                            Вы успешно вышли из системы.
+                        </div>
+                    </#if>
 
 
-                    </div>
+                    <#if RequestParameters.registered??>
+                        <div class="alert alert-info" role="alert">
+                            <i class="bi bi-info-circle me-2"></i>
+                            Вы успешно зарегистрировались! Пожалуйста, войдите.
+                        </div>
+                    </#if>
 
+                    <form action="/auth/login" method="post" novalidate>
+                        <#if _csrf??>
+                            <input type="hidden"
+                                   name="${(_csrf.parameterName)!'csrf'}"
+                                   value="${(_csrf.token)!''}">
+                        </#if>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Email</label>
+                            <input type="email" name="username" class="form-control"
+                                   placeholder="Введите email" required autofocus>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Пароль</label>
+                            <input type="password" name="password" class="form-control"
+                                   placeholder="Введите пароль" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mb-3">Войти</button>
+
+                        <div class="text-center">
+                            <a href="/auth/forgot-password" class="text-muted small">Забыли пароль?</a>
+                            <span class="text-muted small mx-2">|</span>
+                            <a href="/auth/register" class="small">Зарегистрироваться</a>
+                        </div>
+                    </form>
                 </div>
-
             </div>
-
         </div>
-
-    </section>
+    </div>
 </@main.layout>

@@ -51,9 +51,16 @@ public class VacanciesController {
     }
 
     @GetMapping("/create")
-    public String createForm(Model model) {
+    public String createForm(Model model, Principal principal) {
         model.addAttribute("vacancyDto", new VacanciesDto());
         model.addAttribute("categories", categoryRepository.findAll());
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        }
         return "vacancies/create_vacancies";
     }
 
@@ -62,7 +69,15 @@ public class VacanciesController {
                          Model model, Principal principal) throws UserNotFoundException {
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
+            model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
+            if (principal != null) {
+                try {
+                    model.addAttribute("user", userService.getByEmail(principal.getName()));
+                } catch (UserNotFoundException e) {
+                    model.addAttribute("user", null);
+                }
+            }
             return "vacancies/create_vacancies";
         }
         int userId = userService.getUserIdByEmail(principal.getName());
@@ -71,20 +86,36 @@ public class VacanciesController {
         return "redirect:/vacancies";
     }
 
-
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable int id, Model model) {
+    public String editForm(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("vacancyDto", vacancyService.getById(id));
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("id", id);
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        }
         return "vacancies/edit_vacancies";
     }
 
     @PostMapping("/edit/{id}")
-    public String edit(@PathVariable int id, @Valid VacanciesDto dto, BindingResult br, Model model) {
+    public String edit(@PathVariable int id, @Valid VacanciesDto dto,
+                       BindingResult br, Model model, Principal principal) {
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
+            model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
+            model.addAttribute("id", id);
+            if (principal != null) {
+                try {
+                    model.addAttribute("user", userService.getByEmail(principal.getName()));
+                } catch (UserNotFoundException e) {
+                    model.addAttribute("user", null);
+                }
+            }
             return "vacancies/edit_vacancies";
         }
         vacancyService.updateVacancy(id, dto);
@@ -97,10 +128,18 @@ public class VacanciesController {
         return "redirect:/vacancies";
     }
 
-
     @GetMapping("/{id}")
-    public  String getById(@PathVariable int id, Model model){
+    public String getById(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("vacancy", vacancyService.getById(id));
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        } else {
+            model.addAttribute("user", null);
+        }
         return "vacancies/vacancies_info";
     }
 }

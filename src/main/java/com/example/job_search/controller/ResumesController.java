@@ -1,7 +1,6 @@
 package com.example.job_search.controller;
 
 import com.example.job_search.dto.ResumeDto;
-import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.service.ResumeService;
@@ -50,9 +49,16 @@ public class ResumesController {
     }
 
     @GetMapping("create")
-    public String createF(Model model){
+    public String createForm(Model model, Principal principal) {
         model.addAttribute("resumeDto", new ResumeDto());
         model.addAttribute("categories", categoryRepository.findAll());
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        }
         return "resumes/create_resumes";
     }
 
@@ -61,7 +67,15 @@ public class ResumesController {
                          BindingResult br, Principal principal) throws UserNotFoundException {
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
+            if (principal != null) {
+                try {
+                    model.addAttribute("user", userService.getByEmail(principal.getName()));
+                } catch (UserNotFoundException e) {
+                    model.addAttribute("user", null);
+                }
+            }
             return "resumes/create_resumes";
         }
         int userId = userService.getUserIdByEmail(principal.getName());
@@ -70,20 +84,37 @@ public class ResumesController {
         return "redirect:/resumes";
     }
 
-
-
     @GetMapping("edit/{id}")
-    public  String editF(@PathVariable int id, Model model){
+    public String editForm(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("resume", resumeService.getById(id));
+        model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("id", id);
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        }
         return "resumes/edit_resume";
     }
 
-
     @PostMapping("edit/{id}")
-    public  String edit(@PathVariable int id, @Valid ResumeDto resumeDto, Model model ,BindingResult br){
+    public String edit(@PathVariable int id, @Valid ResumeDto resumeDto,
+                       BindingResult br, Model model, Principal principal) {
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
+            model.addAttribute("resume", resumeService.getById(id));
+            model.addAttribute("bindingRes", br);
+            model.addAttribute("categories", categoryRepository.findAll());
+            model.addAttribute("id", id);
+            if (principal != null) {
+                try {
+                    model.addAttribute("user", userService.getByEmail(principal.getName()));
+                } catch (UserNotFoundException e) {
+                    model.addAttribute("user", null);
+                }
+            }
             return "resumes/edit_resume";
         }
         resumeService.updateResumes(id, resumeDto);
@@ -91,15 +122,23 @@ public class ResumesController {
     }
 
     @DeleteMapping("delete/{id}")
-    public  String delete(@PathVariable int id) {
+    public String delete(@PathVariable int id) {
         resumeService.deleteResumes(id);
-        return  "redirect:/resumes";
+        return "redirect:/resumes";
     }
 
     @GetMapping("/{id}")
-    public  String getById(@PathVariable int id, Model model){
+    public String getById(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("resume", resumeService.getById(id));
+        if (principal != null) {
+            try {
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
+            } catch (UserNotFoundException e) {
+                model.addAttribute("user", null);
+            }
+        } else {
+            model.addAttribute("user", null);
+        }
         return "resumes/resumes_info";
     }
-
 }

@@ -1,55 +1,131 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
-        <h2>Редактировать вакансию</h2>
-        <form action="/vacancies/edit/${vacancy.id!''}" method="post">
-            <#if _csrf??>
-                <input type="hidden"
-                       name="${(_csrf.parameterName)!'csrf-param-name'}"
-                       value="${(_csrf.token)!'csrf-token'}">
-            </#if>
-
-            <div class="mb-3">
-                <label class="form-label">Название вакансии</label>
-                <input type="text" name="name" class="form-control" value="${vacancy.name!''}" required>
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h3 class="mb-0"><i class="bi bi-pencil-square me-2"></i>Редактировать вакансию</h3>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Описание</label>
-                <textarea name="description" class="form-control" rows="3" required>${vacancy.description!''}</textarea>
-            </div>
-            <div class="mb-3">
-                <label class="form-label">Категория <span class="text-danger">*</span></label>
-                <select name="categoryId" class="form-control" required>
-                    <option value="">-- Выберите категорию --</option>
-                    <#if categories??>
-                        <#list categories as category>
-                            <option value="${category.id}" <#if vacancy.categoryId?? && vacancy.categoryId == category.id>selected</#if>>
-                                ${category.name}
-                            </option>
-                        </#list>
+            <div class="card-body p-4">
+                <form action="/vacancies/edit/${vacancyDto.id!''}" method="post">
+                    <#if _csrf??>
+                        <input type="hidden"
+                               name="${(_csrf.parameterName)!'csrf-param-name'}"
+                               value="${(_csrf.token)!'csrf-token'}">
                     </#if>
-                </select>
+
+
+                    <#if bindingRes?? && bindingRes.hasErrors()>
+                        <div class="alert alert-danger">
+                            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+                            <ul class="mb-0 mt-2">
+                                <#list bindingRes.allErrors as err>
+                                    <li>${err.defaultMessage!''}</li>
+                                </#list>
+                            </ul>
+                        </div>
+                    </#if>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Название вакансии <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" name="name"
+                               class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
+                               value="${vacancyDto.name!''}" required>
+                        <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
+                            <#list bindingRes.getFieldErrors('name') as err>
+                                <div class="invalid-feedback">${err.defaultMessage}</div>
+                            </#list>
+                        </#if>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">
+                            Описание <span class="text-danger">*</span>
+                        </label>
+                        <textarea name="description" rows="5"
+                                  class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('description')>is-invalid</#if>"
+                                  required>${vacancyDto.description!''}</textarea>
+                        <#if bindingRes?? && bindingRes.hasFieldErrors('description')>
+                            <#list bindingRes.getFieldErrors('description') as err>
+                                <div class="invalid-feedback">${err.defaultMessage}</div>
+                            </#list>
+                        </#if>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">
+                                Категория <span class="text-danger">*</span>
+                            </label>
+                            <select name="categoryId" class="form-select" required>
+                                <option value=""><--- Выберите категорию ---></option>
+                                <#if categories??>
+                                    <#list categories as category>
+                                        <option value="${category.id}"
+                                                <#if vacancyDto.categoryId?? && vacancyDto.categoryId == category.id>selected</#if>>
+                                            ${category.name}
+                                        </option>
+                                    </#list>
+                                </#if>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">
+                                Зарплата <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input type="number" name="salary" step="0.01" min="0"
+                                       class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('salary')>is-invalid</#if>"
+                                       value="${vacancyDto.salary!''}" required>
+                                <span class="input-group-text">⃀</span>
+                                <#if bindingRes?? && bindingRes.hasFieldErrors('salary')>
+                                    <#list bindingRes.getFieldErrors('salary') as err>
+                                        <div class="invalid-feedback">${err.defaultMessage}</div>
+                                    </#list>
+                                </#if>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Опыт от (лет)</label>
+                            <input type="number" name="expFrom" min="0"
+                                   class="form-control"
+                                   value="${vacancyDto.expFrom!0}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Опыт до (лет)</label>
+                            <input type="number" name="expTo" min="0"
+                                   class="form-control"
+                                   value="${vacancyDto.expTo!5}" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" name="isActive" value="true"
+                                   class="form-check-input"
+                                   <#if vacancyDto.isActive?? && vacancyDto.isActive>checked</#if>
+                                   id="isActiveCheck">
+                            <label class="form-check-label" for="isActiveCheck">
+                                Опубликовать вакансию
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                        <a href="/vacancies" class="btn btn-light border">
+                            <i class="bi bi-x me-1"></i>Отмена
+                        </a>
+                        <button type="submit" class="btn btn-primary px-5">
+                            <i class="bi bi-check-lg me-1"></i>Сохранить изменения
+                        </button>
+                    </div>
+                </form>
             </div>
-            <div class="mb-3">
-                <label class="form-label">Зарплата</label>
-                <input type="number" name="salary" class="form-control" value="${vacancy.salary!''}" required>
-            </div>
-            <div class="row">
-                <div class="col mb-3">
-                    <label class="form-label">Опыт от (лет)</label>
-                    <input type="number" name="expFrom" class="form-control" value="${vacancy.expFrom!0}" required>
-                </div>
-                <div class="col mb-3">
-                    <label class="form-label">Опыт до (лет)</label>
-                    <input type="number" name="expTo" class="form-control" value="${vacancy.expTo!5}" required>
-                </div>
-            </div>
-            <div class="form-check mb-3">
-                <input type="checkbox" name="isActive" value="true" class="form-check-input" <#if vacancy.isActive?? && vacancy.isActive>checked</#if>>
-                <label class="form-check-label">Опубликовать</label>
-            </div>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-            <a href="/vacancies" class="btn btn-link">Отмена</a>
-        </form>
+        </div>
     </div>
 </@main.layout>

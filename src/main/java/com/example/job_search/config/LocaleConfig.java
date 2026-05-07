@@ -19,7 +19,7 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfig implements WebMvcConfigurer {
     @Bean
-    public LocaleResolver localResolver(){
+    public LocaleResolver localeResolver(){
         CookieLocaleResolver resolver = new CookieLocaleResolver("lang");
         resolver.setDefaultLocale(Locale.forLanguageTag("ru"));
         return resolver;

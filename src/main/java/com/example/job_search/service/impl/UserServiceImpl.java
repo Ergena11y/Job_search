@@ -10,6 +10,7 @@ import com.example.job_search.model.User;
 import com.example.job_search.repository.UserRepository;
 import com.example.job_search.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,6 +37,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+
+    @Value("${upload.avatar.path:uploads/avatars/}")
+    private String avatarUploadPath;
 
     @Override
     public UserDto register(User user) {
@@ -72,22 +76,23 @@ public class UserServiceImpl implements UserService {
     public String uploadAvatar(int id, MultipartFile file) throws AvatarImageNotFoundException {
         log.info("Загрузка аватара для пользователя id: {}", id );
 
-        String upload = "uploads/avatars/";
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path uploadPath = Paths.get(upload);
+        Path uploadPath = Paths.get(avatarUploadPath);
 
         try {
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
+                log.debug("Директория создана: {}", uploadPath.toAbsolutePath());
             }
-            file.transferTo(uploadPath.resolve(fileName).toFile());
+            Path filePath = uploadPath.resolve(fileName);
+            file.transferTo(filePath.toFile());
+            log.info("Аватар успешно загружен: {}", filePath.toAbsolutePath());
 
-
-            return upload + fileName;
+            return avatarUploadPath + fileName;
         } catch (IOException e) {
-            log.error("Ошибка загрузки аватара: {}", e.getMessage());
-            throw  new RuntimeException();
+            log.error("Ошибка загрузки аватара: {}", e.getMessage(), e);
+            throw new AvatarImageNotFoundException("Ошибка при загрузке аватара: " + e.getMessage());
         }
     }
 
@@ -155,7 +160,7 @@ public class UserServiceImpl implements UserService {
                 String avatarPath = uploadAvatar(userId, avatar);
                 user.setAvatar(avatarPath);
             } catch (AvatarImageNotFoundException e){
-                log.error("error avatar");
+                log.error("Ошибка при загрузке аватара: {}", e.getMessage());
                 throw new RuntimeException(e);
             }
         }

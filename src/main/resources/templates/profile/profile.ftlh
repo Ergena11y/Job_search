@@ -1,26 +1,42 @@
 <#import "../layout.ftlh" as main>
 <@main.layout>
-    <div class="row">
-        <#-- Информация о пользователе -->
+    <div class="row mt-4">
+
         <div class="col-md-4">
             <div class="card shadow-sm mb-4">
                 <div class="card-body text-center">
-                    <#if user.avatar??>
-                        <img src="/images/${user.avatar}" class="rounded-circle img-thumbnail mb-3"
-                             style="width: 150px; height: 150px; object-fit: cover;" alt="Avatar">
+
+
+                    <#if user.avatar?? && user.avatar != "">
+                        <img src="/${user.avatar}"
+                             class="rounded-circle img-thumbnail mb-3"
+                             style="width:150px;height:150px;object-fit:cover;" alt="Avatar">
                     <#else>
-                        <img src="/images/tony-stark-relief.jpg" class="rounded-circle img-thumbnail mb-3"
-                             style="width: 150px; height: 150px; object-fit: cover;" alt="Default Avatar">
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
+                             style="width:150px;height:150px;">
+                            <span class="text-white fw-bold" style="font-size:48px;">
+                                ${user.name?substring(0,1)?upper_case!'?'}
+                            </span>
+                        </div>
                     </#if>
-                    <h3 class="card-title">${user.name!''} ${user.surname!''}</h3>
-                    <p class="text-muted">${(user.accountType == "EMPLOYER")?string("Работодатель", "Соискатель")}</p>
-                    <ul class="list-group list-group-flush text-start">
-                        <li class="list-group-item"><strong>Email:</strong> ${user.email!''}</li>
-                        <li class="list-group-item"><strong>Телефон:</strong> ${user.phoneNumber!'Не указан'}</li>
+
+                    <h4 class="card-title mb-1">${user.name!''} ${user.surname!''}</h4>
+                    <span class="badge <#if user.accountType == 'EMPLOYER'>bg-warning text-dark<#else>bg-success</#if> mb-3">
+                        ${(user.accountType == "EMPLOYER")?string("Работодатель","Соискатель")}
+                    </span>
+
+                    <ul class="list-group list-group-flush text-start mb-3">
+                        <li class="list-group-item px-0">
+                            <i class="bi bi-envelope me-2 text-muted"></i>${user.email!''}
+                        </li>
+                        <li class="list-group-item px-0">
+                            <i class="bi bi-telephone me-2 text-muted"></i>${user.phoneNumber!'Не указан'}
+                        </li>
                     </ul>
-                    <div class="mt-3">
-                        <a href="/profile/edit" class="btn btn-outline-primary btn-sm w-100">Редактировать профиль</a>
-                    </div>
+
+                    <a href="/profile/edit" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="bi bi-pencil me-1"></i>Редактировать профиль
+                    </a>
                 </div>
             </div>
         </div>
@@ -28,116 +44,127 @@
 
         <div class="col-md-8">
 
-
             <#if user.accountType == "EMPLOYER">
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Мои вакансии</h4>
-                    <a href="/vacancies/create" class="btn btn-success btn-sm">Добавить вакансию</a>
+                    <a href="/vacancies/create" class="btn btn-success btn-sm">
+                        <i class="bi bi-plus-lg me-1"></i>Создать вакансию
+                    </a>
                 </div>
 
+
                 <#if vacancies?? && vacancies?has_content>
-                    <div class="list-group mb-4">
-                        <#list vacancies as v>
-                            <a href="/vacancies/${v.id!''}" class="list-group-item list-group-item-action shadow-sm mb-2">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1 text-primary">${v.name!'-'}</h5>
-                                    <small class="text-muted">Откликов: ${v.responseCount!0}</small>
+                    <#list vacancies as v>
+                        <div class="card shadow-sm mb-3 w-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title mb-1">
+                                            <a href="/vacancies/${v.id!''}" class="text-decoration-none text-dark">${v.name!'-'}</a>
+                                        </h5>
+                                        <p class="card-text text-muted small mb-2">
+                                            ${(v.description!'')?truncate(120)}
+                                        </p>
+                                    </div>
+                                    <span class="text-success fw-bold ms-3 text-nowrap">${v.salary!''} ⃀</span>
                                 </div>
-                                <p class="mb-1 text-truncate">${v.description!''}</p>
-                            </a>
-                        </#list>
-                    </div>
+                                <div class="d-flex gap-2">
+                                    <a href="/vacancies/${v.id!''}" class="btn btn-sm btn-outline-primary">Просмотр</a>
+                                    <a href="/vacancies/edit/${v.id!''}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                                </div>
+                            </div>
+                        </div>
+                    </#list>
 
                     <#if totalVacancyPages gt 1>
-                        <nav>
-                            <ul class="pagination pagination-sm justify-content-center">
+                        <nav><ul class="pagination pagination-sm justify-content-center">
                                 <#list 0..totalVacancyPages-1 as i>
-                                    <li class="page-item ${(i == currentVacancyPage)?string('active', '')}">
-                                        <a class="page-link" href="/profile?vacancyPage=${i}">${i + 1}</a>
+                                    <li class="page-item ${(i==currentVacancyPage)?string('active','')}">
+                                        <a class="page-link" href="/profile?vacancyPage=${i}">${i+1}</a>
                                     </li>
                                 </#list>
-                            </ul>
-                        </nav>
+                            </ul></nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-light border mb-4">У вас пока нет активных вакансий.</div>
+                    <div class="alert alert-light border mb-4">У вас пока нет вакансий.</div>
                 </#if>
 
                 <hr class="my-4">
 
-
                 <h4 class="mb-3">База резюме</h4>
                 <#if resumes?? && resumes?has_content>
-                    <div class="list-group">
-                        <#list resumes as r>
-                            <div class="list-group-item shadow-sm mb-2 border-start border-primary border-4">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">${r.name!'-'}</h5>
-                                    <span class="badge bg-success">${r.salary!''} ⃀</span>
+                    <#list resumes as r>
+                        <div class="card shadow-sm mb-3 w-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="card-title mb-1">${r.name!'-'}</h5>
+                                        <p class="card-text text-muted small mb-2">
+                                            <i class="bi bi-person me-1"></i>${r.applicantName!'Аноним'}
+                                        </p>
+                                    </div>
+                                    <span class="badge bg-success ms-3">${r.salary!''} ⃀</span>
                                 </div>
-                                <p class="mb-1 small"><strong>Соискатель:</strong> ${r.applicantName!'Аноним'}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">Обновлено: ${r.updateTime!''}</small>
-                                    <a href="/resumes/${r.id!''}" class="btn btn-link btn-sm p-0">Посмотреть подробнее</a>
-                                </div>
+                                <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary">Посмотреть резюме</a>
                             </div>
-                        </#list>
-                    </div>
-
+                        </div>
+                    </#list>
 
                     <#if totalResPage gt 1>
-                        <nav class="mt-3">
-                            <ul class="pagination pagination-sm justify-content-center">
+                        <nav><ul class="pagination pagination-sm justify-content-center">
                                 <#list 0..totalResPage-1 as i>
-                                    <li class="page-item ${(i == currentResumesPage)?string('active', '')}">
-                                        <a class="page-link" href="/profile?resumePage=${i}">${i + 1}</a>
+                                    <li class="page-item ${(i==currentResumesPage)?string('active','')}">
+                                        <a class="page-link" href="/profile?resumePage=${i}">${i+1}</a>
                                     </li>
                                 </#list>
-                            </ul>
-                        </nav>
+                            </ul></nav>
                     </#if>
                 <#else>
                     <div class="alert alert-info">В системе пока нет доступных резюме.</div>
                 </#if>
 
-            <#-- СЕКЦИЯ ДЛЯ СОИСКАТЕЛЯ -->
+
             <#else>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">Мои резюме</h4>
-                    <a href="/resumes/create" class="btn btn-success btn-sm">Создать резюме</a>
+                    <a href="/resumes/create" class="btn btn-success btn-sm">
+                        <i class="bi bi-plus-lg me-1"></i>Создать резюме
+                    </a>
                 </div>
 
+
                 <#if resumes?? && resumes?has_content>
-                    <div class="list-group">
-                        <#list resumes as r>
-                            <div class="list-group-item list-group-item-action shadow-sm mb-2">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">${r.name!'-'}</h5>
+                    <#list resumes as r>
+                        <div class="card shadow-sm mb-3 w-100">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title mb-1">${r.name!'-'}</h5>
                                     <span class="text-success fw-bold">${r.salary!''} ⃀</span>
                                 </div>
-                                <div class="mt-2">
-                                    <a href="/resumes/edit/${r.id!''}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                                <p class="text-muted small mb-2">
+                                    Обновлено: ${r.updateTime!''}
+                                </p>
+                                <div class="d-flex gap-2">
                                     <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary">Просмотр</a>
+                                    <a href="/resumes/edit/${r.id!''}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
                                 </div>
                             </div>
-                        </#list>
-                    </div>
-
+                        </div>
+                    </#list>
 
                     <#if totalResPage gt 1>
-                        <nav class="mt-3">
-                            <ul class="pagination pagination-sm justify-content-center">
+                        <nav><ul class="pagination pagination-sm justify-content-center">
                                 <#list 0..totalResPage-1 as i>
-                                    <li class="page-item ${(i == currentResumesPage)?string('active', '')}">
-                                        <a class="page-link" href="/profile?resumePage=${i}">${i + 1}</a>
+                                    <li class="page-item ${(i==currentResumesPage)?string('active','')}">
+                                        <a class="page-link" href="/profile?resumePage=${i}">${i+1}</a>
                                     </li>
                                 </#list>
-                            </ul>
-                        </nav>
+                            </ul></nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-light border">Вы еще не создали ни одного резюме.</div>
+                    <div class="alert alert-light border">Вы ещё не создали ни одного резюме.</div>
                 </#if>
             </#if>
 

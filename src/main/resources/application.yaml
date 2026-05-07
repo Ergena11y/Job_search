@@ -1,6 +1,9 @@
 server:
   port: 8090
 
+upload:
+  avatar:
+    path:  ${user.dir}/uploads/avatars/
 
 spring:
   config:

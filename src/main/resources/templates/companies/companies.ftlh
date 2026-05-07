@@ -1,9 +1,10 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Компании</h2>
-            <span class="text-muted small">Всего: ${totalItems!0} компаний</span>
+            <h2 class="mb-0"><@spring.message "company.title"/></h2>
+            <span class="text-muted small"><@spring.message "common.total"/>: ${totalItems!0} <@spring.message "company.total"/></span>
         </div>
 
         <#if companies?? && companies?has_content>
@@ -43,12 +44,12 @@
                                         <i class="bi bi-telephone me-1"></i>${company.phoneNumber}
                                     </#if>
                                 </p>
-                                <span class="badge bg-warning text-dark">Работодатель</span>
+                                <span class="badge bg-warning text-dark"><@spring.message "company.employer"/></span>
                             </div>
 
                             <div class="text-end">
                                 <a href="/companies/${company.id!''}" class="btn btn-sm btn-outline-primary">
-                                    <i class="bi bi-building me-1"></i>Профиль компании
+                                    <i class="bi bi-building me-1"></i><@spring.message "company.profile"/>
                                 </a>
                             </div>
                         </div>
@@ -61,10 +62,10 @@
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center">
                         <#if currentPage == 0>
-                            <li class="page-item disabled"><a class="page-link" href="#">Предыдущая</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.prev"/></a></li>
                         <#else>
                             <li class="page-item">
-                                <a class="page-link" href="/companies?page=${currentPage - 1}">Предыдущая</a>
+                                <a class="page-link" href="/companies?page=${currentPage - 1}"><@spring.message "page.prev"/></a>
                             </li>
                         </#if>
 
@@ -75,10 +76,10 @@
                         </#list>
 
                         <#if currentPage == totalPages - 1>
-                            <li class="page-item disabled"><a class="page-link" href="#">Следующая</a></li>
+                            <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.next"/></a></li>
                         <#else>
                             <li class="page-item">
-                                <a class="page-link" href="/companies?page=${currentPage + 1}">Следующая</a>
+                                <a class="page-link" href="/companies?page=${currentPage + 1}"><@spring.message "page.next"/></a>
                             </li>
                         </#if>
                     </ul>

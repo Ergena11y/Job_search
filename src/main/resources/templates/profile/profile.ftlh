@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="row mt-4">
@@ -5,7 +6,6 @@
         <div class="col-md-4">
             <div class="card shadow-sm mb-4">
                 <div class="card-body text-center">
-
 
                     <#if user.avatar?? && user.avatar != "">
                         <img src="/${user.avatar}"
@@ -22,7 +22,7 @@
 
                     <h4 class="card-title mb-1">${user.name!''} ${user.surname!''}</h4>
                     <span class="badge <#if user.accountType == 'EMPLOYER'>bg-warning text-dark<#else>bg-success</#if> mb-3">
-                        ${(user.accountType == "EMPLOYER")?string("Работодатель","Соискатель")}
+                        ${(user.accountType == "EMPLOYER")?string("<@spring.message 'profile.employer'/>","<@spring.message 'profile.applicant'/>")}
                     </span>
 
                     <ul class="list-group list-group-flush text-start mb-3">
@@ -30,30 +30,27 @@
                             <i class="bi bi-envelope me-2 text-muted"></i>${user.email!''}
                         </li>
                         <li class="list-group-item px-0">
-                            <i class="bi bi-telephone me-2 text-muted"></i>${user.phoneNumber!'Не указан'}
+                            <i class="bi bi-telephone me-2 text-muted"></i>${user.phoneNumber!'<@spring.message "profile.phone.not.specified"/>'}
                         </li>
                     </ul>
 
                     <a href="/profile/edit" class="btn btn-outline-primary btn-sm w-100">
-                        <i class="bi bi-pencil me-1"></i>Редактировать профиль
+                        <i class="bi bi-pencil me-1"></i><@spring.message "profile.edit"/>
                     </a>
                 </div>
             </div>
         </div>
 
-
         <div class="col-md-8">
 
             <#if user.accountType == "EMPLOYER">
 
-
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">Мои вакансии</h4>
+                    <h4 class="mb-0"><@spring.message "profile.my.vacancies"/></h4>
                     <a href="/vacancies/create" class="btn btn-success btn-sm">
-                        <i class="bi bi-plus-lg me-1"></i>Создать вакансию
+                        <i class="bi bi-plus-lg me-1"></i><@spring.message "vacancy.create"/>
                     </a>
                 </div>
-
 
                 <#if vacancies?? && vacancies?has_content>
                     <#list vacancies as v>
@@ -71,8 +68,8 @@
                                     <span class="text-success fw-bold ms-3 text-nowrap">${v.salary!''} ⃀</span>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="/vacancies/${v.id!''}" class="btn btn-sm btn-outline-primary">Просмотр</a>
-                                    <a href="/vacancies/edit/${v.id!''}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                                    <a href="/vacancies/${v.id!''}" class="btn btn-sm btn-outline-primary"><@spring.message "profile.view"/></a>
+                                    <a href="/vacancies/edit/${v.id!''}" class="btn btn-sm btn-outline-secondary"><@spring.message "vacancy.edit"/></a>
                                 </div>
                             </div>
                         </div>
@@ -88,12 +85,12 @@
                             </ul></nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-light border mb-4">У вас пока нет вакансий.</div>
+                    <div class="alert alert-light border mb-4"><@spring.message "profile.no.vacancies"/></div>
                 </#if>
 
                 <hr class="my-4">
 
-                <h4 class="mb-3">База резюме</h4>
+                <h4 class="mb-3"><@spring.message "profile.resume.base"/></h4>
                 <#if resumes?? && resumes?has_content>
                     <#list resumes as r>
                         <div class="card shadow-sm mb-3 w-100">
@@ -102,12 +99,12 @@
                                     <div>
                                         <h5 class="card-title mb-1">${r.name!'-'}</h5>
                                         <p class="card-text text-muted small mb-2">
-                                            <i class="bi bi-person me-1"></i>${r.applicantName!'Аноним'}
+                                            <i class="bi bi-person me-1"></i>${r.applicantName!'<@spring.message "common.anonymous"/>'}
                                         </p>
                                     </div>
                                     <span class="badge bg-success ms-3">${r.salary!''} ⃀</span>
                                 </div>
-                                <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary">Посмотреть резюме</a>
+                                <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary"><@spring.message "profile.see.resume"/></a>
                             </div>
                         </div>
                     </#list>
@@ -122,18 +119,16 @@
                             </ul></nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-info">В системе пока нет доступных резюме.</div>
+                    <div class="alert alert-info"><@spring.message "profile.no.resumes.system"/></div>
                 </#if>
-
 
             <#else>
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="mb-0">Мои резюме</h4>
+                    <h4 class="mb-0"><@spring.message "profile.my.resumes"/></h4>
                     <a href="/resumes/create" class="btn btn-success btn-sm">
-                        <i class="bi bi-plus-lg me-1"></i>Создать резюме
+                        <i class="bi bi-plus-lg me-1"></i><@spring.message "resume.create"/>
                     </a>
                 </div>
-
 
                 <#if resumes?? && resumes?has_content>
                     <#list resumes as r>
@@ -144,11 +139,11 @@
                                     <span class="text-success fw-bold">${r.salary!''} ⃀</span>
                                 </div>
                                 <p class="text-muted small mb-2">
-                                    Обновлено: ${r.updateTime!''}
+                                    <@spring.message "resume.updated"/>: ${r.updateTime!''}
                                 </p>
                                 <div class="d-flex gap-2">
-                                    <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary">Просмотр</a>
-                                    <a href="/resumes/edit/${r.id!''}" class="btn btn-sm btn-outline-secondary">Редактировать</a>
+                                    <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary"><@spring.message "profile.view"/></a>
+                                    <a href="/resumes/edit/${r.id!''}" class="btn btn-sm btn-outline-secondary"><@spring.message "resume.edit"/></a>
                                 </div>
                             </div>
                         </div>
@@ -164,7 +159,7 @@
                             </ul></nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-light border">Вы ещё не создали ни одного резюме.</div>
+                    <div class="alert alert-light border"><@spring.message "profile.no.resumes"/></div>
                 </#if>
             </#if>
 

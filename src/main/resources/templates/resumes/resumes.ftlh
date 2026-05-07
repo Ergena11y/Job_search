@@ -1,15 +1,15 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Резюме соискателей</h2>
+            <h2 class="mb-0"><@spring.message "resume.title"/></h2>
             <#if user?? && user.accountType == "APPLICANT">
                 <a href="/resumes/create" class="btn btn-success">
-                    <i class="bi bi-plus-lg me-1"></i>Создать резюме
+                    <i class="bi bi-plus-lg me-1"></i><@spring.message "resume.create"/>
                 </a>
             </#if>
         </div>
-
 
         <#if error??>
             <div class="alert alert-danger">${error}</div>
@@ -28,9 +28,9 @@
                                     </a>
                                 </h5>
                                 <p class="text-muted small mb-2">
-                                    <i class="bi bi-person me-1"></i>${resume.applicantName!'Аноним'}
+                                    <i class="bi bi-person me-1"></i>${resume.applicantName!'<@spring.message "common.anonymous"/>'}
                                     <span class="mx-2">·</span>
-                                    <i class="bi bi-clock me-1"></i>Обновлено: ${resume.updateTime!''}
+                                    <i class="bi bi-clock me-1"></i><@spring.message "resume.updated"/>: ${resume.updateTime!''}
                                 </p>
                             </div>
                             <div class="text-end ms-3">
@@ -40,11 +40,11 @@
 
                         <div class="d-flex gap-2 mt-2">
                             <a href="/resumes/${resume.id!''}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye me-1"></i>Подробнее
+                                <i class="bi bi-eye me-1"></i><@spring.message "resume.detail"/>
                             </a>
                             <#if user?? && user.accountType == "APPLICANT">
                                 <a href="/resumes/edit/${resume.id!''}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-pencil me-1"></i>Редактировать
+                                    <i class="bi bi-pencil me-1"></i><@spring.message "resume.edit"/>
                                 </a>
                             </#if>
                         </div>
@@ -55,9 +55,9 @@
             <nav aria-label="Page navigation" class="mt-4">
                 <ul class="pagination justify-content-center">
                     <#if currentPage == 0>
-                        <li class="page-item disabled"><a class="page-link" href="#">Предыдущая</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.prev"/></a></li>
                     <#else>
-                        <li class="page-item"><a class="page-link" href="/resumes?page=${currentPage - 1}">Предыдущая</a></li>
+                        <li class="page-item"><a class="page-link" href="/resumes?page=${currentPage - 1}"><@spring.message "page.prev"/></a></li>
                     </#if>
 
                     <#list 0..totalPages - 1 as p>
@@ -67,15 +67,14 @@
                     </#list>
 
                     <#if currentPage == totalPages - 1>
-                        <li class="page-item disabled"><a class="page-link" href="#">Следующая</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.next"/></a></li>
                     <#else>
-                        <li class="page-item"><a class="page-link" href="/resumes?page=${currentPage + 1}">Следующая</a></li>
+                        <li class="page-item"><a class="page-link" href="/resumes?page=${currentPage + 1}"><@spring.message "page.next"/></a></li>
                     </#if>
                 </ul>
             </nav>
         <#else>
-            <div class="alert alert-info">Резюме не найдены</div>
+            <div class="alert alert-info"><@spring.message "resume.not.found"/></div>
         </#if>
     </div>
 </@main.layout>
-

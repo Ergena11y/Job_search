@@ -1,3 +1,4 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
@@ -19,7 +20,7 @@
                         </#if>
 
                         <h4 class="mb-1">${company.name!''} ${company.surname!''}</h4>
-                        <span class="badge bg-warning text-dark mb-3">Работодатель</span>
+                        <span class="badge bg-warning text-dark mb-3"><@spring.message "company.employer"/></span>
 
                         <ul class="list-group list-group-flush text-start">
                             <li class="list-group-item px-0">
@@ -41,7 +42,7 @@
             <div class="col-md-8">
                 <div class="card shadow-sm">
                     <div class="card-header bg-light">
-                        <h5 class="mb-0">Вакансии компании</h5>
+                        <h5 class="mb-0"><@spring.message "company.vacancies.block"/></h5>
                     </div>
                     <div class="card-body">
                         <div class="alert alert-info mb-0">

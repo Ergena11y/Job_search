@@ -1,13 +1,13 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card mt-5 shadow-sm">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="mb-0 text-center">Регистрация</h3>
+                    <h3 class="mb-0 text-center"><@spring.message "auth.register.title"/></h3>
                 </div>
                 <div class="card-body p-4">
-
 
                     <#if error??>
                         <div class="alert alert-danger">${error}</div>
@@ -21,7 +21,7 @@
                         </#if>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Имя <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.name"/> <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
                                    value="${userDto.name!''}" required>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('name')>
@@ -32,7 +32,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Фамилия <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.surname"/> <span class="text-danger">*</span></label>
                             <input type="text" name="surname" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('surname')>is-invalid</#if>"
                                    value="${userDto.surname!''}" required>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('surname')>
@@ -43,7 +43,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Возраст <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.age"/> <span class="text-danger">*</span></label>
                             <input type="number" name="age" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('age')>is-invalid</#if>"
                                    value="${userDto.age!''}" required>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('age')>
@@ -54,13 +54,13 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Номер телефона</label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.phone"/></label>
                             <input type="text" name="phoneNumber" class="form-control"
                                    value="${userDto.phoneNumber!''}">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.email"/> <span class="text-danger">*</span></label>
                             <input type="email" name="email" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('email')>is-invalid</#if>"
                                    value="${userDto.email!''}" required>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('email')>
@@ -71,10 +71,10 @@
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Пароль <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.password"/> <span class="text-danger">*</span></label>
                             <input type="password" name="password" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('password')>is-invalid</#if>"
                                    required>
-                            <div class="form-text text-muted">Минимум 4 символа, строчные и заглавные буквы, цифра</div>
+                            <div class="form-text text-muted"><@spring.message "auth.register.password.hint"/></div>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('password')>
                                 <#list bindingRes.getFieldErrors('password') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -83,16 +83,16 @@
                         </div>
 
                         <div class="mb-4">
-                            <label class="form-label fw-semibold">Тип аккаунта <span class="text-danger">*</span></label>
+                            <label class="form-label fw-semibold"><@spring.message "auth.register.account.type"/> <span class="text-danger">*</span></label>
                             <select name="accountType" class="form-select" required>
-                                <option value="APPLICANT" <#if (userDto.accountType!'') == 'APPLICANT'>selected</#if>>Соискатель</option>
-                                <option value="EMPLOYER" <#if (userDto.accountType!'') == 'EMPLOYER'>selected</#if>>Работодатель</option>
+                                <option value="APPLICANT" <#if (userDto.accountType!'') == 'APPLICANT'>selected</#if>><@spring.message "auth.register.account.applicant"/></option>
+                                <option value="EMPLOYER" <#if (userDto.accountType!'') == 'EMPLOYER'>selected</#if>><@spring.message "auth.register.account.employer"/></option>
                             </select>
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100 mb-2">Зарегистрироваться</button>
+                        <button type="submit" class="btn btn-primary w-100 mb-2"><@spring.message "auth.register.submit"/></button>
                         <div class="text-center">
-                            <a href="/auth/login" class="btn btn-link">Уже есть аккаунт? Войти</a>
+                            <a href="/auth/login" class="btn btn-link"><@spring.message "auth.register.have.account"/></a>
                         </div>
                     </form>
                 </div>

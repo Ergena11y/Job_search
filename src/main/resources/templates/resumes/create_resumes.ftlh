@@ -1,9 +1,10 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0"><i class="bi bi-file-earmark-person me-2"></i>Создать резюме</h3>
+                <h3 class="mb-0"><i class="bi bi-file-earmark-person me-2"></i><@spring.message "resume.create.title"/></h3>
             </div>
             <div class="card-body p-4">
                 <form action="/resumes/create" method="post">
@@ -13,10 +14,10 @@
                                value="${(_csrf.token)!'csrf-token'}">
                     </#if>
 
-
                     <#if bindingRes?? && bindingRes.hasErrors()>
                         <div class="alert alert-danger">
-                            <ul class="mb-0">
+                            <strong><@spring.message "common.errors"/></strong>
+                            <ul class="mb-0 mt-2">
                                 <#list bindingRes.allErrors as err>
                                     <li>${err.defaultMessage!''}</li>
                                 </#list>
@@ -27,17 +28,17 @@
                     <#-- 1. Основная информация -->
                     <section class="mb-4">
                         <h5 class="text-primary border-bottom pb-2 mb-3">
-                            <i class="bi bi-person-badge me-1"></i>Основная информация
+                            <i class="bi bi-person-badge me-1"></i><@spring.message "resume.section.basic"/>
                         </h5>
 
                         <div class="mb-3">
                             <label class="form-label fw-bold">
-                                Название должности <span class="text-danger">*</span>
+                                <@spring.message "resume.name"/> <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="name"
                                    class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
                                    value="${resumeDto.name!''}"
-                                   placeholder="Например: Java Developer" required>
+                                   placeholder="<@spring.message "resume.name.placeholder"/>" required>
                             <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
                                 <#list bindingRes.getFieldErrors('name') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -47,7 +48,7 @@
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Ожидаемая зарплата</label>
+                                <label class="form-label fw-bold"><@spring.message "resume.salary"/></label>
                                 <div class="input-group">
                                     <input type="number" step="0.01" name="salary"
                                            class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('salary')>is-invalid</#if>"
@@ -63,12 +64,12 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-bold">
-                                    Категория <span class="text-danger">*</span>
+                                    <@spring.message "resume.category"/> <span class="text-danger">*</span>
                                 </label>
                                 <select name="categoryId"
                                         class="form-select <#if bindingRes?? && bindingRes.hasFieldErrors('categoryId')>is-invalid</#if>"
                                         required>
-                                    <option value=""><---| Выберите категорию |---></option>
+                                    <option value=""><@spring.message "resume.category.select"/></option>
                                     <#if categories??>
                                         <#list categories as category>
                                             <option value="${category.id}"
@@ -91,7 +92,7 @@
                                 <input type="checkbox" name="isActive" value="true"
                                        class="form-check-input" checked id="isActiveCheck">
                                 <label class="form-check-label" for="isActiveCheck">
-                                    Опубликовать резюме
+                                    <@spring.message "resume.publish"/>
                                 </label>
                             </div>
                         </div>
@@ -100,69 +101,69 @@
                     <#-- 2. Опыт работы -->
                     <section class="mb-4">
                         <h5 class="text-primary border-bottom pb-2 mb-3">
-                            <i class="bi bi-briefcase me-1"></i>Опыт работы
+                            <i class="bi bi-briefcase me-1"></i><@spring.message "resume.section.experience"/>
                         </h5>
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Количество лет</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.exp.years"/></label>
                                 <input type="number" name="workYears" class="form-control"
-                                       placeholder="Например: 3" min="0">
+                                       placeholder="<@spring.message "resume.exp.years.placeholder"/>" min="0">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Название компании</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.exp.company"/></label>
                                 <input type="text" name="companyName" class="form-control"
-                                       placeholder="Название компании">
+                                       placeholder="<@spring.message "resume.exp.company"/>">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Должность</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.exp.position"/></label>
                                 <input type="text" name="position" class="form-control"
-                                       placeholder="Ваша должность">
+                                       placeholder="<@spring.message "resume.exp.position"/>">
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label small text-muted">Обязанности и достижения</label>
+                            <label class="form-label small text-muted"><@spring.message "resume.exp.responsibilities"/></label>
                             <textarea name="responsibilities" class="form-control" rows="4"
-                                      placeholder="Опишите ваши обязанности и ключевые достижения..."></textarea>
+                                      placeholder="<@spring.message "resume.exp.responsibilities.placeholder"/>"></textarea>
                         </div>
                     </section>
 
                     <#-- 3. Образование -->
                     <section class="mb-4">
                         <h5 class="text-primary border-bottom pb-2 mb-3">
-                            <i class="bi bi-mortarboard me-1"></i>Образование
+                            <i class="bi bi-mortarboard me-1"></i><@spring.message "resume.section.education"/>
                         </h5>
 
                         <div class="row g-3 mb-3">
                             <div class="col-md-6">
-                                <label class="form-label small text-muted">Учебное заведение</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.edu.institution"/></label>
                                 <input type="text" name="institution" class="form-control"
-                                       placeholder="Название университета / колледжа">
+                                       placeholder="<@spring.message "resume.edu.institution"/>">
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small text-muted">Специальность / программа</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.edu.program"/></label>
                                 <input type="text" name="program" class="form-control"
-                                       placeholder="Например: Информационные технологии">
+                                       placeholder="<@spring.message "resume.edu.program"/>">
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Дата начала</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.edu.start"/></label>
                                 <input type="date" name="eduStartDate" class="form-control">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Дата окончания</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.edu.end"/></label>
                                 <input type="date" name="eduEndDate" class="form-control">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label small text-muted">Степень</label>
+                                <label class="form-label small text-muted"><@spring.message "resume.edu.degree"/></label>
                                 <select name="degree" class="form-select">
-                                    <option value=""><---| Степень |---></option>
-                                    <option value="Бакалавр">Бакалавр</option>
-                                    <option value="Магистр">Магистр</option>
-                                    <option value="Специалист">Специалист</option>
-                                    <option value="Доктор">Доктор</option>
-                                    <option value="Среднее специальное">Среднее специальное</option>
+                                    <option value=""><@spring.message "resume.edu.degree.select"/></option>
+                                    <option value="Бакалавр"><@spring.message "resume.edu.degree.bachelor"/></option>
+                                    <option value="Магистр"><@spring.message "resume.edu.degree.master"/></option>
+                                    <option value="Специалист"><@spring.message "resume.edu.degree.specialist"/></option>
+                                    <option value="Доктор"><@spring.message "resume.edu.degree.doctor"/></option>
+                                    <option value="Среднее специальное"><@spring.message "resume.edu.degree.secondary"/></option>
                                 </select>
                             </div>
                         </div>
@@ -171,10 +172,10 @@
                     <#-- Кнопки -->
                     <div class="d-flex justify-content-end gap-2 border-top pt-3">
                         <a href="/profile" class="btn btn-light border">
-                            <i class="bi bi-x me-1"></i>Отмена
+                            <i class="bi bi-x me-1"></i><@spring.message "resume.cancel"/>
                         </a>
                         <button type="submit" class="btn btn-primary px-5">
-                            <i class="bi bi-check-lg me-1"></i>Опубликовать резюме
+                            <i class="bi bi-check-lg me-1"></i><@spring.message "resume.save"/>
                         </button>
                     </div>
                 </form>

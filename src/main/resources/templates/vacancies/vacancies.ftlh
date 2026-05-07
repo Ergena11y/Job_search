@@ -1,27 +1,27 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2 class="mb-0">Вакансии</h2>
+            <h2 class="mb-0"><@spring.message "vacancy.title"/></h2>
             <#if user?? && user.accountType == "EMPLOYER">
                 <a href="/vacancies/create" class="btn btn-success">
-                    <i class="bi bi-plus-lg me-1"></i>Создать вакансию
+                    <i class="bi bi-plus-lg me-1"></i><@spring.message "vacancy.create"/>
                 </a>
             </#if>
         </div>
 
-
         <form method="get" class="card bg-light border-0 p-3 mb-4">
             <div class="row align-items-end g-2">
                 <div class="col-md-4">
-                    <label class="form-label small fw-bold mb-1">Сортировка</label>
+                    <label class="form-label small fw-bold mb-1"><@spring.message "vacancy.sort"/></label>
                     <select name="sortBy" class="form-select">
-                        <option value="date" <#if sortBy == "date">selected</#if>>По дате публикации</option>
-                        <option value="responses" <#if sortBy == "responses">selected</#if>>По числу откликов</option>
+                        <option value="date" <#if sortBy == "date">selected</#if>><@spring.message "vacancy.sort.date"/></option>
+                        <option value="responses" <#if sortBy == "responses">selected</#if>><@spring.message "vacancy.sort.responses"/></option>
                     </select>
                 </div>
                 <div class="col-md-2">
-                    <button type="submit" class="btn btn-primary w-100">Применить</button>
+                    <button type="submit" class="btn btn-primary w-100"><@spring.message "vacancy.sort.apply"/></button>
                 </div>
             </div>
         </form>
@@ -43,7 +43,7 @@
                                 </p>
                                 <p class="mb-0 small">
                                     <span class="badge bg-light text-dark border me-2">
-                                        <i class="bi bi-briefcase me-1"></i>Опыт: ${vacancy.expFrom!0} – ${vacancy.expTo!0} лет
+                                        <i class="bi bi-briefcase me-1"></i><@spring.message "vacancy.experience"/>: ${vacancy.expFrom!0} – ${vacancy.expTo!0} <@spring.message "vacancy.experience.years"/>
                                     </span>
                                     <span class="text-muted">
                                         <i class="bi bi-calendar3 me-1"></i>${vacancy.createdDate!''}
@@ -57,11 +57,11 @@
 
                         <div class="d-flex gap-2 mt-3">
                             <a href="/vacancies/${vacancy.id!''}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-eye me-1"></i>Подробнее
+                                <i class="bi bi-eye me-1"></i><@spring.message "vacancy.detail"/>
                             </a>
                             <#if user?? && user.accountType == "EMPLOYER">
                                 <a href="/vacancies/edit/${vacancy.id!''}" class="btn btn-sm btn-outline-secondary">
-                                    <i class="bi bi-pencil me-1"></i>Редактировать
+                                    <i class="bi bi-pencil me-1"></i><@spring.message "vacancy.edit"/>
                                 </a>
                             </#if>
                         </div>
@@ -72,9 +72,9 @@
             <nav aria-label="Page navigation" class="mt-4">
                 <ul class="pagination justify-content-center">
                     <#if currentPage == 0>
-                        <li class="page-item disabled"><a class="page-link" href="#">Предыдущая</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.prev"/></a></li>
                     <#else>
-                        <li class="page-item"><a class="page-link" href="/vacancies?page=${currentPage - 1}&sortBy=${sortBy}">Предыдущая</a></li>
+                        <li class="page-item"><a class="page-link" href="/vacancies?page=${currentPage - 1}&sortBy=${sortBy}"><@spring.message "page.prev"/></a></li>
                     </#if>
 
                     <#list 0..totalPages - 1 as p>
@@ -84,14 +84,14 @@
                     </#list>
 
                     <#if currentPage == totalPages - 1>
-                        <li class="page-item disabled"><a class="page-link" href="#">Следующая</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.next"/></a></li>
                     <#else>
-                        <li class="page-item"><a class="page-link" href="/vacancies?page=${currentPage + 1}&sortBy=${sortBy}">Следующая</a></li>
+                        <li class="page-item"><a class="page-link" href="/vacancies?page=${currentPage + 1}&sortBy=${sortBy}"><@spring.message "page.next"/></a></li>
                     </#if>
                 </ul>
             </nav>
         <#else>
-            <div class="alert alert-info">Вакансии не найдены</div>
+            <div class="alert alert-info"><@spring.message "vacancy.not.found"/></div>
         </#if>
     </div>
 </@main.layout>

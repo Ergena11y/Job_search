@@ -1,9 +1,10 @@
+<#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
     <div class="container mt-4">
         <div class="card shadow-sm">
             <div class="card-header bg-primary text-white">
-                <h3 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Создать вакансию</h3>
+                <h3 class="mb-0"><i class="bi bi-plus-circle me-2"></i><@spring.message "vacancy.create.title"/></h3>
             </div>
             <div class="card-body p-4">
                 <form action="/vacancies/create" method="post">
@@ -13,10 +14,9 @@
                                value="${(_csrf.token)!'csrf-token'}">
                     </#if>
 
-
                     <#if bindingRes?? && bindingRes.hasErrors()>
                         <div class="alert alert-danger">
-                            <strong>Пожалуйста, исправьте следующие ошибки:</strong>
+                            <strong><@spring.message "common.errors"/></strong>
                             <ul class="mb-0 mt-2">
                                 <#list bindingRes.allErrors as err>
                                     <li>${err.defaultMessage!''}</li>
@@ -27,42 +27,42 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">
-                            Название вакансии <span class="text-danger">*</span>
+                            <@spring.message "vacancy.name"/> <span class="text-danger">*</span>
                         </label>
                         <input type="text" name="name"
                                class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
                                value="${vacancyDto.name!''}"
-                               placeholder="Например: Senior Java Developer" required>
+                               placeholder="<@spring.message 'vacancy.name'/>" required>
                         <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
                             <#list bindingRes.getFieldErrors('name') as err>
                                 <div class="invalid-feedback">${err.defaultMessage}</div>
                             </#list>
                         </#if>
-                        <div class="form-text">От 6 до 40 символов</div>
+                        <div class="form-text"><@spring.message "vacancy.name.hint"/></div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label fw-bold">
-                            Описание <span class="text-danger">*</span>
+                            <@spring.message "vacancy.description"/> <span class="text-danger">*</span>
                         </label>
                         <textarea name="description" rows="5"
                                   class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('description')>is-invalid</#if>"
-                                  placeholder="Подробное описание вакансии, требования, условия..." required>${vacancyDto.description!''}</textarea>
+                                  placeholder="<@spring.message 'vacancy.description'/>" required>${vacancyDto.description!''}</textarea>
                         <#if bindingRes?? && bindingRes.hasFieldErrors('description')>
                             <#list bindingRes.getFieldErrors('description') as err>
                                 <div class="invalid-feedback">${err.defaultMessage}</div>
                             </#list>
                         </#if>
-                        <div class="form-text">От 10 до 150 символов</div>
+                        <div class="form-text"><@spring.message "vacancy.description.hint"/></div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">
-                                Категория <span class="text-danger">*</span>
+                                <@spring.message "vacancy.category"/> <span class="text-danger">*</span>
                             </label>
                             <select name="categoryId" class="form-select" required>
-                                <option value=""><---| Выберите категорию |---></option>
+                                <option value=""><@spring.message "vacancy.category.select"/></option>
                                 <#if categories??>
                                     <#list categories as category>
                                         <option value="${category.id}"
@@ -76,7 +76,7 @@
 
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">
-                                Зарплата <span class="text-danger">*</span>
+                                <@spring.message "vacancy.salary"/> <span class="text-danger">*</span>
                             </label>
                             <div class="input-group">
                                 <input type="number" name="salary" step="0.01" min="0"
@@ -95,7 +95,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">
-                                Опыт от (лет) <span class="text-danger">*</span>
+                                <@spring.message "vacancy.exp.from"/> <span class="text-danger">*</span>
                             </label>
                             <input type="number" name="expFrom" min="0"
                                    class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('expFrom')>is-invalid</#if>"
@@ -108,7 +108,7 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">
-                                Опыт до (лет) <span class="text-danger">*</span>
+                                <@spring.message "vacancy.exp.to"/> <span class="text-danger">*</span>
                             </label>
                             <input type="number" name="expTo" min="0"
                                    class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('expTo')>is-invalid</#if>"
@@ -126,17 +126,17 @@
                             <input type="checkbox" name="isActive" value="true"
                                    class="form-check-input" checked id="isActiveCheck">
                             <label class="form-check-label" for="isActiveCheck">
-                                Опубликовать вакансию
+                                <@spring.message "vacancy.publish"/>
                             </label>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 border-top pt-3">
                         <a href="/vacancies" class="btn btn-light border">
-                            <i class="bi bi-x me-1"></i>Отмена
+                            <i class="bi bi-x me-1"></i><@spring.message "vacancy.cancel"/>
                         </a>
                         <button type="submit" class="btn btn-primary px-5">
-                            <i class="bi bi-check-lg me-1"></i>Сохранить вакансию
+                            <i class="bi bi-check-lg me-1"></i><@spring.message "vacancy.save"/>
                         </button>
                     </div>
                 </form>

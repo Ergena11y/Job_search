@@ -22,9 +22,9 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.name"/> <span class="text-danger">*</span></label>
-                            <input type="text" name="name" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
+                            <input type="text" name="name" class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
                                    value="${userDto.name!''}" required>
-                            <#if bindingResult?? && bindingRes.hasFieldErrors('name')>
+                            <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
                                 <#list bindingRes.getFieldErrors('name') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
                                 </#list>
@@ -33,7 +33,7 @@
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.surname"/> <span class="text-danger">*</span></label>
-                            <input type="text" name="surname" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('surname')>is-invalid</#if>"
+                            <input type="text" name="surname" class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('surname')>is-invalid</#if>"
                                    value="${userDto.surname!''}" required>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('surname')>
                                 <#list bindingRes.getFieldErrors('surname') as err>

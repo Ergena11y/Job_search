@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
 
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        Path uploadPath = Paths.get(avatarUploadPath);
+        Path uploadPath = Paths.get(System.getProperty("user.dir"), "uploads", "avatars");
 
         try {
             if (!Files.exists(uploadPath)) {
@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
             file.transferTo(filePath.toFile());
             log.info("Аватар успешно загружен: {}", filePath.toAbsolutePath());
 
-            return avatarUploadPath + fileName;
+            return "uploads/avatars/" + fileName;
         } catch (IOException e) {
             log.error("Ошибка загрузки аватара: {}", e.getMessage(), e);
             throw new AvatarImageNotFoundException("Ошибка при загрузке аватара: " + e.getMessage());

@@ -16,6 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private  final  RoleBasedSuccessHandler successHandler;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -23,7 +25,7 @@ public class SecurityConfig {
                 .formLogin(login -> login
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/login")
-                        .defaultSuccessUrl("/profile")
+                        .successHandler(successHandler)
                         .failureUrl("/auth/login?error=true")
                         .permitAll())
                 .logout(logout -> logout
@@ -42,8 +44,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/vacancies").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
 
-                        .requestMatchers(HttpMethod.GET, "/companies").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/companies/**").permitAll()
+                        //Компании - только соискатели
+                        .requestMatchers(HttpMethod.GET, "/companies").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.GET, "/companies/**").hasRole("APPLICANT")
 
                         // Резюме только после авторизации
                         .requestMatchers(HttpMethod.GET, "/resumes").authenticated()

@@ -8,10 +8,12 @@ import com.example.job_search.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
@@ -34,16 +36,7 @@ public class ResumesController {
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", resumePage.getTotalPages());
         model.addAttribute("totalItems", resumePage.getTotalElements());
-
-        if (principal != null) {
-            try {
-                model.addAttribute("user", userService.getByEmail(principal.getName()));
-            } catch (UserNotFoundException e) {
-                model.addAttribute("user", null);
-            }
-        } else {
-            model.addAttribute("user", null);
-        }
+        addCurrentUser(principal, model);
 
         return "resumes/resumes";
     }
@@ -52,13 +45,7 @@ public class ResumesController {
     public String createForm(Model model, Principal principal) {
         model.addAttribute("resumeDto", new ResumeDto());
         model.addAttribute("categories", categoryRepository.findAll());
-        if (principal != null) {
-            try {
-                model.addAttribute("user", userService.getByEmail(principal.getName()));
-            } catch (UserNotFoundException e) {
-                model.addAttribute("user", null);
-            }
-        }
+        addCurrentUser(principal, model);
         return "resumes/create_resumes";
     }
 
@@ -69,13 +56,7 @@ public class ResumesController {
             model.addAttribute("resumeDto", resumeDto);
             model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
-            if (principal != null) {
-                try {
-                    model.addAttribute("user", userService.getByEmail(principal.getName()));
-                } catch (UserNotFoundException e) {
-                    model.addAttribute("user", null);
-                }
-            }
+            addCurrentUser(principal, model);
             return "resumes/create_resumes";
         }
         int userId = userService.getUserIdByEmail(principal.getName());
@@ -86,35 +67,29 @@ public class ResumesController {
 
     @GetMapping("edit/{id}")
     public String editForm(@PathVariable int id, Model model, Principal principal) {
+        ResumeDto resume = resumeService.getById(id);
+        checkOwnership(resume.getApplicantId(), principal);
         model.addAttribute("resume", resumeService.getById(id));
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("id", id);
-        if (principal != null) {
-            try {
-                model.addAttribute("user", userService.getByEmail(principal.getName()));
-            } catch (UserNotFoundException e) {
-                model.addAttribute("user", null);
-            }
-        }
+        addCurrentUser(principal, model);
         return "resumes/edit_resume";
     }
 
     @PostMapping("edit/{id}")
     public String edit(@PathVariable int id, @Valid ResumeDto resumeDto,
                        BindingResult br, Model model, Principal principal) {
+        ResumeDto existing = resumeService.getById(id);
+        checkOwnership(existing.getApplicantId(), principal);
+
+
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
             model.addAttribute("resume", resumeService.getById(id));
             model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
             model.addAttribute("id", id);
-            if (principal != null) {
-                try {
-                    model.addAttribute("user", userService.getByEmail(principal.getName()));
-                } catch (UserNotFoundException e) {
-                    model.addAttribute("user", null);
-                }
-            }
+            addCurrentUser(principal, model);
             return "resumes/edit_resume";
         }
         resumeService.updateResumes(id, resumeDto);
@@ -122,7 +97,10 @@ public class ResumesController {
     }
 
     @DeleteMapping("delete/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable int id, Principal principal) {
+        ResumeDto resume = resumeService.getById(id);
+        checkOwnership(resume.getApplicantId(), principal);
+
         resumeService.deleteResumes(id);
         return "redirect:/resumes";
     }
@@ -130,15 +108,30 @@ public class ResumesController {
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("resume", resumeService.getById(id));
-        if (principal != null) {
+        addCurrentUser(principal, model);
+        return "resumes/resumes_info";
+    }
+
+
+    private  void addCurrentUser(Principal principal, Model model){
+        if (principal != null){
             try {
                 model.addAttribute("user", userService.getByEmail(principal.getName()));
             } catch (UserNotFoundException e) {
                 model.addAttribute("user", null);
             }
-        } else {
+        }   else {
             model.addAttribute("user", null);
         }
-        return "resumes/resumes_info";
     }
+
+
+    private void checkOwnership(Long applicantId, Principal principal) throws  UserNotFoundException{
+        int currentUserId = userService.getUserIdByEmail(principal.getName());
+        if (applicantId == null || applicantId.intValue() != currentUserId ){
+            throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "У вас нет прав для редактирования этого резюме");
+        }
+    }
+
+
 }

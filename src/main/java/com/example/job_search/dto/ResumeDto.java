@@ -21,6 +21,9 @@ public class ResumeDto {
 
     private String applicantName;
 
+    private String applicantEmail;
+    private String applicantPhone;
+
     @NotBlank
     private String name;
     @Positive

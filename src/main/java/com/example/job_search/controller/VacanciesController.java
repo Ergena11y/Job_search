@@ -8,10 +8,12 @@ import com.example.job_search.service.VacancyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 
@@ -36,17 +38,7 @@ public class VacanciesController {
         model.addAttribute("totalPages", vacancyPage.getTotalPages());
         model.addAttribute("totalItems", vacancyPage.getTotalElements());
         model.addAttribute("sortBy", sortBy);
-
-        if (principal != null) {
-            try {
-                model.addAttribute("user", userService.getByEmail(principal.getName()));
-            } catch (UserNotFoundException e) {
-                model.addAttribute("user", null);
-            }
-        } else {
-            model.addAttribute("user", null);
-        }
-
+        addCurrentUser(principal,model);
         return "vacancies/vacancies";
     }
 
@@ -54,13 +46,7 @@ public class VacanciesController {
     public String createForm(Model model, Principal principal) {
         model.addAttribute("vacancyDto", new VacanciesDto());
         model.addAttribute("categories", categoryRepository.findAll());
-        if (principal != null) {
-            try {
-                model.addAttribute("user", userService.getByEmail(principal.getName()));
-            } catch (UserNotFoundException e) {
-                model.addAttribute("user", null);
-            }
-        }
+       addCurrentUser(principal, model);
         return "vacancies/create_vacancies";
     }
 
@@ -71,13 +57,7 @@ public class VacanciesController {
             model.addAttribute("vacancyDto", dto);
             model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
-            if (principal != null) {
-                try {
-                    model.addAttribute("user", userService.getByEmail(principal.getName()));
-                } catch (UserNotFoundException e) {
-                    model.addAttribute("user", null);
-                }
-            }
+            addCurrentUser(principal, model);
             return "vacancies/create_vacancies";
         }
         int userId = userService.getUserIdByEmail(principal.getName());
@@ -87,35 +67,29 @@ public class VacanciesController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editForm(@PathVariable int id, Model model, Principal principal) {
+    public String editForm(@PathVariable int id, Model model, Principal principal) throws  UserNotFoundException{
+        VacanciesDto vacancy = vacancyService.getById(id);
+        checkOwnership(vacancy.getAuthorId(), principal);
         model.addAttribute("vacancyDto", vacancyService.getById(id));
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("id", id);
-        if (principal != null) {
-            try {
-                model.addAttribute("user", userService.getByEmail(principal.getName()));
-            } catch (UserNotFoundException e) {
-                model.addAttribute("user", null);
-            }
-        }
+        addCurrentUser(principal, model);
         return "vacancies/edit_vacancies";
     }
 
     @PostMapping("/edit/{id}")
     public String edit(@PathVariable int id, @Valid VacanciesDto dto,
-                       BindingResult br, Model model, Principal principal) {
+                       BindingResult br, Model model, Principal principal) throws  UserNotFoundException {
+        VacanciesDto existing = vacancyService.getById(id);
+        checkOwnership(existing.getAuthorId(), principal);
+
+
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
             model.addAttribute("bindingRes", br);
             model.addAttribute("categories", categoryRepository.findAll());
             model.addAttribute("id", id);
-            if (principal != null) {
-                try {
-                    model.addAttribute("user", userService.getByEmail(principal.getName()));
-                } catch (UserNotFoundException e) {
-                    model.addAttribute("user", null);
-                }
-            }
+            addCurrentUser(principal, model);
             return "vacancies/edit_vacancies";
         }
         vacancyService.updateVacancy(id, dto);
@@ -123,7 +97,9 @@ public class VacanciesController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable int id) {
+    public String delete(@PathVariable int id, Principal principal) {
+        VacanciesDto vacancy = vacancyService.getById(id);
+        checkOwnership(vacancy.getAuthorId(), principal);
         vacancyService.deleteVacancy(id);
         return "redirect:/vacancies";
     }
@@ -131,15 +107,29 @@ public class VacanciesController {
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("vacancy", vacancyService.getById(id));
-        if (principal != null) {
+       addCurrentUser(principal, model);
+        return "vacancies/vacancies_info";
+    }
+
+
+    private  void addCurrentUser(Principal principal, Model model){
+        if (principal != null){
             try {
                 model.addAttribute("user", userService.getByEmail(principal.getName()));
             } catch (UserNotFoundException e) {
                 model.addAttribute("user", null);
             }
-        } else {
+        }   else {
             model.addAttribute("user", null);
         }
-        return "vacancies/vacancies_info";
     }
+
+
+    private void checkOwnership(Integer authorId, Principal principal) throws  UserNotFoundException{
+        int currentUserId = userService.getUserIdByEmail(principal.getName());
+        if (authorId == null || authorId != currentUserId ){
+            throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "У вас нет прав для редактирования этого резюме");
+        }
+    }
+
 }

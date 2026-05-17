@@ -1,6 +1,5 @@
 package com.example.job_search.service.impl;
 
-
 import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.model.Category;
 import com.example.job_search.model.Resumes;
@@ -21,7 +20,6 @@ import java.time.LocalDateTime;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-
 public class ResumeServiceImpl implements ResumeService {
 
     private final ResumeRepository resumeRepository;
@@ -31,17 +29,13 @@ public class ResumeServiceImpl implements ResumeService {
     @Override
     public Page<ResumeDto> getAllResumes(int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-
-
-        return resumeRepository.findByIsActiveTrue(pageable)
-                .map(this::mapToDto);
+        return resumeRepository.findByIsActiveTrue(pageable).map(this::mapToDto);
     }
 
     @Override
     public void createResumes(ResumeDto resumeDto) {
         log.info("Создание нового резюме: {}", resumeDto.getName());
         Resumes r = new Resumes();
-
         r.setName(resumeDto.getName());
         r.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0);
         r.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : true);
@@ -93,20 +87,14 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Page<ResumeDto> getByCategory(int categoryId, int page, int size) {
-        log.debug("Получение резюме по категории id: {}", categoryId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-
-        return resumeRepository.findByCategoryIdAndIsActiveTrue(categoryId,  pageable)
-                .map(this::mapToDto);
+        return resumeRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable).map(this::mapToDto);
     }
 
     @Override
     public Page<ResumeDto> getByApplicant(int applicantId, int page, int size) {
-        log.debug("Получение резюме соискателя id: {}", applicantId);
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-
-        return resumeRepository.findByApplicantId(applicantId, pageable)
-                .map(this::mapToDto);
+        return resumeRepository.findByApplicantId(applicantId, pageable).map(this::mapToDto);
     }
 
     @Override
@@ -117,7 +105,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     private ResumeDto mapToDto(Resumes resume) {
-        return ResumeDto.builder()
+        ResumeDto dto = ResumeDto.builder()
                 .id((long) resume.getId())
                 .name(resume.getName())
                 .salary(resume.getSalary())
@@ -125,15 +113,16 @@ public class ResumeServiceImpl implements ResumeService {
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateTime())
                 .categoryId(resume.getCategory() != null ? resume.getCategory().getId() : null)
+                .categoryName(resume.getCategory() != null ? resume.getCategory().getName() : null)
                 .applicantId(resume.getApplicant() != null ? (long) resume.getApplicant().getId() : null)
                 .build();
-    }
 
-    private Resumes mapToModel(ResumeDto dto) {
-        Resumes resume = new Resumes();
-        resume.setName(dto.getName());
-        resume.setSalary(dto.getSalary());
-        resume.setIsActive(dto.getIsActive());
-        return resume;
+        if (resume.getApplicant() != null) {
+            dto.setApplicantName(resume.getApplicant().getName() + " " + resume.getApplicant().getSurname());
+            dto.setApplicantEmail(resume.getApplicant().getEmail());
+            dto.setApplicantPhone(resume.getApplicant().getPhoneNumber());
+        }
+
+        return dto;
     }
 }

@@ -1,6 +1,7 @@
 package com.example.job_search.exception.hendler;
 
 
+import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.NotFoundEntryException;
 import com.example.job_search.service.ErrorService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,7 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
+
+import org.springframework.security.access.AccessDeniedException;
 
 import java.sql.SQLException;
 
@@ -56,5 +60,13 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     private ResponseEntity<ErrorResponseBody> validationHandler(MethodArgumentNotValidException e) {
         return new ResponseEntity<>(errorService.makeResponse(e.getBindingResult()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    private String forbiddenHandler(ForbiddenException e, HttpServletRequest request, Model model) {
+        model.addAttribute("status", HttpStatus.FORBIDDEN.value());
+        model.addAttribute("reason", e.getMessage());
+        model.addAttribute("details", request);
+        return "errors/error";
     }
 }

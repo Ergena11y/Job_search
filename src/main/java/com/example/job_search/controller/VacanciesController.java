@@ -1,6 +1,7 @@
 package com.example.job_search.controller;
 
 import com.example.job_search.dto.VacanciesDto;
+import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.service.UserService;
@@ -128,8 +129,7 @@ public class VacanciesController {
     private void checkOwnership(Integer authorId, Principal principal) throws  UserNotFoundException{
         int currentUserId = userService.getUserIdByEmail(principal.getName());
         if (authorId == null || authorId != currentUserId ){
-            throw  new ResponseStatusException(HttpStatus.FORBIDDEN, "У вас нет прав для редактирования этого резюме");
-        }
+            throw new ForbiddenException();        }
     }
 
 }

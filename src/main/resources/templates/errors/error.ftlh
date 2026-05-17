@@ -21,7 +21,7 @@
             </div>
             <div class="content">
                 <h1>${status!500}</h1>
-                <h2>${reason!'<@spring.message "error.generic"/>'}</h2>
+                <h2><@spring.message reason!'error.generic'/></h2>
 
                 <#if details??>
                     <ul class="details">

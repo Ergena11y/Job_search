@@ -96,7 +96,7 @@ public class VacanciesController {
         return "redirect:/vacancies";
     }
 
-    @DeleteMapping("/delete/{id}")
+    @PostMapping("/delete/{id}")
     public String delete(@PathVariable int id, Principal principal) {
         VacanciesDto vacancy = vacancyService.getById(id);
         checkOwnership(vacancy.getAuthorId(), principal);

@@ -96,7 +96,7 @@ public class ResumesController {
         return "redirect:/resumes";
     }
 
-    @DeleteMapping("delete/{id}")
+    @PostMapping("delete/{id}")
     public String delete(@PathVariable int id, Principal principal) {
         ResumeDto resume = resumeService.getById(id);
         checkOwnership(resume.getApplicantId(), principal);

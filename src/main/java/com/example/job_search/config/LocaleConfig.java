@@ -13,6 +13,7 @@ import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 
 
+import java.time.Duration;
 import java.util.Locale;
 
 
@@ -22,6 +23,8 @@ public class LocaleConfig implements WebMvcConfigurer {
     public LocaleResolver localeResolver(){
         CookieLocaleResolver resolver = new CookieLocaleResolver("lang");
         resolver.setDefaultLocale(Locale.forLanguageTag("ru"));
+        resolver.setCookieMaxAge(Duration.ofDays(365));
+        resolver.setCookiePath("/");
         return resolver;
     }
 

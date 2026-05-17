@@ -25,7 +25,7 @@
                         </div>
                     </#if>
 
-                    <#-- 1. Основная информация -->
+                    <#--  Основная информация -->
                     <section class="mb-4">
                         <h5 class="text-primary border-bottom pb-2 mb-3">
                             <i class="bi bi-person-badge me-1"></i><@spring.message "resume.section.basic"/>
@@ -38,7 +38,7 @@
                             <input type="text" name="name"
                                    class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
                                    value="${resumeDto.name!''}"
-                                   placeholder="<@spring.message "resume.name.placeholder"/>" required>
+                                   placeholder="<@spring.message 'resume.name.placeholder'/>" required>
                             <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
                                 <#list bindingRes.getFieldErrors('name') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -98,7 +98,24 @@
                         </div>
                     </section>
 
-                    <#-- 2. Опыт работы -->
+                    <#-- Контактная информация -->
+                    <section class="mb-4">
+                        <h5 class="text-primary border-bottom pb-2 mb-3">
+                            <i class="bi bi-telephone me-1"></i><@spring.message "resume.contacts"/>
+                        </h5>
+                        <div class="alert alert-info small py-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Email берётся из вашего профиля. Вы можете указать дополнительный контактный телефон.
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><@spring.message "resume.contact.phone"/></label>
+                            <input type="text" name="contactPhone" class="form-control"
+                                   value="${user.phoneNumber!''}"
+                                   placeholder="+996 700 000 000">
+                        </div>
+                    </section>
+
+                    <#-- Опыт работы -->
                     <section class="mb-4">
                         <h5 class="text-primary border-bottom pb-2 mb-3">
                             <i class="bi bi-briefcase me-1"></i><@spring.message "resume.section.experience"/>
@@ -108,27 +125,27 @@
                             <div class="col-md-4">
                                 <label class="form-label small text-muted"><@spring.message "resume.exp.years"/></label>
                                 <input type="number" name="workYears" class="form-control"
-                                       placeholder="<@spring.message "resume.exp.years.placeholder"/>" min="0">
+                                       placeholder="<@spring.message 'resume.exp.years.placeholder'/>" min="0">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small text-muted"><@spring.message "resume.exp.company"/></label>
                                 <input type="text" name="companyName" class="form-control"
-                                       placeholder="<@spring.message "resume.exp.company"/>">
+                                       placeholder="<@spring.message 'resume.exp.company'/>">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label small text-muted"><@spring.message "resume.exp.position"/></label>
                                 <input type="text" name="position" class="form-control"
-                                       placeholder="<@spring.message "resume.exp.position"/>">
+                                       placeholder="<@spring.message 'resume.exp.position'/>">
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label small text-muted"><@spring.message "resume.exp.responsibilities"/></label>
                             <textarea name="responsibilities" class="form-control" rows="4"
-                                      placeholder="<@spring.message "resume.exp.responsibilities.placeholder"/>"></textarea>
+                                      placeholder="<@spring.message 'resume.exp.responsibilities.placeholder'/>"></textarea>
                         </div>
                     </section>
 
-                    <#-- 3. Образование -->
+                    <#-- Образование -->
                     <section class="mb-4">
                         <h5 class="text-primary border-bottom pb-2 mb-3">
                             <i class="bi bi-mortarboard me-1"></i><@spring.message "resume.section.education"/>
@@ -138,12 +155,12 @@
                             <div class="col-md-6">
                                 <label class="form-label small text-muted"><@spring.message "resume.edu.institution"/></label>
                                 <input type="text" name="institution" class="form-control"
-                                       placeholder="<@spring.message "resume.edu.institution"/>">
+                                       placeholder="<@spring.message 'resume.edu.institution'/>">
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label small text-muted"><@spring.message "resume.edu.program"/></label>
                                 <input type="text" name="program" class="form-control"
-                                       placeholder="<@spring.message "resume.edu.program"/>">
+                                       placeholder="<@spring.message 'resume.edu.program'/>">
                             </div>
                         </div>
                         <div class="row g-3 mb-3">
@@ -169,7 +186,6 @@
                         </div>
                     </section>
 
-                    <#-- Кнопки -->
                     <div class="d-flex justify-content-end gap-2 border-top pt-3">
                         <a href="/profile" class="btn btn-light border">
                             <i class="bi bi-x me-1"></i><@spring.message "resume.cancel"/>

@@ -24,6 +24,9 @@ public class Resumes {
     private String name;
     private float salary;
 
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
     @Column(name = "is_active")
     private Boolean isActive;
 

@@ -21,7 +21,10 @@ public class ResumeDto {
 
     private String applicantName;
 
+    private String description;
+
     private String applicantEmail;
+
     private String applicantPhone;
 
     @NotBlank

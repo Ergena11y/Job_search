@@ -109,6 +109,7 @@ public class ResumeServiceImpl implements ResumeService {
                 .id((long) resume.getId())
                 .name(resume.getName())
                 .salary(resume.getSalary())
+                .description(resume.getDescription())
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateTime())

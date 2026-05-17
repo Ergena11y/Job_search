@@ -35,7 +35,7 @@
                             <label class="form-label fw-semibold"><@spring.message "auth.register.surname"/> <span class="text-danger">*</span></label>
                             <input type="text" name="surname" class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('surname')>is-invalid</#if>"
                                    value="${userDto.surname!''}" required>
-                            <#if bindingResult?? && bindingRes.hasFieldErrors('surname')>
+                            <#if bindingRes?? && bindingRes.hasFieldErrors('surname')>
                                 <#list bindingRes.getFieldErrors('surname') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
                                 </#list>
@@ -46,7 +46,7 @@
                             <label class="form-label fw-semibold"><@spring.message "auth.register.age"/> <span class="text-danger">*</span></label>
                             <input type="number" name="age" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('age')>is-invalid</#if>"
                                    value="${userDto.age!''}" required>
-                            <#if bindingResult?? && bindingRes.hasFieldErrors('age')>
+                            <#if bindingRes?? && bindingRes.hasFieldErrors('age')>
                                 <#list bindingRes.getFieldErrors('age') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
                                 </#list>

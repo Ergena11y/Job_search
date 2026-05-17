@@ -35,3 +35,4 @@ build/
 /db/test.mv.db
 /db/test.trace.db
 /logs/
+/.env

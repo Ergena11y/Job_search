@@ -74,11 +74,6 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/companies">
-                                <i class="bi bi-building me-1"></i><@spring.message "nav.companies"/>
-                            </a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link" href="/auth/register">
                                 <i class="bi bi-person-plus me-1"></i><@spring.message "nav.register"/>
                             </a>

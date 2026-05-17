@@ -65,7 +65,7 @@
 
                                     <div class="mb-3">
                                         <label class="text-muted small d-block">Номер телефона</label>
-                                        <span class="fw-bold">${resume.phoneNumber!'Не указан'}</span>
+                                        <span class="fw-bold">${resume.applicantPhone!'Не указан'}</span>
                                     </div>
 
                                     <hr>

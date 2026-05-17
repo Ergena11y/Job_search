@@ -48,9 +48,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/companies").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.GET, "/companies/**").hasRole("APPLICANT")
 
-                        // Резюме только после авторизации
-                        .requestMatchers(HttpMethod.GET, "/resumes").authenticated()
-                        .requestMatchers(HttpMethod.GET, "/resumes/**").authenticated()
+                        // Резюме т
+                        .requestMatchers(HttpMethod.GET, "/resumes").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.GET, "/resumes/**").hasRole("EMPLOYER")
+
                         .requestMatchers(HttpMethod.POST, "/resumes").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")

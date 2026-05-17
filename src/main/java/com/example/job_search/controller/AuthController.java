@@ -76,7 +76,7 @@ public class AuthController {
             request.login(userDto.getEmail(), userDto.getPassword());
         } catch (ServletException e) {
             log.error("Ошибка автологина: {}", e.getMessage(), e);
-            return "redirect:/atuh/login";
+            return "redirect:/auth/login";
         }
 
         String accountType = userDto.getAccountType() != null ? userDto.getAccountType() : "APPLICANT";

@@ -22,7 +22,11 @@
 
                     <h4 class="card-title mb-1">${user.name!''} ${user.surname!''}</h4>
                     <span class="badge <#if user.accountType == 'EMPLOYER'>bg-warning text-dark<#else>bg-success</#if> mb-3">
-                        ${(user.accountType == "EMPLOYER")?string("<@spring.message 'profile.employer'/>","<@spring.message 'profile.applicant'/>")}
+                        <#if user.accountType == "EMPLOYER">
+                            <@spring.message "profile.employer"/>
+                            <#else>
+                            <@spring.message "profile.applicant"/>
+                        </#if>
                     </span>
 
                     <ul class="list-group list-group-flush text-start mb-3">

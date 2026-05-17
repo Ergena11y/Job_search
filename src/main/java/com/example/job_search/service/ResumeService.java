@@ -1,6 +1,10 @@
 package com.example.job_search.service;
 
+import com.example.job_search.dto.EducationDto;
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.dto.WorkExperienceDto;
+import com.example.job_search.model.EducationInfo;
+import com.example.job_search.model.WorkExperienceInfo;
 import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 
@@ -21,5 +25,7 @@ public interface ResumeService {
     Page<ResumeDto> getByCategory(int categoryId, int page, int size);
 
     Page<ResumeDto> getByApplicant(int applicantId, int page, int size);
+
+    void  createResume(ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education);
 
 }

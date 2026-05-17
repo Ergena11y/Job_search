@@ -33,11 +33,6 @@
                                     <i class="bi bi-file-person me-1"></i><@spring.message "nav.resumes"/>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/companies">
-                                    <i class="bi bi-building me-1"></i><@spring.message "nav.companies"/>
-                                </a>
-                            </li>
                         <#else>
 
                             <li class="nav-item">

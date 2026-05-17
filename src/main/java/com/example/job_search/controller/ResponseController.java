@@ -38,7 +38,7 @@ public class ResponseController {
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
         if (resume.getApplicant() == null || resume.getApplicant().getId() != userId){
             redirectAttributes.addFlashAttribute("error", "Это не ваше резюме");
-            return "redirect:/vacancies" + vacancyId;
+            return "redirect:/vacancies/" + vacancyId;
         }
 
         //проверка на дублирующий отклик

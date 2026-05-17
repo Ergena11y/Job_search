@@ -4,6 +4,7 @@ import com.example.job_search.dto.VacanciesDto;
 import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.repository.CategoryRepository;
+import com.example.job_search.service.ResumeService;
 import com.example.job_search.service.UserService;
 import com.example.job_search.service.VacancyService;
 import jakarta.validation.Valid;
@@ -26,6 +27,7 @@ public class VacanciesController {
     private final VacancyService vacancyService;
     private final UserService userService;
     private final CategoryRepository categoryRepository;
+    private final ResumeService resumeService;
 
     @GetMapping
     public String vacancies(@RequestParam(defaultValue = "0") int page,
@@ -108,7 +110,18 @@ public class VacanciesController {
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("vacancy", vacancyService.getById(id));
-       addCurrentUser(principal, model);
+        addCurrentUser(principal, model);
+
+        if(principal != null ){
+            try{
+                int userId = userService.getUserIdByEmail(principal.getName());
+                var resume = resumeService.getByApplicant(userId, 0, 100);
+                model.addAttribute("myResumes", resume.getContent());
+            } catch (UserNotFoundException e){
+                model.addAttribute("myResumes", null);
+            }
+        }
+
         return "vacancies/vacancies_info";
     }
 

@@ -6,6 +6,7 @@ import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.repository.CategoryRepository;
 import com.example.job_search.service.ResumeService;
 import com.example.job_search.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 @RequestMapping("resumes")

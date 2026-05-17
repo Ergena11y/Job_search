@@ -51,20 +51,37 @@
                             <div class="col-md-4">
                                 <div class="card border-0 bg-light p-3 shadow-sm">
                                     <h5 class="fw-bold mb-4"><@spring.message "vacancy.respond.block"/></h5>
-
                                     <#if user?? && user.accountType == "APPLICANT">
-                                        <form action="/responses/apply/${vacancy.id}" method="post">
-                                            <button type="submit" class="btn btn-primary w-100 py-2 mb-3">
-                                                <@spring.message "vacancy.respond"/>
-                                            </button>
-                                        </form>
-                                    <#elseif user?? && user.accountType == "EMPLOYER">
-                                        <p class="text-muted small"><@spring.message "vacancy.employer.view"/></p>
-                                        <a href="/vacancies/edit/${vacancy.id}" class="btn btn-outline-primary w-100"><@spring.message "vacancy.edit"/></a>
-                                    <#else>
-                                        <p class="text-danger small"><@spring.message "vacancy.login.to.respond"/></p>
+                                        <#if myResumes?? && myResumes?has_content>
+                                            <form action="/responses/apply/${vacancy.id}" method="post">
+                                                <#if _csrf??>
+                                                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
+                                                </#if>
+                                                <div class="mb-3">
+                                                    <label class="form-label small fw-bold">Выберите резюме:</label>
+                                                    <select name="resumeId" class="form-select form-select-sm">
+                                                        <#list myResumes as r>
+                                                            <option value="${r.id!''}">${r.name!''}</option>
+                                                        </#list>
+                                                    </select>
+                                                </div>
+                                                <#if success??>
+                                                    <div class="alert alert-success small py-2">${success}</div>
+                                                </#if>
+                                                <#if error??>
+                                                    <div class="alert alert-danger small py-2">${error}</div>
+                                                </#if>
+                                                <button type="submit" class="btn btn-primary w-100 py-2">
+                                                    <@spring.message "vacancy.respond"/>
+                                                </button>
+                                            </form>
+                                        <#else>
+                                            <div class="alert alert-warning small">
+                                                 <@spring.message "vacancy.to.respond.first"/>
+                                                <a href="/resumes/create_resumes"><@spring.message "resume.create" /></a>.
+                                            </div>
+                                        </#if>
                                     </#if>
-
                                     <hr>
                                     <div class="mb-3">
                                         <label class="text-muted small d-block"><@spring.message "vacancy.contact.person"/>:</label>

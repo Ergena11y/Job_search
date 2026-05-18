@@ -5,6 +5,7 @@ import com.example.job_search.dto.UpdateProfileDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.exception.UserProfileNotFoundException;
+import com.example.job_search.repository.RespondedApplicantsRepository;
 import com.example.job_search.service.ResumeService;
 import com.example.job_search.service.VacancyService;
 import jakarta.validation.Valid;
@@ -27,6 +28,7 @@ public class ProfileController {
     private final UserService userService;
     private final ResumeService resumeService;
     private final VacancyService vacancyService;
+    private final RespondedApplicantsRepository respondedApplicantsRepository;
 
     @GetMapping
     public String profile( Principal principal,
@@ -55,6 +57,9 @@ public class ProfileController {
             model.addAttribute("resumes",  resumes.getContent());
             model.addAttribute("currentResumesPage",  resumePage);
             model.addAttribute("totalResPage",  resumes.getTotalPages());
+
+            var responds = respondedApplicantsRepository.findByResumeApplicantId(userId);
+            model.addAttribute("myResponds", responds);
         }
         return "profile/profile";
     }

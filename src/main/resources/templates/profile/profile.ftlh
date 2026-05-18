@@ -24,7 +24,7 @@
                     <span class="badge <#if user.accountType == 'EMPLOYER'>bg-warning text-dark<#else>bg-success</#if> mb-3">
                         <#if user.accountType == "EMPLOYER">
                             <@spring.message "profile.employer"/>
-                            <#else>
+                        <#else>
                             <@spring.message "profile.applicant"/>
                         </#if>
                     </span>
@@ -165,6 +165,33 @@
                 <#else>
                     <div class="alert alert-light border"><@spring.message "profile.no.resumes"/></div>
                 </#if>
+
+                <#if myResponds?? && myResponds?has_content>
+                    <hr class="my-4">
+                    <h4 class="mb-3"><@spring.message "chat.my.responds"/></h4>
+                    <#list myResponds as ra>
+                        <div class="card shadow-sm mb-2">
+                            <div class="card-body py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <span class="fw-bold small">${ra.vacancy.name!''}</span>
+                                        <br>
+                                        <span class="text-muted small">
+                                            <@spring.message "chat.respond.resume"/>: ${ra.resume.name!''}
+                                        </span>
+                                    </div>
+                                    <a href="/chat/${ra.id}"
+                                       class="btn btn-sm btn-success"
+                                       title="<@spring.message "chat.open"/>">
+                                        <i class="bi bi-chat-dots-fill me-1"></i>
+                                        <@spring.message "chat.open"/>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </#list>
+                </#if>
+
             </#if>
 
         </div>

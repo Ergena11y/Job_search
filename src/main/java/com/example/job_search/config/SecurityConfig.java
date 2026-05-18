@@ -76,6 +76,9 @@ public class SecurityConfig {
 
                         .requestMatchers("/auth/forgot-password", "/auth/reset-password").permitAll()
 
+                        .requestMatchers("/chat/**").authenticated()
+                        .requestMatchers("/ws/**").authenticated()
+
                         .anyRequest().permitAll()
                 );
 

@@ -102,10 +102,18 @@
                                            class="btn btn-primary w-100 mb-2 py-2">
                                             <@spring.message "resume.contact.candidate"/>
                                         </a>
+                                        <#if respondedId??>
+                                            <a href="/chat/${respondedId}"
+                                               class="btn btn-success w-100 mb-2 py-2">
+                                                <i class="bi bi-chat-dots-fill me-1"></i>
+                                                <@spring.message "chat.open"/>
+                                            </a>
+                                        </#if>
                                         <button class="btn btn-outline-dark w-100 py-2"
                                                 onclick="window.print()">
                                             <@spring.message "resume.print"/>
                                         </button>
+
                                     <#elseif isOwner>
                                         <a href="/resumes/edit/${resume.id!''}"
                                            class="btn btn-outline-primary w-100 mb-2 py-2">
@@ -116,6 +124,26 @@
                                                 onclick="window.print()">
                                             <@spring.message "resume.print"/>
                                         </button>
+
+                                        <#if myResponds?? && myResponds?has_content>
+                                            <div class="mt-3">
+                                                <h6 class="fw-bold text-muted small text-uppercase">
+                                                    <@spring.message "chat.my.responds"/>
+                                                </h6>
+                                                <#list myResponds as ra>
+                                                    <div class="d-flex justify-content-between align-items-center
+                                                                border rounded p-2 mb-2 bg-white">
+                                                        <span class="small">${ra.vacancy.name!''}</span>
+                                                        <a href="/chat/${ra.id}"
+                                                           class="btn btn-sm btn-success"
+                                                           title="<@spring.message "chat.open"/>">
+                                                            <i class="bi bi-chat-dots-fill"></i>
+                                                        </a>
+                                                    </div>
+                                                </#list>
+                                            </div>
+                                        </#if>
+
                                     <#else>
                                         <p class="text-muted small text-center">
                                             <@spring.message "resume.contacts.employer.only"/>

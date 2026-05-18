@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RespondedApplicantsRepository extends JpaRepository<RespondedApplicants, Integer> {
@@ -17,4 +18,11 @@ public interface RespondedApplicantsRepository extends JpaRepository<RespondedAp
     @Query("SELECT ra.resume.applicant FROM RespondedApplicants ra" +
             " WHERE ra.vacancy.id = :vacancyId")
     List<User> findUsersByVacancyId(@Param("vacancyId") Integer vacancyId);
+
+
+    Optional<RespondedApplicants> findByResumeIdAndVacancyId(Integer resumeId, Integer vacancyId);
+
+    List<RespondedApplicants> findByResumeApplicantId(Integer applicantId);
+
+    List<RespondedApplicants> findByVacancyAuthorId(Integer authorId);
 }

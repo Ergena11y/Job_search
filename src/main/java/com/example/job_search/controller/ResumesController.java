@@ -7,7 +7,9 @@ import com.example.job_search.dto.UserDto;
 import com.example.job_search.dto.WorkExperienceDto;
 import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.UserNotFoundException;
+import com.example.job_search.model.RespondedApplicants;
 import com.example.job_search.repository.CategoryRepository;
+import com.example.job_search.repository.RespondedApplicantsRepository;
 import com.example.job_search.service.ResumeService;
 import com.example.job_search.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -31,6 +33,7 @@ public class ResumesController {
     private final UserService userService;
     private final CategoryRepository categoryRepository;
     private final ResumeFormParser resumeFormParser;
+    private final RespondedApplicantsRepository respondedApplicantsRepository;
 
     @GetMapping
     public String resumes(@RequestParam(defaultValue = "0") int page,
@@ -149,6 +152,23 @@ public class ResumesController {
                 if (!isOwner && !isEmployer){
                     throw new ForbiddenException();
                 }
+
+                if (isEmployer) {
+                    respondedApplicantsRepository
+                            .findByResumeApplicantId(resume.getApplicantId().intValue())
+                            .stream()
+                            .filter(ra -> ra.getVacancy().getAuthor().getId() == currentUserId)
+                            .findFirst()
+                            .ifPresent(ra -> model.addAttribute("respondedId", ra.getId()));
+                }
+
+                if (isOwner) {
+                    List<RespondedApplicants> myResponds =
+                            respondedApplicantsRepository.findByResumeApplicantId(currentUserId);
+                    model.addAttribute("myResponds", myResponds);
+                }
+
+
             } catch (UserNotFoundException e){
                 throw new ForbiddenException();
             }

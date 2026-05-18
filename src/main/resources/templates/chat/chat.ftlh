@@ -4,7 +4,7 @@
     <div class="container mt-4">
         <div class="row">
 
-            <!-- Левая панель: информация о собеседнике -->
+
             <div class="col-md-3">
                 <div class="card shadow-sm mb-3">
                     <div class="card-body text-center">
@@ -139,8 +139,7 @@
             bubble.style.background = isMine ? '#0d6efd' : '#ffffff';
             bubble.style.color      = isMine ? '#fff'    : '#212529';
 
-            const time = msg.timeStamp
-                ? new Date(msg.timeStamp).toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'})
+            const time = msg.timeStamp ? new Date(msg.timeStamp).toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'})
                 : '';
 
             bubble.innerHTML =
@@ -156,7 +155,6 @@
             return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         }
 
-        // Прокрутить вниз при загрузке
         window.addEventListener('load', function () {
             const box = document.getElementById('chatBox');
             box.scrollTop = box.scrollHeight;

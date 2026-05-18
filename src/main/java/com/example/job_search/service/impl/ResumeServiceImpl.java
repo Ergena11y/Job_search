@@ -1,11 +1,13 @@
 package com.example.job_search.service.impl;
 
+import com.example.job_search.dto.EducationDto;
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.dto.WorkExperienceDto;
 import com.example.job_search.model.Category;
+import com.example.job_search.model.EducationInfo;
 import com.example.job_search.model.Resumes;
-import com.example.job_search.repository.CategoryRepository;
-import com.example.job_search.repository.ResumeRepository;
-import com.example.job_search.repository.UserRepository;
+import com.example.job_search.model.WorkExperienceInfo;
+import com.example.job_search.repository.*;
 import com.example.job_search.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -25,6 +28,8 @@ public class ResumeServiceImpl implements ResumeService {
     private final ResumeRepository resumeRepository;
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final WorkExperienceRepository workExperienceRepository;
+    private final EducationRepository educationRepository;
 
     @Override
     public Page<ResumeDto> getAllResumes(int page, int size) {
@@ -33,48 +38,110 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    public void createResumes(ResumeDto resumeDto) {
+    public void createResumes(ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education) {
         log.info("Создание нового резюме: {}", resumeDto.getName());
         Resumes r = new Resumes();
         r.setName(resumeDto.getName());
-        r.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0);
+        r.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0 );
         r.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : true);
+        r.setDescription(resumeDto.getDescription());
         r.setCreatedDate(LocalDateTime.now());
         r.setUpdateTime(LocalDateTime.now());
 
-        if (resumeDto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(resumeDto.getCategoryId())
-                    .orElseThrow(() -> new IllegalArgumentException("Категория не найдена"));
-            r.setCategory(category);
+        if (resumeDto.getCategoryId() != null){
+            categoryRepository.findById(resumeDto.getCategoryId())
+                    .ifPresent(r::setCategory);
         }
-
-        if (resumeDto.getApplicantId() != null) {
+        if (resumeDto.getApplicantId() != null){
             userRepository.findById(resumeDto.getApplicantId().intValue())
                     .ifPresent(r::setApplicant);
         }
 
-        resumeRepository.save(r);
+        Resumes saved = resumeRepository.save(r);
+
+        if(workExperience != null){
+            for (WorkExperienceDto w : workExperience){
+                if(w.getCompanyName() != null && !w.getCompanyName().isBlank()){
+                    WorkExperienceInfo we = new WorkExperienceInfo();
+                    we.setResume(saved);
+                    we.setYears(w.getYears());
+                    we.setCompanyName(w.getCompanyName());
+                    we.setPosition(w.getPosition());
+                    we.setResponsibilities(w.getResponsibilities());
+                    workExperienceRepository.save(we);
+                }
+            }
+        }
+
+        if (education != null){
+            for (EducationDto e : education){
+                if (e.getInstitution() != null && !e.getInstitution().isBlank()){
+                    EducationInfo educationInfo = new EducationInfo();
+                    educationInfo.setResume(saved);
+                    educationInfo.setInstitution(e.getInstitution());
+                    educationInfo.setProgram(e.getProgram());
+                    educationInfo.setStartDate(e.getStartDate());
+                    educationInfo.setEndDate(e.getEndDate());
+                    educationInfo.setDegree(e.getDegree());
+                    educationRepository.save(educationInfo);
+                }
+            }
+        }
+
         log.info("Резюме '{}' успешно создано", resumeDto.getName());
     }
 
     @Override
-    public void updateResumes(int id, ResumeDto resumeDto) {
+    public void updateResumes(int id, ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education) {
         log.info("Обновление резюме с id: {}", id);
         Resumes existing = resumeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Resume not found: " + id));
 
         existing.setName(resumeDto.getName());
-        existing.setSalary(resumeDto.getSalary());
-        existing.setIsActive(resumeDto.getIsActive());
+        existing.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0);
+        existing.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : true);
+        existing.setDescription(resumeDto.getDescription());
+        existing.setUpdateTime(LocalDateTime.now());
 
         if (resumeDto.getCategoryId() != null) {
-            Category category = categoryRepository.findById(resumeDto.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Категория не найдена"));
-            existing.setCategory(category);
+            categoryRepository.findById(resumeDto.getCategoryId())
+                    .ifPresent(existing::setCategory);
         }
 
-        existing.setUpdateTime(LocalDateTime.now());
         resumeRepository.save(existing);
+
+        // Удаляем старые записи и сохраняем новые
+        if (workExperience != null) {
+            workExperienceRepository.deleteByResumeId(id);
+            for (WorkExperienceDto w : workExperience) {
+                if (w.getCompanyName() != null && !w.getCompanyName().isBlank()) {
+                    WorkExperienceInfo we = new WorkExperienceInfo();
+                    we.setResume(existing);
+                    we.setYears(w.getYears());
+                    we.setCompanyName(w.getCompanyName());
+                    we.setPosition(w.getPosition());
+                    we.setResponsibilities(w.getResponsibilities());
+                    workExperienceRepository.save(we);
+                }
+            }
+        }
+
+        if (education != null) {
+            educationRepository.deleteByResumeId(id);
+            for (EducationDto e : education) {
+                if (e.getInstitution() != null && !e.getInstitution().isBlank()) {
+                    EducationInfo educationInfo = new EducationInfo();
+                    educationInfo.setResume(existing);
+                    educationInfo.setInstitution(e.getInstitution());
+                    educationInfo.setProgram(e.getProgram());
+                    educationInfo.setStartDate(e.getStartDate());
+                    educationInfo.setEndDate(e.getEndDate());
+                    educationInfo.setDegree(e.getDegree());
+                    educationRepository.save(educationInfo);
+                }
+            }
+        }
+
         log.info("Резюме с id {} успешно обновлено", id);
     }
 

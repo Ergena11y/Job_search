@@ -1,6 +1,9 @@
 package com.example.job_search.controller;
 
+import com.example.job_search.common.ResumeFormParser;
+import com.example.job_search.dto.EducationDto;
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.dto.WorkExperienceDto;
 import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.repository.CategoryRepository;
@@ -10,12 +13,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.security.Principal;
 import java.util.List;
@@ -28,6 +29,7 @@ public class ResumesController {
     private final ResumeService resumeService;
     private final UserService userService;
     private final CategoryRepository categoryRepository;
+    private final ResumeFormParser resumeFormParser;
 
     @GetMapping
     public String resumes(@RequestParam(defaultValue = "0") int page,
@@ -54,7 +56,8 @@ public class ResumesController {
 
     @PostMapping("create")
     public String create(Model model, @Valid ResumeDto resumeDto,
-                         BindingResult br, Principal principal) throws UserNotFoundException {
+                         BindingResult br, Principal principal,
+                         HttpServletRequest  request) throws UserNotFoundException {
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
             model.addAttribute("bindingRes", br);
@@ -64,8 +67,12 @@ public class ResumesController {
         }
         int userId = userService.getUserIdByEmail(principal.getName());
         resumeDto.setApplicantId((long) userId);
-        resumeService.createResumes(resumeDto);
-        return "redirect:/resumes";
+
+        List<WorkExperienceDto> workList = resumeFormParser.parseWorkExperience(request);
+        List<EducationDto> eduList = resumeFormParser.parseEducation(request);
+
+        resumeService.createResumes(resumeDto, workList, eduList);
+        return "redirect:/profile";
     }
 
     @GetMapping("edit/{id}")
@@ -81,7 +88,8 @@ public class ResumesController {
 
     @PostMapping("edit/{id}")
     public String edit(@PathVariable int id, @Valid ResumeDto resumeDto,
-                       BindingResult br, Model model, Principal principal) {
+                       BindingResult br, Model model, Principal principal,
+                       HttpServletRequest request) {
         ResumeDto existing = resumeService.getById(id);
         checkOwnership(existing.getApplicantId(), principal);
 
@@ -95,8 +103,11 @@ public class ResumesController {
             addCurrentUser(principal, model);
             return "resumes/edit_resume";
         }
-        resumeService.updateResumes(id, resumeDto);
-        return "redirect:/resumes";
+
+        List<WorkExperienceDto> workList = resumeFormParser.parseWorkExperience(request);
+        List<EducationDto> eduList = resumeFormParser.parseEducation(request);
+        resumeService.updateResumes(id, resumeDto, workList, eduList);
+        return "redirect:/profile";
     }
 
     @PostMapping("delete/{id}")
@@ -105,7 +116,7 @@ public class ResumesController {
         checkOwnership(resume.getApplicantId(), principal);
 
         resumeService.deleteResumes(id);
-        return "redirect:/resumes";
+        return "redirect:/profile";
     }
 
     @GetMapping("/{id}")

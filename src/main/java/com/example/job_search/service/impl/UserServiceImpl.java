@@ -109,7 +109,6 @@ public class UserServiceImpl implements UserService {
         log.debug("Поиск пользователя по email: {}", email);
         User user = userRepository.findByEmail(email)
                 .orElseThrow(UserNotFoundException::new);
-        log.warn("Пользователь с email {} не найден", email);
     return convertToDto(user);
     }
 

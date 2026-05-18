@@ -16,7 +16,7 @@ public class ResumeDto {
 
     private Long id;
 
-    @NotNull
+
     private Long applicantId;
 
     private String applicantName;
@@ -29,9 +29,11 @@ public class ResumeDto {
 
     @NotBlank
     private String name;
+
     @Positive
     private Float salary;
-    @NotNull
+
+
     private Boolean isActive;
 
     private LocalDateTime createdDate;

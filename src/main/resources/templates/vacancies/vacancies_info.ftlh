@@ -78,7 +78,7 @@
                                         <#else>
                                             <div class="alert alert-warning small">
                                                  <@spring.message "vacancy.to.respond.first"/>
-                                                <a href="/resumes/create_resumes"><@spring.message "resume.create" /></a>.
+                                                <a href="/resumes/create"><@spring.message "resume.create" /></a>.
                                             </div>
                                         </#if>
                                     </#if>

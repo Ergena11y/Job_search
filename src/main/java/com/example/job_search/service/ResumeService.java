@@ -16,16 +16,14 @@ public interface ResumeService {
 
     ResumeDto getById(int id);
 
-    void createResumes(ResumeDto resumeDto);
+    void  createResumes(ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education);
 
-    void updateResumes(int id, ResumeDto resumeDto);
+    void updateResumes(int id, ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education);
 
     void deleteResumes(int id);
 
     Page<ResumeDto> getByCategory(int categoryId, int page, int size);
 
     Page<ResumeDto> getByApplicant(int applicantId, int page, int size);
-
-    void  createResume(ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education);
 
 }

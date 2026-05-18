@@ -50,12 +50,17 @@ public class SecurityConfig {
 
                         // Резюме т
                         .requestMatchers(HttpMethod.GET, "/resumes").hasRole("EMPLOYER")
+
+                        .requestMatchers(HttpMethod.GET, "/resumes/create").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.GET, "/resumes/edit/**").hasRole("APPLICANT")
+
                         .requestMatchers(HttpMethod.GET, "/resumes/**").hasRole("EMPLOYER")
+
 
                         .requestMatchers(HttpMethod.POST, "/resumes").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/resumes/create").hasRole("APPLICANT")
-                        .requestMatchers(HttpMethod.PUT, "/resumes/**").hasRole("APPLICANT")
-                        .requestMatchers(HttpMethod.DELETE, "/resumes/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/resumes/edit/**").hasRole("APPLICANT")
+                        .requestMatchers(HttpMethod.POST, "/resumes/delete/**").hasRole("APPLICANT")
 
                         // Employer может создавать вакансии
                         .requestMatchers(HttpMethod.POST, "/vacancies/create").hasRole("EMPLOYER")

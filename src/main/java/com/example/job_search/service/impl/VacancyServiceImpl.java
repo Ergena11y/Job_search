@@ -150,19 +150,11 @@ public class VacancyServiceImpl implements VacancyService {
                 .createdDate(v.getCreatedDate())
                 .updateTime(v.getUpdateTime())
                 .categoryId(v.getCategory() != null ? v.getCategory().getId() : null)
+                .categoryName(v.getCategory() != null ? v.getCategory().getName() : null)
                 .authorId(v.getAuthor() != null ? v.getAuthor().getId() : null)
+                .authorName(v.getAuthor() != null ? v.getAuthor().getName() + " " + v.getAuthor().getSurname() : null)
+                .authorEmail(v.getAuthor() != null ? v.getAuthor().getEmail() : null)
                 .build();
-    }
-
-    private Vacancies mapToModel(VacanciesDto dto) {
-        Vacancies v = new Vacancies();
-        v.setName(dto.getName());
-        v.setDescription(dto.getDescription());
-        v.setSalary(dto.getSalary());
-        v.setExpFrom(dto.getExpFrom());
-        v.setExpTo(dto.getExpTo());
-        v.setIsActive(dto.getIsActive());
-        return v;
     }
 
 }

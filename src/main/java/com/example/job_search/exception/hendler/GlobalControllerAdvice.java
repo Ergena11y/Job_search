@@ -6,6 +6,7 @@ import com.example.job_search.exception.NotFoundEntryException;
 import com.example.job_search.service.ErrorService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.security.access.AccessDeniedException;
 
 import java.sql.SQLException;
 
+@Slf4j
 @ControllerAdvice
 @RequiredArgsConstructor
 public class GlobalControllerAdvice {
@@ -46,8 +48,9 @@ public class GlobalControllerAdvice {
     private String runtimeExceptionHandler(RuntimeException e,
                                            HttpServletRequest request,
                                            Model model) {
+        log.error("RuntimeException: {}", e.getMessage(), e);
         model.addAttribute("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        model.addAttribute("reason", e.getMessage() != null ? e.getMessage() : "Internal error");
+        model.addAttribute("reason", "Внутренняя ошибка сервера");
         model.addAttribute("details", request);
         return "errors/error";
     }

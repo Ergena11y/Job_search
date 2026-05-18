@@ -26,4 +26,11 @@ public class Messages {
 
     @Column(name = "time_stamp")
     private LocalDateTime timeStamp;
+
+    @Column(name = "sender_email")
+    private  String senderEmail;
+
+    @Column(name = "sender_role")
+    private  String senderRole;
+
 }

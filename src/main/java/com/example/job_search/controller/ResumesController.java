@@ -3,6 +3,7 @@ package com.example.job_search.controller;
 import com.example.job_search.common.ResumeFormParser;
 import com.example.job_search.dto.EducationDto;
 import com.example.job_search.dto.ResumeDto;
+import com.example.job_search.dto.UserDto;
 import com.example.job_search.dto.WorkExperienceDto;
 import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.UserNotFoundException;
@@ -35,13 +36,25 @@ public class ResumesController {
     public String resumes(@RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size,
                           Principal principal,
-                          Model model) {
-        Page<@Valid ResumeDto> resumePage = resumeService.getAllResumes(page, size);
-        model.addAttribute("resumes", resumePage.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", resumePage.getTotalPages());
-        model.addAttribute("totalItems", resumePage.getTotalElements());
+                          Model model) throws UserNotFoundException {
         addCurrentUser(principal, model);
+
+        UserDto currentUser = userService.getByEmail(principal.getName());
+
+        if ("EMPLOYER".equals(currentUser.getAccountType())) {
+            Page<@Valid ResumeDto> resumePage = resumeService.getAllResumes(page, size);
+            model.addAttribute("resumes", resumePage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", resumePage.getTotalPages());
+            model.addAttribute("totalItems", resumePage.getTotalElements());
+        } else {
+            int userId = userService.getUserIdByEmail(principal.getName());
+            Page<@Valid ResumeDto> resumePage = resumeService.getByApplicant(userId, page, size);
+            model.addAttribute("resumes", resumePage.getContent());
+            model.addAttribute("currentPage", page);
+            model.addAttribute("totalPages", resumePage.getTotalPages());
+            model.addAttribute("totalItems", resumePage.getTotalElements());
+        }
 
         return "resumes/resumes";
     }
@@ -121,8 +134,29 @@ public class ResumesController {
 
     @GetMapping("/{id}")
     public String getById(@PathVariable int id, Model model, Principal principal) {
-        model.addAttribute("resume", resumeService.getById(id));
+        ResumeDto resume = resumeService.getById(id);
         addCurrentUser(principal, model);
+
+        if (principal != null){
+            try{
+                int currentUserId = userService.getUserIdByEmail(principal.getName());
+                UserDto currentUser = userService.getByEmail(principal.getName());
+
+                boolean isOwner = resume.getApplicantId() != null
+                        && resume.getApplicantId().intValue() == currentUserId;
+                boolean isEmployer = "EMPLOYER".equals(currentUser.getAccountType());
+
+                if (!isOwner && !isEmployer){
+                    throw new ForbiddenException();
+                }
+            } catch (UserNotFoundException e){
+                throw new ForbiddenException();
+            }
+        } else {
+            throw new ForbiddenException();
+        }
+
+        model.addAttribute("resume", resume);
         return "resumes/resumes_info";
     }
 

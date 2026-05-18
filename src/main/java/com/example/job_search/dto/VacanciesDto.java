@@ -26,6 +26,7 @@ public class VacanciesDto {
 
 
     private Integer categoryId;
+    private String categoryName;
 
     @NotNull
     @PositiveOrZero(message =  "Salary must be >= 0")
@@ -42,6 +43,8 @@ public class VacanciesDto {
 
 
     private Integer authorId;
+    private String authorName;
+    private String authorEmail;
 
 
     private LocalDateTime createdDate;

@@ -13,14 +13,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkExperienceDto {
-    @NotNull
-    @Positive
     private Integer years;
 
-    @NotBlank
     private String companyName;
 
-    @NotBlank
     private String position;
 
     private String responsibilities;

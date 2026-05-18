@@ -16,18 +16,9 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 public class EducationDto {
-
-    @NotBlank
     private String institution;
-
-    @NotBlank
     private String program;
-
-    @NotNull
     private LocalDate startDate;
-    @NotNull
     private LocalDate endDate;
-
-    @NotBlank
     private String degree;
 }

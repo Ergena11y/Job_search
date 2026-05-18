@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 007
+      author: Ergen
+      changes:
+        - addColumn:
+            tableName: messages
+            columns:
+              - column:
+                  name: sender_email
+                  type: varchar(100)
+              - column:
+                  name: sender_role
+                  type: varchar(25)

@@ -1,6 +1,7 @@
 <#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <@main.layout>
+    <link rel="stylesheet" href="/static/css/chat.css">
     <div class="container mt-4">
         <div class="row">
 
@@ -96,68 +97,14 @@
         </div>
     </div>
 
-    <!-- SockJS + STOMP -->
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+
     <script>
-        const respondedId = ${respondedId};
-        const myRole      = '${user.accountType!''}';
-        const myName      = '${user.name!''} ${user.surname!''}';
-
-        const socket = new SockJS('/ws');
-        const stompClient = Stomp.over(socket);
-        stompClient.debug = null; // отключаем лог
-
-        stompClient.connect({}, function () {
-            stompClient.subscribe('/topic/chat/' + respondedId, function (frame) {
-                const msg = JSON.parse(frame.body);
-                appendMessage(msg, msg.senderRole === myRole);
-            });
-        });
-
-        document.getElementById('sendBtn').addEventListener('click', sendMsg);
-        document.getElementById('msgInput').addEventListener('keydown', function (e) {
-            if (e.key === 'Enter') sendMsg();
-        });
-
-        function sendMsg() {
-            const input = document.getElementById('msgInput');
-            const text  = input.value.trim();
-            if (!text || !stompClient.connected) return;
-            stompClient.send('/app/chat/' + respondedId, {}, text);
-            input.value = '';
-        }
-
-        function appendMessage(msg, isMine) {
-            const box = document.getElementById('chatBox');
-            const wrapper = document.createElement('div');
-            wrapper.className = 'd-flex mb-2 ' + (isMine ? 'justify-content-end' : 'justify-content-start');
-
-            const bubble = document.createElement('div');
-            bubble.className = 'px-3 py-2 rounded-3 shadow-sm';
-            bubble.style.maxWidth = '70%';
-            bubble.style.background = isMine ? '#0d6efd' : '#ffffff';
-            bubble.style.color      = isMine ? '#fff'    : '#212529';
-
-            const time = msg.timeStamp ? new Date(msg.timeStamp).toLocaleTimeString('ru', {hour:'2-digit', minute:'2-digit'})
-                : '';
-
-            bubble.innerHTML =
-                '<div class="small">' + escHtml(msg.content) + '</div>' +
-                '<div class="text-end" style="font-size:0.7rem;opacity:0.7;margin-top:2px;">' + time + '</div>';
-
-            wrapper.appendChild(bubble);
-            box.appendChild(wrapper);
-            box.scrollTop = box.scrollHeight;
-        }
-
-        function escHtml(str) {
-            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-        }
-
-        window.addEventListener('load', function () {
-            const box = document.getElementById('chatBox');
-            box.scrollTop = box.scrollHeight;
-        });
+        const  CHAT_RESPONDED_ID = ${respondedId};
+        const CHAT_MY_ROLE = '${user.accountType!''}';
+        const CHAT_MY_NAME = '${user.name!''} ${user.surname!''}';
     </script>
+
+    <script src="/static/js/chat.js" defer></script>
 </@main.layout>

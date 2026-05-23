@@ -22,18 +22,7 @@ public class MainController {
     private final UserService userService;
 
     @GetMapping("/")
-    public String  index(
-            Principal principal,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "date") String sortBy,
-            Model model){
-        Page<@Valid VacanciesDto> vacancies = vacancyService.getAllVacancies(page, size, sortBy);
-        model.addAttribute("vacancies", vacancies.getContent());
-        model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", vacancies.getTotalPages());
-        model.addAttribute("sortBy", sortBy);
-
+    public String  index(Principal principal, Model model){
         if (principal != null){
             try {
                 model.addAttribute("user", userService.getByEmail(principal.getName()));
@@ -43,8 +32,7 @@ public class MainController {
         }else {
             model.addAttribute("user", null);
         }
-
-
+        
         return "index";
     }
 

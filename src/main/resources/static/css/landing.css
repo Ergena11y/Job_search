@@ -1,0 +1,315 @@
+
+.landing-hero {
+    background: linear-gradient(135deg, #0d47a1 0%, #1976d2 50%, #42a5f5 100%);
+    min-height: 520px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    margin-bottom: 3rem;
+}
+
+.landing-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+            radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%),
+            radial-gradient(circle at 10% 80%, rgba(255,255,255,0.05) 0%, transparent 40%);
+}
+
+.landing-hero__content {
+    position: relative;
+    z-index: 1;
+    padding: 3rem 2.5rem;
+}
+
+.landing-hero__eyebrow {
+    font-size: 0.8rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.landing-hero__title {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.15;
+    margin-bottom: 1.25rem;
+}
+
+.landing-hero__title span {
+    color: #ffd54f;
+}
+
+.landing-hero__subtitle {
+    font-size: 1.1rem;
+    color: rgba(255,255,255,0.85);
+    max-width: 480px;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.landing-hero__cta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+
+.btn-hero-primary {
+    background: #ffd54f;
+    color: #0d47a1;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+    border: none;
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn-hero-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    color: #0d47a1;
+}
+
+.btn-hero-outline {
+    background: transparent;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.75rem 2rem;
+    border: 2px solid rgba(255,255,255,0.6);
+    border-radius: 50px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.btn-hero-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #fff;
+    color: #fff;
+}
+
+.landing-hero__illustration {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 2rem;
+}
+
+.hero-svg-wrap {
+    opacity: 0.92;
+    filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
+    animation: heroFloat 4s ease-in-out infinite;
+}
+
+.img-fluid{
+
+    width: 250px;
+    height: auto;
+    animation: bounce 1.5s infinite ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-25px);
+    }
+}
+
+
+.landing-stats {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.stat-item__value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #ffd54f;
+    line-height: 1;
+}
+
+.stat-item__label {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.65);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.section-title {
+    font-size: 1.9rem;
+    font-weight: 800;
+    color: #1a1a2e;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+    text-align: center;
+    color: #6c757d;
+    margin-bottom: 2.5rem;
+    font-size: 1.05rem;
+}
+
+
+.step-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    border: 2px solid #f0f0f0;
+    transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    height: 100%;
+}
+
+.step-card:hover {
+    border-color: #1976d2;
+    box-shadow: 0 8px 30px rgba(25,118,210,0.12);
+    transform: translateY(-4px);
+}
+
+.step-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1976d2, #42a5f5);
+    color: #fff;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+}
+
+.step-number {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #ffd54f;
+    color: #0d47a1;
+    font-size: 0.75rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.step-card__title {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: #1a1a2e;
+    margin-bottom: 0.5rem;
+}
+
+.step-card__text {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    margin: 0;
+}
+
+
+.role-card {
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    border: none;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.role-card--applicant {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    color: #0d47a1;
+}
+
+.role-card--employer {
+    background: linear-gradient(135deg, #fff8e1, #ffecb3);
+    color: #e65100;
+}
+
+.role-card__icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+    opacity: 0.85;
+}
+
+.role-card__title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+.role-card__list {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 1.5rem;
+}
+
+.role-card__list li {
+    padding: 0.3rem 0;
+    font-size: 0.92rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    opacity: 0.85;
+}
+
+.role-card__list li::before {
+    content: '✓';
+    font-weight: 800;
+    font-size: 0.85rem;
+}
+
+
+.landing-cta-bottom {
+    background: #1a1a2e;
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    text-align: center;
+    color: #fff;
+    margin-top: 3rem;
+}
+
+.landing-cta-bottom h2 {
+    font-size: 1.9rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+}
+
+.landing-cta-bottom p {
+    color: rgba(255,255,255,0.65);
+    margin-bottom: 1.75rem;
+    font-size: 1.05rem;
+}
+
+
+@media (max-width: 768px) {
+    .landing-hero__content {
+        padding: 2rem 1.5rem;
+    }
+    .landing-stats {
+        gap: 1.5rem;
+    }
+}

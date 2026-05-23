@@ -1,11 +1,12 @@
 <#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
 <#assign today>${.now?string('yyyy-MM-dd')}</#assign>
+<link rel="stylesheet" href="/static/css/resume.css">
 <@main.layout>
     <div class="container mt-4" style="max-width: 700px;">
         <div class="card shadow-sm" style="border-radius: 16px; border: 2px solid #e0e0e0;">
             <div class="card-body p-4">
-                <h3 class="text-center mb-4" style="color: var(--bs-primary);">
+                <h3 class="text-center mb-4">
                     <@spring.message "resume.create.title"/>
                 </h3>
 
@@ -131,110 +132,28 @@
         </div>
     </div>
 
-    <script>
-        const msg = {
-            workYears:           `<@spring.message "resume.exp.years"/>`,
-            workYearsPlaceholder:`<@spring.message "resume.exp.years.placeholder"/>`,
-            workCompany:         `<@spring.message "resume.exp.company"/>`,
-            workPosition:        `<@spring.message "resume.exp.position"/>`,
-            workResp:            `<@spring.message "resume.exp.responsibilities"/>`,
-            workRespPlaceholder: `<@spring.message "resume.exp.responsibilities.placeholder"/>`,
-            eduInstitution:      `<@spring.message "resume.edu.institution"/>`,
-            eduProgram:          `<@spring.message "resume.edu.program"/>`,
-            eduStart:            `<@spring.message "resume.edu.start"/>`,
-            eduEnd:              `<@spring.message "resume.edu.end"/>`,
-            eduDegree:           `<@spring.message "resume.edu.degree"/>`,
-            eduDegreeSelect:     `<@spring.message "resume.edu.degree.select"/>`,
-            eduBachelor:         `<@spring.message "resume.edu.degree.bachelor"/>`,
-            eduMaster:           `<@spring.message "resume.edu.degree.master"/>`,
-            eduSpecialist:       `<@spring.message "resume.edu.degree.specialist"/>`,
-            eduDoctor:           `<@spring.message "resume.edu.degree.doctor"/>`,
-            eduSecondary:        `<@spring.message "resume.edu.degree.secondary"/>`,
-        };
-
-        <#noparse>
-        function addWork() {
-            const container = document.getElementById('workContainer');
-            const div = document.createElement('div');
-            div.className = 'card p-3 mb-2 position-relative';
-            div.style.borderRadius = '12px';
-
-            div.innerHTML = `
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2"
-                    onclick="this.parentElement.remove()"></button>
-            <div class="row g-2">
-                <div class="col-md-4">
-                    <label class="form-label small">${msg.workYears}</label>
-                    <input type="number" name="work_years[]" class="form-control form-control-sm"
-                           placeholder="${msg.workYearsPlaceholder}" min="0">
-                </div>
-                <div class="col-md-8">
-                    <label class="form-label small">${msg.workCompany}</label>
-                    <input type="text" name="work_company[]" class="form-control form-control-sm"
-                           placeholder="${msg.workCompany}">
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label small">${msg.workPosition}</label>
-                    <input type="text" name="work_position[]" class="form-control form-control-sm"
-                           placeholder="${msg.workPosition}">
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label small">${msg.workResp}</label>
-                    <textarea name="work_responsibilities[]" class="form-control form-control-sm"
-                              rows="2" placeholder="${msg.workRespPlaceholder}"></textarea>
-                </div>
-            </div>`;
-            container.appendChild(div);
-        }
-
-        function addEdu() {
-            const container = document.getElementById('eduContainer');
-            const div = document.createElement('div');
-            div.className = 'card p-3 mb-2 position-relative';
-            div.style.borderRadius = '12px';
-            const today = '${today}';
-
-            div.innerHTML = `
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2"
-                    onclick="this.parentElement.remove()"></button>
-            <div class="row g-2">
-                <div class="col-md-6">
-                    <label class="form-label small">${msg.eduInstitution}</label>
-                    <input type="text" name="edu_institution[]" class="form-control form-control-sm"
-                           placeholder="${msg.eduInstitution}">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small">${msg.eduProgram}</label>
-                    <input type="text" name="edu_program[]" class="form-control form-control-sm"
-                           placeholder="${msg.eduProgram}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small">${msg.eduStart}</label>
-                    <input type="date" name="edu_start[]" class="form-control form-control-sm"
-                    max="${today}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small">${msg.eduEnd}</label>
-                    <input type="date" name="edu_end[]" class="form-control form-control-sm"
-                    max="${today}">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small">${msg.eduDegree}</label>
-                    <select name="edu_degree[]" class="form-select form-select-sm">
-                        <option value="">${msg.eduDegreeSelect}</option>
-                        <option value="Bachelor">${msg.eduBachelor}</option>
-                        <option value="Master">${msg.eduMaster}</option>
-                        <option value="Specialist">${msg.eduSpecialist}</option>
-                        <option value="Doctor">${msg.eduDoctor}</option>
-                        <option value="Secondary">${msg.eduSecondary}</option>
-                    </select>
-                </div>
-            </div>`;
-            container.appendChild(div);
-        }
-
-        addWork();
-        addEdu();
-    </script>
-</#noparse>
+<script>
+    const RESUME_MSG = {
+        workYears:`<@spring.message "resume.exp.years"/>`,
+        workYearsPlaceholder:`<@spring.message "resume.exp.years.placeholder"/>`,
+        workCompany:         `<@spring.message "resume.exp.company"/>`,
+        workPosition:        `<@spring.message "resume.exp.position"/>`,
+        workResp:            `<@spring.message "resume.exp.responsibilities"/>`,
+        workRespPlaceholder: `<@spring.message "resume.exp.responsibilities.placeholder"/>`,
+        eduInstitution:      `<@spring.message "resume.edu.institution"/>`,
+        eduProgram:          `<@spring.message "resume.edu.program"/>`,
+        eduStart:            `<@spring.message "resume.edu.start"/>`,
+        eduEnd:              `<@spring.message "resume.edu.end"/>`,
+        eduDegree:           `<@spring.message "resume.edu.degree"/>`,
+        eduDegreeSelect:     `<@spring.message "resume.edu.degree.select"/>`,
+        eduBachelor:         `<@spring.message "resume.edu.degree.bachelor"/>`,
+        eduMaster:           `<@spring.message "resume.edu.degree.master"/>`,
+        eduSpecialist:       `<@spring.message "resume.edu.degree.specialist"/>`,
+        eduDoctor:           `<@spring.message "resume.edu.degree.doctor"/>`,
+        eduSecondary:        `<@spring.message "resume.edu.degree.secondary"/>`,
+    };
+    const RESUME_TODAY = '${today}'
+</script>
+<script src="/static/js/resume.js"></script>
+<script> ResumeForm.init({ autoAddFirst: true})</script>
 </@main.layout>

@@ -1,26 +1,7 @@
 <#import "/spring.ftl" as spring>
 <#import "../layout.ftlh" as main>
-
-<#assign t_years><@spring.message "resume.exp.years"/></#assign>
-<#assign t_years_ph><@spring.message "resume.exp.years.placeholder"/></#assign>
-<#assign t_company><@spring.message "resume.exp.company"/></#assign>
-<#assign t_position><@spring.message "resume.exp.position"/></#assign>
-<#assign t_resp><@spring.message "resume.exp.responsibilities"/></#assign>
-<#assign t_resp_ph><@spring.message "resume.exp.responsibilities.placeholder"/></#assign>
-<#assign t_institution><@spring.message "resume.edu.institution"/></#assign>
-<#assign t_program><@spring.message "resume.edu.program"/></#assign>
-<#assign t_start><@spring.message "resume.edu.start"/></#assign>
-<#assign t_end><@spring.message "resume.edu.end"/></#assign>
-<#assign t_degree><@spring.message "resume.edu.degree"/></#assign>
-<#assign t_degree_sel><@spring.message "resume.edu.degree.select"/></#assign>
-<#assign t_bachelor><@spring.message "resume.edu.degree.bachelor"/></#assign>
-<#assign t_master><@spring.message "resume.edu.degree.master"/></#assign>
-<#assign t_specialist><@spring.message "resume.edu.degree.specialist"/></#assign>
-<#assign t_doctor><@spring.message "resume.edu.degree.doctor"/></#assign>
-<#assign t_secondary><@spring.message "resume.edu.degree.secondary"/></#assign>
-<#assign t_name_ph><@spring.message "resume.name.placeholder"/></#assign>
 <#assign today>${.now?string('yyyy-MM-dd')}</#assign>
-
+<link rel="stylesheet" href="/static/css/resume.css">
 <@main.layout>
     <div class="container mt-4" style="max-width: 700px;">
         <div class="card shadow-sm" style="border-radius: 16px; border: 2px solid #e0e0e0;">
@@ -176,80 +157,27 @@
     </div>
 
     <script>
-        function addWork() {
-            const container = document.getElementById('workContainer');
-            const div = document.createElement('div');
-            div.className = 'card p-3 mb-2 position-relative';
-            div.style.borderRadius = '12px';
-
-            div.innerHTML = `
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2"
-                    onclick="this.parentElement.remove()"></button>
-            <div class="row g-2">
-                <div class="col-md-4">
-                    <label class="form-label small">${t_years}</label>
-                    <input type="number" name="work_years[]" class="form-control form-control-sm"
-                           placeholder="${t_years_ph}" min="0">
-                </div>
-                <div class="col-md-8">
-                    <label class="form-label small">${t_company}</label>
-                    <input type="text" name="work_company[]" class="form-control form-control-sm">
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label small">${t_position}</label>
-                    <input type="text" name="work_position[]" class="form-control form-control-sm">
-                </div>
-                <div class="col-md-12">
-                    <label class="form-label small">${t_resp}</label>
-                    <textarea name="work_responsibilities[]" class="form-control form-control-sm"
-                              rows="2" placeholder="${t_resp_ph}"></textarea>
-                </div>
-            </div>`;
-            container.appendChild(div);
-        }
-
-        function addEdu() {
-            const container = document.getElementById('eduContainer');
-            const div = document.createElement('div');
-            div.className = 'card p-3 mb-2 position-relative';
-            div.style.borderRadius = '12px';
-            const today = '${today}';
-
-            div.innerHTML = `
-            <button type="button" class="btn-close position-absolute top-0 end-0 m-2"
-                    onclick="this.parentElement.remove()"></button>
-            <div class="row g-2">
-                <div class="col-md-6">
-                    <label class="form-label small">${t_institution}</label>
-                    <input type="text" name="edu_institution[]" class="form-control form-control-sm">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label small">${t_program}</label>
-                    <input type="text" name="edu_program[]" class="form-control form-control-sm">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small">${t_start}</label>
-                    <input type="date" name="edu_start[]" class="form-control form-control-sm"
-                    max="`+ today +`">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small">${t_end}</label>
-                    <input type="date" name="edu_end[]" class="form-control form-control-sm"
-                    max="`+ today +`">
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small">${t_degree}</label>
-                    <select name="edu_degree[]" class="form-select form-select-sm">
-                        <option value="">${t_degree_sel}</option>
-                        <option value="Бакалавр">${t_bachelor}</option>
-                        <option value="Магистр">${t_master}</option>
-                        <option value="Специалист">${t_specialist}</option>
-                        <option value="Доктор">${t_doctor}</option>
-                        <option value="Среднее специальное">${t_secondary}</option>
-                    </select>
-                </div>
-            </div>`;
-            container.appendChild(div);
-        }
+        const RESUME_MSG = {
+            workYears:`<@spring.message "resume.exp.years"/>`,
+            workYearsPlaceholder:`<@spring.message "resume.exp.years.placeholder"/>`,
+            workCompany:         `<@spring.message "resume.exp.company"/>`,
+            workPosition:        `<@spring.message "resume.exp.position"/>`,
+            workResp:            `<@spring.message "resume.exp.responsibilities"/>`,
+            workRespPlaceholder: `<@spring.message "resume.exp.responsibilities.placeholder"/>`,
+            eduInstitution:      `<@spring.message "resume.edu.institution"/>`,
+            eduProgram:          `<@spring.message "resume.edu.program"/>`,
+            eduStart:            `<@spring.message "resume.edu.start"/>`,
+            eduEnd:              `<@spring.message "resume.edu.end"/>`,
+            eduDegree:           `<@spring.message "resume.edu.degree"/>`,
+            eduDegreeSelect:     `<@spring.message "resume.edu.degree.select"/>`,
+            eduBachelor:         `<@spring.message "resume.edu.degree.bachelor"/>`,
+            eduMaster:           `<@spring.message "resume.edu.degree.master"/>`,
+            eduSpecialist:       `<@spring.message "resume.edu.degree.specialist"/>`,
+            eduDoctor:           `<@spring.message "resume.edu.degree.doctor"/>`,
+            eduSecondary:        `<@spring.message "resume.edu.degree.secondary"/>`,
+        };
+        const RESUME_TODAY = '${today}'
     </script>
+    <script src="/static/js/resume.js"></script>
+    <script> ResumeForm.init({ autoAddFirst: true})</script>
 </@main.layout>

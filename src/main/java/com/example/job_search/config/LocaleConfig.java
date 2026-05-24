@@ -33,7 +33,8 @@ public class LocaleConfig implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
-    private LocaleChangeInterceptor localeChangeInterceptor(){
+    @Bean
+    public LocaleChangeInterceptor localeChangeInterceptor(){
         var lci = new LocaleChangeInterceptor();
         lci.setParamName("lang");
         return lci;

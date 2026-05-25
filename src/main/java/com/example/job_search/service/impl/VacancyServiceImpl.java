@@ -31,7 +31,6 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy,
                                               String search, Float salaryMin, Integer expFrom) {
-        // Пустые строки приводим к null, чтобы JPQL-условие IS NULL сработало
         String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
 
         boolean hasFilter = searchParam != null || salaryMin != null || expFrom != null;

@@ -16,13 +16,13 @@ public class PasswordResetController {
 
     private final PasswordResetService passwordResetService;
 
-    // Страница запроса сброса
+
     @GetMapping("/forgot-password")
     public String forgotPasswordPage() {
         return "auth/forgot-password";
     }
 
-    // Обработка запроса письма
+
     @PostMapping("/forgot-password")
     public String sendResetLink(@RequestParam String email,
                                 HttpServletRequest request,
@@ -39,14 +39,14 @@ public class PasswordResetController {
         return "redirect:/auth/forgot-password";
     }
 
-    // Страница ввода нового пароля
+
     @GetMapping("/reset-password")
     public String resetPasswordPage(@RequestParam String token, Model model) {
         model.addAttribute("token", token);
         return "auth/reset-password";
     }
 
-    // Обработка нового пароля
+
     @PostMapping("/reset-password")
     public String resetPassword(@RequestParam String token,
                                 @RequestParam String password,

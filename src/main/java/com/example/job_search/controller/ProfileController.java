@@ -41,7 +41,7 @@ public class ProfileController {
 
         model.addAttribute("user", user);
 
-        //Employer -> его вакансии
+
         if ("EMPLOYER".equals(user.getAccountType())){
             var vacancies = vacancyService.getByAuthor(userId, vacancyPage, 5);
             model.addAttribute("vacancies", vacancies.getContent());
@@ -52,7 +52,7 @@ public class ProfileController {
             model.addAttribute("resumes", allResumes.getContent());
             model.addAttribute("currentResumesPage", resumePage);
             model.addAttribute("totalResPage", allResumes.getTotalPages());
-        }else { // Applicant
+        }else {
             var resumes = resumeService.getByApplicant(userId, resumePage, 5);
             model.addAttribute("resumes",  resumes.getContent());
             model.addAttribute("currentResumesPage",  resumePage);

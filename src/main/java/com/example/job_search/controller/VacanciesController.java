@@ -18,7 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("vacancies")
@@ -158,6 +160,24 @@ public class VacanciesController {
         model.addAttribute("responses", responses);
         addCurrentUser(principal, model);
         return "vacancies/vacancy_responses";
+    }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public Map<String, Object> search(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) Float salaryMin,
+            @RequestParam(required = false) Integer expFrom,
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Page<VacanciesDto> result = vacancyService.getAllVacancies(page, size, sortBy, search, salaryMin, expFrom);
+        Map<String, Object> response = new HashMap<>();
+        response.put("vacancies", result.getContent());
+        response.put("totalPages", result.getTotalPages());
+        response.put("currentPage", page);
+        response.put("totalItems", result.getTotalElements());
+        return response;
     }
 
     private void addCurrentUser(Principal principal, Model model) {

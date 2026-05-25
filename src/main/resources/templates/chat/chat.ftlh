@@ -49,7 +49,6 @@
                 </div>
             </div>
 
-            <!-- Правая панель: чат -->
             <div class="col-md-9">
                 <div class="card shadow-sm">
                     <div class="card-header bg-primary text-white d-flex align-items-center">
@@ -61,7 +60,7 @@
           </span>
                     </div>
 
-                    <!-- Блок сообщений -->
+
                     <div class="card-body p-3"
                          id="chatBox"
                          style="height:420px;overflow-y:auto;background:#f8f9fa;">
@@ -81,7 +80,7 @@
                         </#list>
                     </div>
 
-                    <!-- Поле ввода -->
+
                     <div class="card-footer bg-white p-2">
                         <div class="input-group">
                             <input type="text" id="msgInput" class="form-control"

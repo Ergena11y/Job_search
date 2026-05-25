@@ -52,7 +52,7 @@
                                   placeholder="<@spring.message "resume.about"/>">${resumeDto.description!''}</textarea>
                     </div>
 
-                    <!-- Work Experience blocks -->
+
                     <div class="mb-3">
                         <label class="form-label fw-bold"><@spring.message "resume.section.experience"/>:</label>
                         <div id="workContainer"></div>
@@ -62,7 +62,7 @@
                         </button>
                     </div>
 
-                    <!-- Education blocks -->
+
                     <div class="mb-3">
                         <label class="form-label fw-bold"><@spring.message "resume.section.education"/>:</label>
                         <div id="eduContainer"></div>
@@ -72,7 +72,7 @@
                         </button>
                     </div>
 
-                    <!-- Contacts -->
+
                     <div class="mb-3">
                         <label class="form-label fw-bold"><@spring.message "resume.contacts"/>:</label>
                         <div class="row g-2">

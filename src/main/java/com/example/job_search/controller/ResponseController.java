@@ -42,7 +42,7 @@ public class ResponseController {
             return "redirect:/vacancies/" + vacancyId;
         }
 
-        //проверка на дублирующий отклик
+
         boolean alreadyApplied = respondedApplicantsRepository
                 .findByVacancyId(vacancyId)
                 .stream()
@@ -74,7 +74,7 @@ public class ResponseController {
         RespondedApplicants responded = respondedApplicantsRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Not found"));
 
-        // Проверка что это вакансия текущего работодателя
+
         int userId = userService.getUserIdByEmail(principal.getName());
         if (responded.getVacancy().getAuthor().getId() != userId) {
             throw new ForbiddenException();

@@ -30,7 +30,6 @@
                                 </#if>
                             </div>
 
-                            <#-- Информация о компании -->
                             <div class="flex-grow-1">
                                 <h5 class="card-title mb-1">
                                     <a href="/companies/${company.id!''}" class="text-decoration-none text-dark fw-bold">
@@ -57,7 +56,7 @@
                 </div>
             </#list>
 
-        <#-- Пагинация -->
+
             <#if totalPages gt 1>
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center">

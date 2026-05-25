@@ -169,7 +169,7 @@
                 </#if>
 
             <#else>
-            <#-- APPLICANT -->
+
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0"><@spring.message "profile.my.resumes"/></h4>
                     <a href="/resumes/create" class="btn btn-success btn-sm">
@@ -221,7 +221,7 @@
                     </div>
                 </#if>
 
-            <#-- Applicant responses with statuses -->
+
                 <#if myResponds?? && myResponds?has_content>
                     <hr class="my-4">
                     <h4 class="mb-3"><@spring.message "chat.my.responds"/></h4>

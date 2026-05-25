@@ -42,15 +42,15 @@ public class SecurityConfig {
 
                         .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
 
-                        //Вакансии читают все
+
                         .requestMatchers(HttpMethod.GET, "/vacancies").permitAll()
                         .requestMatchers(HttpMethod.GET, "/vacancies/**").permitAll()
 
-                        //Компании - только соискатели
+
                         .requestMatchers(HttpMethod.GET, "/companies").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.GET, "/companies/**").hasRole("APPLICANT")
 
-                        // Резюме т
+
                         .requestMatchers(HttpMethod.GET, "/resumes").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/resumes/create").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.GET, "/resumes/edit/**").hasRole("APPLICANT")
@@ -60,14 +60,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/resumes/edit/**").hasRole("APPLICANT")
                         .requestMatchers(HttpMethod.POST, "/resumes/delete/**").hasRole("APPLICANT")
 
-                        // Employer может создавать вакансии
+
                         .requestMatchers(HttpMethod.POST, "/vacancies/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.GET, "/vacancies/create").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.POST, "/vacancies").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.PUT, "/vacancies/**").hasRole("EMPLOYER")
                         .requestMatchers(HttpMethod.DELETE, "/vacancies/**").hasRole("EMPLOYER")
 
-                        //profile смотрят только авториз
+
                         .requestMatchers(HttpMethod.POST, "/profile/update").authenticated()
                         .requestMatchers(HttpMethod.POST, "/profile/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/profile/**").authenticated()

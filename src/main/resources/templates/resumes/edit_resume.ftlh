@@ -23,7 +23,7 @@
                 <form action="/resumes/edit/${resume.id!''}" method="post" id="resumeForm">
                     <#if _csrf??><input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"></#if>
 
-                    <#-- Основные поля -->
+
                     <div class="mb-3">
                         <label class="form-label"><@spring.message "resume.name"/>: <span class="text-danger">*</span></label>
                         <input type="text" name="name"
@@ -67,7 +67,7 @@
                         <textarea name="description" class="form-control" rows="3">${resume.description!''}</textarea>
                     </div>
 
-                    <#-- Блоки опыта работы -->
+
                     <div class="mb-3">
                         <label class="form-label fw-bold"><@spring.message "resume.section.experience"/>:</label>
                         <div id="workContainer"></div>
@@ -77,7 +77,7 @@
                         </button>
                     </div>
 
-                    <#-- Блоки образования -->
+
                     <div class="mb-3">
                         <label class="form-label fw-bold"><@spring.message "resume.section.education"/>:</label>
                         <div id="eduContainer"></div>
@@ -87,7 +87,7 @@
                         </button>
                     </div>
 
-                    <#-- Контакты -->
+
                     <div class="mb-3">
                         <label class="form-label fw-bold"><@spring.message "resume.contacts"/>:</label>
                         <div class="row g-2">

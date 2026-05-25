@@ -35,7 +35,7 @@ public class VacanciesController {
 
     @GetMapping
     public String vacancies(@RequestParam(defaultValue = "0") int page,
-                            @RequestParam(defaultValue = "10") int size,
+                            @RequestParam(defaultValue = "20") int size,
                             @RequestParam(defaultValue = "date") String sortBy,
                             @RequestParam(required = false) String search,
                             @RequestParam(required = false) Float salaryMin,
@@ -170,7 +170,7 @@ public class VacanciesController {
             @RequestParam(required = false) Integer expFrom,
             @RequestParam(defaultValue = "date") String sortBy,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "20") int size) {
         Page<VacanciesDto> result = vacancyService.getAllVacancies(page, size, sortBy, search, salaryMin, expFrom);
         Map<String, Object> response = new HashMap<>();
         response.put("vacancies", result.getContent());

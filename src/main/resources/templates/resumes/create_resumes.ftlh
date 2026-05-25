@@ -155,5 +155,8 @@
     const RESUME_TODAY = '${today}'
 </script>
 <script src="/static/js/resume.js"></script>
-<script> ResumeForm.init({ autoAddFirst: true})</script>
+<script> ResumeForm.init({ autoAddFirst: true});
+         function addWork() {ResumeForm.addWork();}
+         function addEdu() {ResumeForm.addEdu();}
+</script>
 </@main.layout>

@@ -90,7 +90,7 @@
                                                 </#if>
                                                 <div class="mb-3">
                                                     <label class="form-label small fw-bold">
-                                                        Выберите резюме:
+                                                        <@spring.message "vacancy.respond.select.resume"/>:
                                                     </label>
                                                     <select name="resumeId" class="form-select form-select-sm">
                                                         <#list myResumes as r>
@@ -127,7 +127,7 @@
                                             <a href="/vacancies/${vacancy.id}/responses"
                                                class="btn btn-outline-primary w-100 mb-2">
                                                 <i class="bi bi-people me-1"></i>
-                                                Посмотреть отклики
+                                                <@spring.message "vacancy.view.responses"/>
                                             </a>
                                             <a href="/vacancies/edit/${vacancy.id}"
                                                class="btn btn-outline-secondary w-100">
@@ -172,7 +172,7 @@
                                 <div class="mt-4 text-center">
                                     <small class="text-muted">
                                         <@spring.message "vacancy.published"/>: <br>
-                                        <strong>${vacancy.updateTime!''}</strong>
+                                        <strong>${vacancy.formattedUpdateTime!''}</strong>
                                     </small>
                                 </div>
                             </div>

@@ -202,5 +202,8 @@
         ];
     </script>
     <script src="/static/js/resume.js"></script>
-    <script> ResumeForm.init({ existingWork: RESUME_EXISTING_WORK, existingEdu: RESUME_EXISTING_EDU});</script>
+    <script> ResumeForm.init({ existingWork: RESUME_EXISTING_WORK, existingEdu: RESUME_EXISTING_EDU});
+        function addWork() {ResumeForm.addWork();}
+        function addEdu() {ResumeForm.addEdu();}
+    </script>
 </@main.layout>

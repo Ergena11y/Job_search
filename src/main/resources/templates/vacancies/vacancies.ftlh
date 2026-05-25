@@ -46,7 +46,7 @@
                                         <i class="bi bi-briefcase me-1"></i><@spring.message "vacancy.experience"/>: ${vacancy.expFrom!0} – ${vacancy.expTo!0} <@spring.message "vacancy.experience.years"/>
                                     </span>
                                     <span class="text-muted">
-                                        <i class="bi bi-calendar3 me-1"></i>${vacancy.createdDate!''}
+                                        <i class="bi bi-calendar3 me-1"></i>${vacancy.formattedCreatedDate!''}
                                     </span>
                                 </p>
                             </div>

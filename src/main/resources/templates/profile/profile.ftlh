@@ -37,7 +37,11 @@
                         </li>
                         <li class="list-group-item px-0">
                             <i class="bi bi-telephone me-2 text-muted"></i>
-                            ${user.phoneNumber!'<@spring.message "profile.phone.not.specified"/>'}
+                            <#if user.phoneNumber?? && user.phoneNumber != "">
+                                ${user.phoneNumber}
+                            <#else>
+                                <@spring.message "profile.phone.not.specified"/>
+                            </#if>
                         </li>
                     </ul>
 
@@ -90,7 +94,7 @@
                                     </a>
                                     <a href="/vacancies/${v.id!!''}/responses"
                                        class="btn btn-sm btn-outline-info">
-                                        <i class="bi bi-people me-1"></i>Отклики
+                                        <i class="bi bi-people me-1"></i><@spring.message "vacancy.view.responses"/>
                                     </a>
                                 </div>
                             </div>
@@ -128,7 +132,11 @@
                                         <h5 class="card-title mb-1">${r.name!'-'}</h5>
                                         <p class="card-text text-muted small mb-2">
                                             <i class="bi bi-person me-1"></i>
-                                            ${r.applicantName!'<@spring.message "common.anonymous"/>'}
+                                            <#if r.applicantName?? && r.applicantName != "">
+                                                ${r.applicantName}
+                                            <#else>
+                                                <@spring.message "common.anonymous"/>
+                                            </#if>
                                         </p>
                                     </div>
                                     <span class="badge bg-success ms-3">${r.salary!''} ⃀</span>
@@ -161,7 +169,7 @@
                 </#if>
 
             <#else>
-            <#-- СОИСКАТЕЛЬ -->
+            <#-- APPLICANT -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0"><@spring.message "profile.my.resumes"/></h4>
                     <a href="/resumes/create" class="btn btn-success btn-sm">
@@ -178,7 +186,7 @@
                                     <span class="text-success fw-bold">${r.salary!''} ⃀</span>
                                 </div>
                                 <p class="text-muted small mb-2">
-                                    <@spring.message "resume.updated"/>: ${r.updateTime!''}
+                                    <@spring.message "resume.updated"/>: ${r.formattedUpdateTime!''}
                                 </p>
                                 <div class="d-flex gap-2">
                                     <a href="/resumes/${r.id!''}"
@@ -213,7 +221,7 @@
                     </div>
                 </#if>
 
-            <#-- Отклики соискателя с статусами -->
+            <#-- Applicant responses with statuses -->
                 <#if myResponds?? && myResponds?has_content>
                     <hr class="my-4">
                     <h4 class="mb-3"><@spring.message "chat.my.responds"/></h4>
@@ -229,18 +237,20 @@
                                             ${ra.resume.name!''}
                                         </span>
                                         <br>
-                                        <#-- Бейдж статуса -->
                                         <#if ra.status == "APPROVED">
-                                            <span class="badge bg-success mt-1">Одобрено</span>
+                                            <span class="badge bg-success mt-1">
+                                                <@spring.message "respond.status.approved"/>
+                                            </span>
                                         <#elseif ra.status == "REJECTED">
-                                            <span class="badge bg-danger mt-1">Отклонено</span>
+                                            <span class="badge bg-danger mt-1">
+                                                <@spring.message "respond.status.rejected"/>
+                                            </span>
                                         <#else>
                                             <span class="badge bg-warning text-dark mt-1">
-                                                На рассмотрении
+                                                <@spring.message "respond.status.pending"/>
                                             </span>
                                         </#if>
                                     </div>
-                                    <#-- Чат только если одобрено -->
                                     <#if ra.status == "APPROVED">
                                         <a href="/chat/${ra.id}"
                                            class="btn btn-sm btn-success"

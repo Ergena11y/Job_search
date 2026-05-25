@@ -14,7 +14,7 @@
                         <span class="badge bg-info text-dark p-2"><@spring.message "resume.employer.mode"/></span>
                     </#if>
                     <#if isOwner>
-                        <span class="badge bg-success p-2">Ваше резюме</span>
+                        <span class="badge bg-success p-2"><@spring.message "resume.your"/></span>
                     </#if>
                 </div>
 
@@ -24,7 +24,7 @@
                             <div class="col-md-8">
                                 <h1 class="display-6 fw-bold text-dark mb-1">${resume.name!'-'}</h1>
                                 <p class="lead text-primary mb-0">
-                                    <i class="bi bi-person-badge"></i> ${resume.applicantName!'ФИО не указано'}
+                                    <i class="bi bi-person-badge"></i> ${resume.applicantName!''}
                                 </p>
                             </div>
                             <div class="col-md-4 text-md-end mt-3 mt-md-0">
@@ -44,7 +44,7 @@
                                     </h5>
                                     <div class="p-3 bg-light rounded shadow-sm"
                                          style="white-space: pre-wrap; line-height: 1.6;">
-                                        ${resume.description!'Информация отсутствует'}
+                                        ${resume.description!''}<#if !resume.description??><@spring.message "resume.info.missing"/></#if>
                                     </div>
                                 </div>
 
@@ -71,7 +71,7 @@
                                         <#if isEmployer || isOwner>
                                             <a href="mailto:${resume.applicantEmail!''}"
                                                class="fw-bold text-decoration-none">
-                                                ${resume.applicantEmail!'Не указан'}
+                                                ${resume.applicantEmail!''}<#if !resume.applicantEmail??><@spring.message "resume.contact.not.specified"/></#if>
                                             </a>
                                         <#else>
                                             <span class="fw-bold text-muted">
@@ -86,7 +86,7 @@
                                         </label>
                                         <#if isEmployer || isOwner>
                                             <span class="fw-bold">
-                                                ${resume.applicantPhone!'Не указан'}
+                                                ${resume.applicantPhone!''}<#if !resume.applicantPhone??><@spring.message "resume.contact.not.specified"/></#if>
                                             </span>
                                         <#else>
                                             <span class="fw-bold text-muted">
@@ -154,7 +154,7 @@
                                 <div class="mt-4 text-center">
                                     <small class="text-muted">
                                         <@spring.message "resume.published.date"/>: <br>
-                                        <strong>${resume.createdDate!''}</strong>
+                                        <strong>${resume.formattedCreatedDate!''}</strong>
                                     </small>
                                 </div>
                             </div>

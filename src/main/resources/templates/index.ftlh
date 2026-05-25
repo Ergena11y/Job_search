@@ -10,26 +10,25 @@
 
             <div class="col-md-7 landing-hero__content">
                 <p class="landing-hero__eyebrow">
-                    <i class="bi bi-briefcase-fill me-1"></i> Платформа поиска работы
+                    <i class="bi bi-briefcase-fill me-1"></i> <@spring.message "index.hero.eyebrow"/>
                 </p>
                 <h1 class="landing-hero__title">
-                    Найди работу <span>мечты</span><br>или лучший талант
+                    <@spring.message "index.hero.title"/>
                 </h1>
                 <p class="landing-hero__subtitle">
-                    Тысячи вакансий и резюме в одном месте. Соискатели находят работу быстрее,
-                    работодатели — нужных людей.
+                    <@spring.message "index.hero.subtitle"/>
                 </p>
 
                 <div class="landing-hero__cta">
                     <#if user??>
                         <a href="<#if user.accountType == 'EMPLOYER'>/vacancies/create<#else>/vacancies</#if>"
                            class="btn-hero-primary">
-                            <#if user.accountType == "EMPLOYER">Создать вакансию<#else>Смотреть вакансии</#if>
+                            <#if user.accountType == "EMPLOYER"><@spring.message "index.cta.create.vacancy"/><#else><@spring.message "index.cta.browse.vacancies"/></#if>
                         </a>
-                        <a href="/profile" class="btn-hero-outline">Мой профиль</a>
+                        <a href="/profile" class="btn-hero-outline"><@spring.message "index.cta.my.profile"/></a>
                     <#else>
-                        <a href="/auth/register" class="btn-hero-primary">Зарегистрироваться бесплатно</a>
-                        <a href="/auth/login"    class="btn-hero-outline">Войти</a>
+                        <a href="/auth/register" class="btn-hero-primary"><@spring.message "index.cta.register"/></a>
+                        <a href="/auth/login"    class="btn-hero-outline"><@spring.message "nav.login"/></a>
                     </#if>
                 </div>
 
@@ -37,16 +36,16 @@
                     <div class="stat-item">
                         <div class="stat-item__value"
                              data-counter="1000" data-suffix="+" data-duration="1400">0+</div>
-                        <div class="stat-item__label">Вакансий</div>
+                        <div class="stat-item__label"><@spring.message "index.stat.vacancies"/></div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-item__value"
                              data-counter="500" data-suffix="+" data-duration="1200">0+</div>
-                        <div class="stat-item__label">Компаний</div>
+                        <div class="stat-item__label"><@spring.message "index.stat.companies"/></div>
                     </div>
                     <div class="stat-item">
                         <div class="stat-item__value">24/7</div>
-                        <div class="stat-item__label">Доступ</div>
+                        <div class="stat-item__label"><@spring.message "index.stat.access"/></div>
                     </div>
                 </div>
             </div>
@@ -60,8 +59,8 @@
 
 
     <section class="mb-5">
-        <h2 class="section-title">Как это работает</h2>
-        <p class="section-subtitle">Три шага до новой работы или лучшего кандидата</p>
+        <h2 class="section-title"><@spring.message "index.how.title"/></h2>
+        <p class="section-subtitle"><@spring.message "index.how.subtitle"/></p>
 
         <div class="row g-4">
             <div class="col-md-4">
@@ -70,9 +69,9 @@
                         <div class="step-icon"><i class="bi bi-person-plus-fill"></i></div>
                         <div class="step-number">1</div>
                     </div>
-                    <div class="step-card__title">Создай аккаунт</div>
+                    <div class="step-card__title"><@spring.message "index.step1.title"/></div>
                     <p class="step-card__text">
-                        Зарегистрируйся как соискатель или работодатель. Займёт меньше минуты.
+                        <@spring.message "index.step1.text"/>
                     </p>
                 </div>
             </div>
@@ -82,9 +81,9 @@
                         <div class="step-icon"><i class="bi bi-file-earmark-person-fill"></i></div>
                         <div class="step-number">2</div>
                     </div>
-                    <div class="step-card__title">Заполни профиль</div>
+                    <div class="step-card__title"><@spring.message "index.step2.title"/></div>
                     <p class="step-card__text">
-                        Добавь резюме с опытом и образованием — или создай вакансию с описанием и зарплатой.
+                        <@spring.message "index.step2.text"/>
                     </p>
                 </div>
             </div>
@@ -94,9 +93,9 @@
                         <div class="step-icon"><i class="bi bi-chat"></i></div>
                         <div class="step-number">3</div>
                     </div>
-                    <div class="step-card__title">Откликайся и общайся</div>
+                    <div class="step-card__title"><@spring.message "index.step3.title"/></div>
                     <p class="step-card__text">
-                        Откликнись на вакансию и общайся напрямую с работодателем через встроенный чат.
+                        <@spring.message "index.step3.text"/>
                     </p>
                 </div>
             </div>
@@ -105,27 +104,27 @@
 
 
     <section class="mb-5">
-        <h2 class="section-title">Для кого платформа</h2>
-        <p class="section-subtitle">Одно решение — для обеих сторон</p>
+        <h2 class="section-title"><@spring.message "index.for.whom.title"/></h2>
+        <p class="section-subtitle"><@spring.message "index.for.whom.subtitle"/></p>
 
         <div class="row g-4">
             <div class="col-md-6">
                 <div class="role-card role-card--applicant">
                     <i class="bi bi-person-workspace role-card__icon"></i>
-                    <div class="role-card__title">Соискателям</div>
+                    <div class="role-card__title"><@spring.message "index.applicant.title"/></div>
                     <ul class="role-card__list">
-                        <li>Просматривай тысячи актуальных вакансий</li>
-                        <li>Создавай и редактируй резюме онлайн</li>
-                        <li>Откликайся в один клик</li>
-                        <li>Общайся с работодателями в чате</li>
+                        <li><@spring.message "index.applicant.item1"/></li>
+                        <li><@spring.message "index.applicant.item2"/></li>
+                        <li><@spring.message "index.applicant.item3"/></li>
+                        <li><@spring.message "index.applicant.item4"/></li>
                     </ul>
                     <#if user??>
                         <a href="/vacancies" class="btn btn-primary rounded-pill px-4">
-                            <i class="bi bi-search me-1"></i>Вакансии
+                            <i class="bi bi-search me-1"></i><@spring.message "nav.vacancies"/>
                         </a>
                     <#else>
                         <a href="/auth/register" class="btn btn-primary rounded-pill px-4">
-                            <i class="bi bi-rocket-takeoff me-1"></i>Начать поиск
+                            <i class="bi bi-rocket-takeoff me-1"></i><@spring.message "index.cta.start.search"/>
                         </a>
                     </#if>
                 </div>
@@ -134,22 +133,20 @@
             <div class="col-md-6">
                 <div class="role-card role-card--employer">
                     <i class="bi bi-building role-card__icon"></i>
-                    <div class="role-card__title">Работодателям</div>
+                    <div class="role-card__title"><@spring.message "index.employer.title"/></div>
                     <ul class="role-card__list">
-                        <li>Публикуй вакансии без лишних шагов</li>
-                        <li>Просматривай базу резюме соискателей</li>
-                        <li>Одобряй или отклоняй кандидатов</li>
-                        <li>Ведите переговоры прямо на платформе</li>
+                        <li><@spring.message "index.employer.item1"/></li>
+                        <li><@spring.message "index.employer.item2"/></li>
+                        <li><@spring.message "index.employer.item3"/></li>
+                        <li><@spring.message "index.employer.item4"/></li>
                     </ul>
                     <#if user??>
-                        <a href="/resumes" class="btn btn-warning rounded-pill px-4"
-                           style="color:#0d47a1; font-weight:700;">
-                            <i class="bi bi-people-fill me-1"></i>База резюме
+                        <a href="/resumes" class="btn btn-warning rounded-pill px-4">
+                            <i class="bi bi-people-fill me-1"></i><@spring.message "profile.resume.base"/>
                         </a>
                     <#else>
-                        <a href="/auth/register" class="btn btn-warning rounded-pill px-4"
-                           style="color:#0d47a1; font-weight:700;">
-                            <i class="bi bi-plus-circle me-1"></i>Разместить вакансию
+                        <a href="/auth/register" class="btn btn-warning rounded-pill px-4">
+                            <i class="bi bi-plus-circle me-1"></i><@spring.message "index.cta.post.vacancy"/>
                         </a>
                     </#if>
                 </div>
@@ -160,14 +157,14 @@
 
     <#if !user??>
         <section class="landing-cta-bottom">
-            <h2>Готов начать?</h2>
-            <p>Регистрация бесплатна и занимает меньше минуты</p>
+            <h2><@spring.message "index.cta.bottom.title"/></h2>
+            <p><@spring.message "index.cta.bottom.subtitle"/></p>
             <div class="d-flex justify-content-center gap-3 flex-wrap">
                 <a href="/auth/register" class="btn-hero-primary">
-                    <i class="bi bi-person-plus me-1"></i>Зарегистрироваться
+                    <i class="bi bi-person-plus me-1"></i><@spring.message "index.cta.register"/>
                 </a>
                 <a href="/vacancies" class="btn-hero-outline">
-                    <i class="bi bi-eye me-1"></i>Смотреть вакансии
+                    <i class="bi bi-eye me-1"></i><@spring.message "index.cta.browse.vacancies"/>
                 </a>
             </div>
         </section>

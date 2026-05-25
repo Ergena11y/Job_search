@@ -1,6 +1,5 @@
 package com.example.job_search.service.impl;
 
-
 import com.example.job_search.dto.UpdateProfileDto;
 import com.example.job_search.dto.UserDto;
 import com.example.job_search.exception.AvatarImageNotFoundException;
@@ -10,8 +9,8 @@ import com.example.job_search.model.User;
 import com.example.job_search.repository.UserRepository;
 import com.example.job_search.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,17 +23,13 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -50,6 +45,7 @@ public class UserServiceImpl implements UserService {
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setEnabled(true);
+        user.setPreferredLanguage("ru");
         User saved = userRepository.save(user);
         log.info("Пользователь успешно зарегистрирован с id: {}", saved.getId());
         return convertToDto(saved);
@@ -74,7 +70,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String uploadAvatar(int id, MultipartFile file) throws AvatarImageNotFoundException {
-        log.info("Загрузка аватара для пользователя id: {}", id );
+        log.info("Загрузка аватара для пользователя id: {}" , id );
 
 
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
@@ -173,6 +169,14 @@ public class UserServiceImpl implements UserService {
                 .getId();
     }
 
+    @Override
+    public void updateUserLanguage(int userId, String language) throws UserProfileNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserProfileNotFoundException("Профиль не найден"));
+        user.setPreferredLanguage(language);
+        userRepository.save(user);
+        log.info("Язык пользователя {} обновлен на: {}", userId, language);
+    }
 
     private UserDto convertToDto(User user) {
         UserDto dto = new UserDto();
@@ -184,6 +188,7 @@ public class UserServiceImpl implements UserService {
         dto.setPhoneNumber(user.getPhoneNumber());
         dto.setAvatar(user.getAvatar());
         dto.setAccountType(user.getAccountType());
+        dto.setPreferredLanguage(user.getPreferredLanguage());
         return dto;
     }
 
@@ -208,3 +213,4 @@ public class UserServiceImpl implements UserService {
         return authorities;
     }
 }
+

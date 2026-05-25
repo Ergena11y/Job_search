@@ -39,4 +39,6 @@ public interface UserService extends UserDetailsService {
     void updateUserProfile(int userId, UpdateProfileDto dto, MultipartFile avatar) throws UserProfileNotFoundException;
 
     int getUserIdByEmail(String email) throws  UserNotFoundException;
+
+    void updateUserLanguage(int userId, String language) throws UserProfileNotFoundException;
 }

@@ -1,9 +1,5 @@
 package com.example.job_search.config;
 
-
-
-
-
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

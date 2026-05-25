@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 009
+      author: Ergen
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: preferred_language
+                  type: varchar(10)
+                  defaultValue: "ru"
+                  constraints:
+                    nullable: false

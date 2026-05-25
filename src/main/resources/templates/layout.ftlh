@@ -86,8 +86,8 @@
                             <i class="bi bi-globe me-1"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
-                            <li><a class="dropdown-item" href="?lang=ru"><@spring.message "nav.lang.ru"/></a></li>
-                            <li><a class="dropdown-item" href="?lang=en"><@spring.message "nav.lang.en"/></a></li>
+                            <li><a class="dropdown-item" href="/language/change?lang=ru"><@spring.message "nav.lang.ru"/></a></li>
+                            <li><a class="dropdown-item" href="/language/change?lang=en"><@spring.message "nav.lang.en"/></a></li>
                         </ul>
                     </li>
                 </ul>

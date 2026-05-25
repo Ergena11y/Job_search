@@ -43,6 +43,9 @@ public class User implements UserDetails {
     @Column(name = "reset_password_token")
     private String resetPasswordToken;
 
+    @Column(name = "preferred_language")
+    private String preferredLanguage;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Vacancies> vacancies;
 

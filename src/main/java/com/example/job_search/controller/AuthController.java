@@ -80,6 +80,6 @@ public class AuthController {
         }
 
         String accountType = userDto.getAccountType() != null ? userDto.getAccountType() : "APPLICANT";
-        return  "EMPLOYER".equals(accountType) ? "redirect:/resumes" : "redirect:/vacancies";
+        return "EMPLOYER".equals(accountType) ? "redirect:/resumes" : "redirect:/vacancies";
     }
 }

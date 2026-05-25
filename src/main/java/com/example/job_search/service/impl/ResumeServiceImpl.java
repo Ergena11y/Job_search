@@ -96,6 +96,7 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
+    @Transactional
     public void updateResumes(int id, ResumeDto resumeDto,
                               List<WorkExperienceDto> workExperience,
                               List<EducationDto> education) {

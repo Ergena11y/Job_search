@@ -35,15 +35,24 @@ public class VacanciesController {
     public String vacancies(@RequestParam(defaultValue = "0") int page,
                             @RequestParam(defaultValue = "10") int size,
                             @RequestParam(defaultValue = "date") String sortBy,
+                            @RequestParam(required = false) String search,
+                            @RequestParam(required = false) Float salaryMin,
+                            @RequestParam(required = false) Integer expFrom,
                             Principal principal,
                             Model model) {
+
         Page<@Valid VacanciesDto> vacancyPage =
-                vacancyService.getAllVacancies(page, size, sortBy);
+                vacancyService.getAllVacancies(page, size, sortBy, search, salaryMin, expFrom);
+
         model.addAttribute("vacancies", vacancyPage.getContent());
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", vacancyPage.getTotalPages());
         model.addAttribute("totalItems", vacancyPage.getTotalElements());
         model.addAttribute("sortBy", sortBy);
+        model.addAttribute("search", search != null ? search : "");
+        model.addAttribute("salaryMin", salaryMin != null ? salaryMin : "");
+        model.addAttribute("expFrom", expFrom != null ? expFrom : "");
+
         addCurrentUser(principal, model);
         return "vacancies/vacancies";
     }
@@ -59,13 +68,11 @@ public class VacanciesController {
     @PostMapping("/create")
     public String create(@Valid VacanciesDto dto, BindingResult br,
                          Model model, Principal principal) throws UserNotFoundException {
-
         if (dto.getExpFrom() != null && dto.getExpTo() != null
                 && dto.getExpFrom() > dto.getExpTo()) {
             br.rejectValue("expTo", "exp.invalid",
                     "Опыт 'до' не может быть меньше опыта 'от'");
         }
-
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
             model.addAttribute("bindingRes", br);
@@ -97,14 +104,11 @@ public class VacanciesController {
                        Principal principal) throws UserNotFoundException {
         VacanciesDto existing = vacancyService.getById(id);
         checkOwnership(existing.getAuthorId(), principal);
-
-
         if (dto.getExpFrom() != null && dto.getExpTo() != null
                 && dto.getExpFrom() > dto.getExpTo()) {
             br.rejectValue("expTo", "exp.invalid",
                     "Опыт 'до' не может быть меньше опыта 'от'");
         }
-
         if (br.hasErrors()) {
             model.addAttribute("vacancyDto", dto);
             model.addAttribute("bindingRes", br);
@@ -129,33 +133,27 @@ public class VacanciesController {
     public String getById(@PathVariable int id, Model model, Principal principal) {
         model.addAttribute("vacancy", vacancyService.getById(id));
         addCurrentUser(principal, model);
-
-        if(principal != null ){
-            try{
+        if (principal != null) {
+            try {
                 int userId = userService.getUserIdByEmail(principal.getName());
                 var resume = resumeService.getByApplicant(userId, 0, 100);
                 model.addAttribute("myResumes", resume.getContent());
-            } catch (UserNotFoundException e){
+            } catch (UserNotFoundException e) {
                 model.addAttribute("myResumes", null);
             }
         }
-
         return "vacancies/vacancies_info";
     }
-
 
     @GetMapping("/{id}/responses")
     public String vacancyResponses(@PathVariable int id, Model model,
                                    Principal principal) throws UserNotFoundException {
         VacanciesDto vacancy = vacancyService.getById(id);
         int userId = userService.getUserIdByEmail(principal.getName());
-
         if (vacancy.getAuthorId() == null || vacancy.getAuthorId() != userId) {
             throw new ForbiddenException();
         }
-
-        List<RespondedApplicants> responses =
-                respondedApplicantsRepository.findByVacancyId(id);
+        List<RespondedApplicants> responses = respondedApplicantsRepository.findByVacancyId(id);
         model.addAttribute("vacancy", vacancy);
         model.addAttribute("responses", responses);
         addCurrentUser(principal, model);
@@ -165,8 +163,7 @@ public class VacanciesController {
     private void addCurrentUser(Principal principal, Model model) {
         if (principal != null) {
             try {
-                model.addAttribute("user",
-                        userService.getByEmail(principal.getName()));
+                model.addAttribute("user", userService.getByEmail(principal.getName()));
             } catch (UserNotFoundException e) {
                 model.addAttribute("user", null);
             }
@@ -175,12 +172,10 @@ public class VacanciesController {
         }
     }
 
-    private void checkOwnership(Integer authorId,
-                                Principal principal) throws UserNotFoundException {
+    private void checkOwnership(Integer authorId, Principal principal) throws UserNotFoundException {
         int currentUserId = userService.getUserIdByEmail(principal.getName());
-        if (authorId == null || authorId != currentUserId ){
+        if (authorId == null || authorId != currentUserId) {
             throw new ForbiddenException();
         }
     }
-
 }

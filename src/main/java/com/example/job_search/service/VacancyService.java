@@ -1,14 +1,14 @@
 package com.example.job_search.service;
 
 import com.example.job_search.dto.VacanciesDto;
-import org.jspecify.annotations.Nullable;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 public interface VacancyService {
 
-    Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy);
+    Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy,
+                                       String search, Float salaryMin, Integer expFrom);
 
     Page<VacanciesDto> getByCategory(int categoryId, int page, int size);
 

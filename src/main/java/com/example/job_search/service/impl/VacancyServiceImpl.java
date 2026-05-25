@@ -1,6 +1,5 @@
 package com.example.job_search.service.impl;
 
-
 import com.example.job_search.dto.VacanciesDto;
 import com.example.job_search.model.Category;
 import com.example.job_search.model.Vacancies;
@@ -29,25 +28,37 @@ public class VacancyServiceImpl implements VacancyService {
     private final VacancyRepository vacancyRepository;
     private final UserRepository userRepository;
 
-
     @Override
-    public Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy) {
+    public Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy,
+                                              String search, Float salaryMin, Integer expFrom) {
+        // Пустые строки приводим к null, чтобы JPQL-условие IS NULL сработало
+        String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
+
+        boolean hasFilter = searchParam != null || salaryMin != null || expFrom != null;
+
         if ("responses".equalsIgnoreCase(sortBy)) {
             Pageable pageable = PageRequest.of(page, size);
-            return vacancyRepository.findAllActiveOrderByResponseCount(pageable)
+            if (hasFilter) {
+                return vacancyRepository
+                        .findWithFilterOrderByResponses(searchParam, salaryMin, expFrom, pageable)
+                        .map(this::mapToDto);
+            }
+            return vacancyRepository.findAllActiveOrderByResponseCount(pageable).map(this::mapToDto);
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
+        if (hasFilter) {
+            return vacancyRepository
+                    .findWithFilter(searchParam, salaryMin, expFrom, pageable)
                     .map(this::mapToDto);
         }
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-
         return vacancyRepository.findByIsActiveTrue(pageable).map(this::mapToDto);
     }
 
     @Override
     public Page<VacanciesDto> getByCategory(int categoryId, int page, int size) {
         log.debug("Получение вакансий по категории id: {}", categoryId);
-
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-
         return vacancyRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable).map(this::mapToDto);
     }
 
@@ -65,13 +76,10 @@ public class VacancyServiceImpl implements VacancyService {
         v.setUpdateTime(LocalDateTime.now());
 
         if (dto.getCategoryId() != null) {
-            categoryRepository.findById(dto.getCategoryId())
-                    .ifPresent(v::setCategory);
+            categoryRepository.findById(dto.getCategoryId()).ifPresent(v::setCategory);
         }
-
         if (dto.getAuthorId() != null) {
-            userRepository.findById(dto.getAuthorId())
-                    .ifPresent(v::setAuthor);
+            userRepository.findById(dto.getAuthorId()).ifPresent(v::setAuthor);
         }
 
         vacancyRepository.save(v);
@@ -81,15 +89,13 @@ public class VacancyServiceImpl implements VacancyService {
     @Override
     public void updateVacancy(int id, VacanciesDto dto) {
         log.info("Обновление вакансии с id: {}", id);
-       Vacancies existing = vacancyRepository.findById(id)
-                       .orElseThrow(RuntimeException::new);
-
-       existing.setName(dto.getName());
-       existing.setDescription(dto.getDescription());
-       existing.setSalary(dto.getSalary());
-       existing.setExpFrom(dto.getExpFrom());
-       existing.setExpTo(dto.getExpTo());
-       existing.setIsActive(dto.getIsActive());
+        Vacancies existing = vacancyRepository.findById(id).orElseThrow(RuntimeException::new);
+        existing.setName(dto.getName());
+        existing.setDescription(dto.getDescription());
+        existing.setSalary(dto.getSalary());
+        existing.setExpFrom(dto.getExpFrom());
+        existing.setExpTo(dto.getExpTo());
+        existing.setIsActive(dto.getIsActive());
 
         if (dto.getCategoryId() != null) {
             Category category = categoryRepository.findById(dto.getCategoryId())
@@ -97,10 +103,8 @@ public class VacancyServiceImpl implements VacancyService {
             existing.setCategory(category);
         }
 
-       existing.setUpdateTime(LocalDateTime.now());
-
-
-       vacancyRepository.save(existing);
+        existing.setUpdateTime(LocalDateTime.now());
+        vacancyRepository.save(existing);
         log.info("Вакансия с id {} успешно обновлена", id);
     }
 
@@ -111,23 +115,17 @@ public class VacancyServiceImpl implements VacancyService {
         log.info("Вакансия с id {} удалена", id);
     }
 
-
     @Override
     public List<VacanciesDto> getRespondedByUser(int applicantId) {
         log.debug("Получение вакансий на которые откликнулся соискатель id: {}", applicantId);
-
         return vacancyRepository.findRespondedByApplicant(applicantId)
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+                .stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
     @Override
     public Page<VacanciesDto> getByAuthor(int authorId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-
-        return vacancyRepository.findByAuthorId(authorId, pageable)
-                .map(this::mapToDto);
+        return vacancyRepository.findByAuthorId(authorId, pageable).map(this::mapToDto);
     }
 
     @Override
@@ -152,9 +150,9 @@ public class VacancyServiceImpl implements VacancyService {
                 .categoryId(v.getCategory() != null ? v.getCategory().getId() : null)
                 .categoryName(v.getCategory() != null ? v.getCategory().getName() : null)
                 .authorId(v.getAuthor() != null ? v.getAuthor().getId() : null)
-                .authorName(v.getAuthor() != null ? v.getAuthor().getName() + " " + v.getAuthor().getSurname() : null)
+                .authorName(v.getAuthor() != null
+                        ? v.getAuthor().getName() + " " + v.getAuthor().getSurname() : null)
                 .authorEmail(v.getAuthor() != null ? v.getAuthor().getEmail() : null)
                 .build();
     }
-
 }

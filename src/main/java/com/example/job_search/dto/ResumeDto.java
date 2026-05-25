@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -43,4 +44,8 @@ public class ResumeDto {
     private Integer categoryId;
 
     private String categoryName;
+
+    private List<WorkExperienceDto> workExperience;
+
+    private List<EducationDto> education;
 }

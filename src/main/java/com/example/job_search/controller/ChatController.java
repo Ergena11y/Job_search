@@ -32,9 +32,14 @@ public class ChatController {
         RespondedApplicants ra = respondedApplicantsRepository.findById(respondedId)
                 .orElseThrow(() -> new RuntimeException("Not found"));
 
+        if (!"APPROVED".equals(ra.getStatus())){
+            return "redirect:/vacancies";
+        }
+
         String email = principal.getName();
         String applicantEmail = ra.getResume().getApplicant().getEmail();
         String employerEmail = ra.getVacancy().getAuthor().getEmail();
+
         if (!email.equals(applicantEmail) && !email.equals(employerEmail)){
             return "redirect:/vacancies";
         }

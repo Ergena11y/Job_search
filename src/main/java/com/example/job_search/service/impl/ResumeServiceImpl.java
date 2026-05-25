@@ -3,7 +3,6 @@ package com.example.job_search.service.impl;
 import com.example.job_search.dto.EducationDto;
 import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.dto.WorkExperienceDto;
-import com.example.job_search.model.Category;
 import com.example.job_search.model.EducationInfo;
 import com.example.job_search.model.Resumes;
 import com.example.job_search.model.WorkExperienceInfo;
@@ -16,9 +15,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -33,12 +34,15 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Page<ResumeDto> getAllResumes(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "updateTime"));
         return resumeRepository.findByIsActiveTrue(pageable).map(this::mapToDto);
     }
 
     @Override
-    public void createResumes(ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education) {
+    public void createResumes(ResumeDto resumeDto,
+                              List<WorkExperienceDto> workExperience,
+                              List<EducationDto> education) {
         log.info("Создание нового резюме: {}", resumeDto.getName());
         Resumes r = new Resumes();
         r.setName(resumeDto.getName());
@@ -92,7 +96,9 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     @Override
-    public void updateResumes(int id, ResumeDto resumeDto, List<WorkExperienceDto> workExperience, List<EducationDto> education) {
+    public void updateResumes(int id, ResumeDto resumeDto,
+                              List<WorkExperienceDto> workExperience,
+                              List<EducationDto> education) {
         log.info("Обновление резюме с id: {}", id);
         Resumes existing = resumeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Resume not found: " + id));
@@ -110,7 +116,6 @@ public class ResumeServiceImpl implements ResumeService {
 
         resumeRepository.save(existing);
 
-        // Удаляем старые записи и сохраняем новые
         if (workExperience != null) {
             workExperienceRepository.deleteByResumeId(id);
             for (WorkExperienceDto w : workExperience) {
@@ -154,17 +159,22 @@ public class ResumeServiceImpl implements ResumeService {
 
     @Override
     public Page<ResumeDto> getByCategory(int categoryId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-        return resumeRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable).map(this::mapToDto);
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "updateTime"));
+        return resumeRepository
+                .findByCategoryIdAndIsActiveTrue(categoryId, pageable)
+                .map(this::mapToDto);
     }
 
     @Override
     public Page<ResumeDto> getByApplicant(int applicantId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
+        Pageable pageable = PageRequest.of(page, size,
+                Sort.by(Sort.Direction.DESC, "updateTime"));
         return resumeRepository.findByApplicantId(applicantId, pageable).map(this::mapToDto);
     }
 
     @Override
+    @Transactional
     public ResumeDto getById(int id) {
         return resumeRepository.findById(id)
                 .map(this::mapToDto)
@@ -172,6 +182,29 @@ public class ResumeServiceImpl implements ResumeService {
     }
 
     private ResumeDto mapToDto(Resumes resume) {
+        List<WorkExperienceDto> workList = resume.getWorkExperience() != null
+                ? resume.getWorkExperience().stream()
+                .map(w -> WorkExperienceDto.builder()
+                        .years(w.getYears())
+                        .companyName(w.getCompanyName())
+                        .position(w.getPosition())
+                        .responsibilities(w.getResponsibilities())
+                        .build())
+                .collect(Collectors.toList())
+                : List.of();
+
+        List<EducationDto> eduList = resume.getEducation() != null
+                ? resume.getEducation().stream()
+                .map(e -> EducationDto.builder()
+                        .institution(e.getInstitution())
+                        .program(e.getProgram())
+                        .startDate(e.getStartDate())
+                        .endDate(e.getEndDate())
+                        .degree(e.getDegree())
+                        .build())
+                .collect(Collectors.toList())
+                : List.of();
+
         ResumeDto dto = ResumeDto.builder()
                 .id((long) resume.getId())
                 .name(resume.getName())
@@ -180,13 +213,19 @@ public class ResumeServiceImpl implements ResumeService {
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateTime())
-                .categoryId(resume.getCategory() != null ? resume.getCategory().getId() : null)
-                .categoryName(resume.getCategory() != null ? resume.getCategory().getName() : null)
-                .applicantId(resume.getApplicant() != null ? (long) resume.getApplicant().getId() : null)
+                .categoryId(resume.getCategory() != null
+                        ? resume.getCategory().getId() : null)
+                .categoryName(resume.getCategory() != null
+                        ? resume.getCategory().getName() : null)
+                .applicantId(resume.getApplicant() != null
+                        ? (long) resume.getApplicant().getId() : null)
+                .workExperience(workList)
+                .education(eduList)
                 .build();
 
         if (resume.getApplicant() != null) {
-            dto.setApplicantName(resume.getApplicant().getName() + " " + resume.getApplicant().getSurname());
+            dto.setApplicantName(resume.getApplicant().getName()
+                    + " " + resume.getApplicant().getSurname());
             dto.setApplicantEmail(resume.getApplicant().getEmail());
             dto.setApplicantPhone(resume.getApplicant().getPhoneNumber());
         }

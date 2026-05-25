@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008
+      author: Ergen
+      changes:
+        - addColumn:
+            tableName: responded_applicants
+            columns:
+              - column:
+                  name: status
+                  type: varchar(20)
+                  defaultValue: PENDING
+                  constraints:
+                    nullable: false

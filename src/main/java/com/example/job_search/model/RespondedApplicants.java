@@ -24,4 +24,7 @@ public class RespondedApplicants {
     private Vacancies vacancy;
 
     private boolean confirmation;
+
+    @Column(name = "status")
+    private String status = "PENDING";
 }

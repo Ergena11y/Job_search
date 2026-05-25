@@ -28,7 +28,7 @@
                         <label class="form-label"><@spring.message "resume.name"/>: <span class="text-danger">*</span></label>
                         <input type="text" name="name"
                                class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
-                               placeholder="${t_name_ph}"
+                               placeholder="<@spring.message "resume.name.placeholder"/>"
                                value="${resume.name!''}" required>
                         <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
                             <#list bindingRes.getFieldErrors('name') as err>
@@ -177,7 +177,30 @@
             eduSecondary:        `<@spring.message "resume.edu.degree.secondary"/>`,
         };
         const RESUME_TODAY = '${today}'
+
+
+        const RESUME_EXISTING_WORK = [
+            <#list resume.workExperience![] as w>
+            {
+                years: "${w.years!''}",
+                company: "${(w.companyName!'')?js_string}",
+                position: "${(w.position!'')?js_string}",
+                responsibilities: "${(w.responsibilities!'')?js_string}"
+            }<#sep>,</#sep>
+            </#list>
+        ];
+        const RESUME_EXISTING_EDU = [
+            <#list resume.education![] as e>
+            {
+                institution: "${(e.institution!'')?js_string}",
+                program: "${(e.program!'')?js_string}",
+                startDate: "${e.startDate!''}",
+                endDate: "${e.endDate!''}",
+                degree: "${(e.degree!'')?js_string}"
+            }<#sep>,</#sep>
+            </#list>
+        ];
     </script>
     <script src="/static/js/resume.js"></script>
-    <script> ResumeForm.init({ autoAddFirst: true})</script>
+    <script> ResumeForm.init({ existingWork: RESUME_EXISTING_WORK, existingEdu: RESUME_EXISTING_EDU});</script>
 </@main.layout>

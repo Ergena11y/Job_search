@@ -71,6 +71,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/profile/**").authenticated()
                         .requestMatchers(HttpMethod.GET, "/profile").authenticated()
 
+                        .requestMatchers(HttpMethod.GET, "/vacancies/*/responses").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/responses/approve/**").hasRole("EMPLOYER")
+                        .requestMatchers(HttpMethod.POST, "/responses/reject/**").hasRole("EMPLOYER")
+
                         .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers("/static/**").permitAll()
 

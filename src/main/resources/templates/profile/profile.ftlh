@@ -12,7 +12,8 @@
                              class="rounded-circle img-thumbnail mb-3"
                              style="width:150px;height:150px;object-fit:cover;" alt="Avatar">
                     <#else>
-                        <div class="rounded-circle bg-primary d-inline-flex align-items-center justify-content-center mb-3"
+                        <div class="rounded-circle bg-primary d-inline-flex align-items-center
+                                    justify-content-center mb-3"
                              style="width:150px;height:150px;">
                             <span class="text-white fw-bold" style="font-size:48px;">
                                 ${user.name?substring(0,1)?upper_case!'?'}
@@ -21,7 +22,8 @@
                     </#if>
 
                     <h4 class="card-title mb-1">${user.name!''} ${user.surname!''}</h4>
-                    <span class="badge <#if user.accountType == 'EMPLOYER'>bg-warning text-dark<#else>bg-success</#if> mb-3">
+                    <span class="badge mb-3
+                        <#if user.accountType == 'EMPLOYER'>bg-warning text-dark<#else>bg-success</#if>">
                         <#if user.accountType == "EMPLOYER">
                             <@spring.message "profile.employer"/>
                         <#else>
@@ -34,7 +36,8 @@
                             <i class="bi bi-envelope me-2 text-muted"></i>${user.email!''}
                         </li>
                         <li class="list-group-item px-0">
-                            <i class="bi bi-telephone me-2 text-muted"></i>${user.phoneNumber!'<@spring.message "profile.phone.not.specified"/>'}
+                            <i class="bi bi-telephone me-2 text-muted"></i>
+                            ${user.phoneNumber!'<@spring.message "profile.phone.not.specified"/>'}
                         </li>
                     </ul>
 
@@ -63,33 +66,54 @@
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
                                         <h5 class="card-title mb-1">
-                                            <a href="/vacancies/${v.id!''}" class="text-decoration-none text-dark">${v.name!'-'}</a>
+                                            <a href="/vacancies/${v.id!''}"
+                                               class="text-decoration-none text-dark">
+                                                ${v.name!'-'}
+                                            </a>
                                         </h5>
                                         <p class="card-text text-muted small mb-2">
                                             ${(v.description!'')?truncate(120)}
                                         </p>
                                     </div>
-                                    <span class="text-success fw-bold ms-3 text-nowrap">${v.salary!''} ⃀</span>
+                                    <span class="text-success fw-bold ms-3 text-nowrap">
+                                        ${v.salary!''} ⃀
+                                    </span>
                                 </div>
                                 <div class="d-flex gap-2">
-                                    <a href="/vacancies/${v.id!''}" class="btn btn-sm btn-outline-primary"><@spring.message "profile.view"/></a>
-                                    <a href="/vacancies/edit/${v.id!''}" class="btn btn-sm btn-outline-secondary"><@spring.message "vacancy.edit"/></a>
+                                    <a href="/vacancies/${v.id!''}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <@spring.message "profile.view"/>
+                                    </a>
+                                    <a href="/vacancies/edit/${v.id!''}"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        <@spring.message "vacancy.edit"/>
+                                    </a>
+                                    <a href="/vacancies/${v.id!!''}/responses"
+                                       class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-people me-1"></i>Отклики
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </#list>
 
                     <#if totalVacancyPages gt 1>
-                        <nav><ul class="pagination pagination-sm justify-content-center">
+                        <nav>
+                            <ul class="pagination pagination-sm justify-content-center">
                                 <#list 0..totalVacancyPages-1 as i>
                                     <li class="page-item ${(i==currentVacancyPage)?string('active','')}">
-                                        <a class="page-link" href="/profile?vacancyPage=${i}">${i+1}</a>
+                                        <a class="page-link" href="/profile?vacancyPage=${i}">
+                                            ${i+1}
+                                        </a>
                                     </li>
                                 </#list>
-                            </ul></nav>
+                            </ul>
+                        </nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-light border mb-4"><@spring.message "profile.no.vacancies"/></div>
+                    <div class="alert alert-light border mb-4">
+                        <@spring.message "profile.no.vacancies"/>
+                    </div>
                 </#if>
 
                 <hr class="my-4">
@@ -103,30 +127,41 @@
                                     <div>
                                         <h5 class="card-title mb-1">${r.name!'-'}</h5>
                                         <p class="card-text text-muted small mb-2">
-                                            <i class="bi bi-person me-1"></i>${r.applicantName!'<@spring.message "common.anonymous"/>'}
+                                            <i class="bi bi-person me-1"></i>
+                                            ${r.applicantName!'<@spring.message "common.anonymous"/>'}
                                         </p>
                                     </div>
                                     <span class="badge bg-success ms-3">${r.salary!''} ⃀</span>
                                 </div>
-                                <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary"><@spring.message "profile.see.resume"/></a>
+                                <a href="/resumes/${r.id!''}"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <@spring.message "profile.see.resume"/>
+                                </a>
                             </div>
                         </div>
                     </#list>
 
                     <#if totalResPage gt 1>
-                        <nav><ul class="pagination pagination-sm justify-content-center">
+                        <nav>
+                            <ul class="pagination pagination-sm justify-content-center">
                                 <#list 0..totalResPage-1 as i>
                                     <li class="page-item ${(i==currentResumesPage)?string('active','')}">
-                                        <a class="page-link" href="/profile?resumePage=${i}">${i+1}</a>
+                                        <a class="page-link" href="/profile?resumePage=${i}">
+                                            ${i+1}
+                                        </a>
                                     </li>
                                 </#list>
-                            </ul></nav>
+                            </ul>
+                        </nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-info"><@spring.message "profile.no.resumes.system"/></div>
+                    <div class="alert alert-info">
+                        <@spring.message "profile.no.resumes.system"/>
+                    </div>
                 </#if>
 
             <#else>
+            <#-- СОИСКАТЕЛЬ -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0"><@spring.message "profile.my.resumes"/></h4>
                     <a href="/resumes/create" class="btn btn-success btn-sm">
@@ -146,26 +181,39 @@
                                     <@spring.message "resume.updated"/>: ${r.updateTime!''}
                                 </p>
                                 <div class="d-flex gap-2">
-                                    <a href="/resumes/${r.id!''}" class="btn btn-sm btn-outline-primary"><@spring.message "profile.view"/></a>
-                                    <a href="/resumes/edit/${r.id!''}" class="btn btn-sm btn-outline-secondary"><@spring.message "resume.edit"/></a>
+                                    <a href="/resumes/${r.id!''}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        <@spring.message "profile.view"/>
+                                    </a>
+                                    <a href="/resumes/edit/${r.id!''}"
+                                       class="btn btn-sm btn-outline-secondary">
+                                        <@spring.message "resume.edit"/>
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </#list>
 
                     <#if totalResPage gt 1>
-                        <nav><ul class="pagination pagination-sm justify-content-center">
+                        <nav>
+                            <ul class="pagination pagination-sm justify-content-center">
                                 <#list 0..totalResPage-1 as i>
                                     <li class="page-item ${(i==currentResumesPage)?string('active','')}">
-                                        <a class="page-link" href="/profile?resumePage=${i}">${i+1}</a>
+                                        <a class="page-link" href="/profile?resumePage=${i}">
+                                            ${i+1}
+                                        </a>
                                     </li>
                                 </#list>
-                            </ul></nav>
+                            </ul>
+                        </nav>
                     </#if>
                 <#else>
-                    <div class="alert alert-light border"><@spring.message "profile.no.resumes"/></div>
+                    <div class="alert alert-light border">
+                        <@spring.message "profile.no.resumes"/>
+                    </div>
                 </#if>
 
+            <#-- Отклики соискателя с статусами -->
                 <#if myResponds?? && myResponds?has_content>
                     <hr class="my-4">
                     <h4 class="mb-3"><@spring.message "chat.my.responds"/></h4>
@@ -177,15 +225,30 @@
                                         <span class="fw-bold small">${ra.vacancy.name!''}</span>
                                         <br>
                                         <span class="text-muted small">
-                                            <@spring.message "chat.respond.resume"/>: ${ra.resume.name!''}
+                                            <@spring.message "chat.respond.resume"/>:
+                                            ${ra.resume.name!''}
                                         </span>
+                                        <br>
+                                        <#-- Бейдж статуса -->
+                                        <#if ra.status == "APPROVED">
+                                            <span class="badge bg-success mt-1">Одобрено</span>
+                                        <#elseif ra.status == "REJECTED">
+                                            <span class="badge bg-danger mt-1">Отклонено</span>
+                                        <#else>
+                                            <span class="badge bg-warning text-dark mt-1">
+                                                На рассмотрении
+                                            </span>
+                                        </#if>
                                     </div>
-                                    <a href="/chat/${ra.id}"
-                                       class="btn btn-sm btn-success"
-                                       title="<@spring.message "chat.open"/>">
-                                        <i class="bi bi-chat-dots-fill me-1"></i>
-                                        <@spring.message "chat.open"/>
-                                    </a>
+                                    <#-- Чат только если одобрено -->
+                                    <#if ra.status == "APPROVED">
+                                        <a href="/chat/${ra.id}"
+                                           class="btn btn-sm btn-success"
+                                           title="<@spring.message "chat.open"/>">
+                                            <i class="bi bi-chat-dots-fill me-1"></i>
+                                            <@spring.message "chat.open"/>
+                                        </a>
+                                    </#if>
                                 </div>
                             </div>
                         </div>

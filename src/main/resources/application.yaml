@@ -47,6 +47,10 @@ spring:
           auth: true
           starttls:
             enable: true
+  web:
+    error:
+      whitelabel:
+        enabled: false
 
 logging:
   file:

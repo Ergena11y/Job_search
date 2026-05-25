@@ -1,5 +1,6 @@
 package com.example.job_search.controller;
 
+import com.example.job_search.exception.ForbiddenException;
 import com.example.job_search.exception.UserNotFoundException;
 import com.example.job_search.model.RespondedApplicants;
 import com.example.job_search.model.Resumes;
@@ -64,6 +65,44 @@ public class ResponseController {
 
         redirectAttributes.addFlashAttribute("success", "Вы успешно откликнулись на вакансию!");
         return "redirect:/vacancies/" + vacancyId;
+    }
+
+
+    @PostMapping("/approve/{id}")
+    public String approve(@PathVariable int id, Principal principal,
+                          RedirectAttributes ra) throws UserNotFoundException {
+        RespondedApplicants responded = respondedApplicantsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+
+        // Проверка что это вакансия текущего работодателя
+        int userId = userService.getUserIdByEmail(principal.getName());
+        if (responded.getVacancy().getAuthor().getId() != userId) {
+            throw new ForbiddenException();
+        }
+
+        responded.setStatus("APPROVED");
+        responded.setConfirmation(true);
+        respondedApplicantsRepository.save(responded);
+        ra.addFlashAttribute("success", "Кандидат одобрен");
+        return "redirect:/vacancies/" + responded.getVacancy().getId() + "/responses";
+    }
+
+    @PostMapping("/reject/{id}")
+    public String reject(@PathVariable int id, Principal principal,
+                         RedirectAttributes ra) throws UserNotFoundException {
+        RespondedApplicants responded = respondedApplicantsRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found"));
+
+        int userId = userService.getUserIdByEmail(principal.getName());
+        if (responded.getVacancy().getAuthor().getId() != userId) {
+            throw new ForbiddenException();
+        }
+
+        responded.setStatus("REJECTED");
+        responded.setConfirmation(false);
+        respondedApplicantsRepository.save(responded);
+        ra.addFlashAttribute("info", "Кандидат отклонён");
+        return "redirect:/vacancies/" + responded.getVacancy().getId() + "/responses";
     }
 
 }

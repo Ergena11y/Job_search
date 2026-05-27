@@ -32,26 +32,38 @@ public class VacancyServiceImpl implements VacancyService {
     public Page<VacanciesDto> getAllVacancies(int page, int size, String sortBy,
                                               String search, Float salaryMin, Integer expFrom) {
         String searchParam = (search != null && !search.isBlank()) ? search.trim() : null;
-
         boolean hasFilter = searchParam != null || salaryMin != null || expFrom != null;
 
-        if ("responses".equalsIgnoreCase(sortBy)) {
-            Pageable pageable = PageRequest.of(page, size);
-            if (hasFilter) {
-                return vacancyRepository
-                        .findWithFilterOrderByResponses(searchParam, salaryMin, expFrom, pageable)
-                        .map(this::mapToDto);
+        switch (sortBy == null ? "date" : sortBy.toLowerCase()) {
+            case "responses" -> {
+                Pageable pageable = PageRequest.of(page, size);
+                if (hasFilter) {
+                    return vacancyRepository
+                            .findWithFilterOrderByResponses(searchParam, salaryMin, expFrom, pageable)
+                            .map(this::mapToDto);
+                }
+                return vacancyRepository.findAllActiveOrderByResponseCount(pageable).map(this::mapToDto);
             }
-            return vacancyRepository.findAllActiveOrderByResponseCount(pageable).map(this::mapToDto);
+            case "salary" -> {
+                Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "salary"));
+                if (hasFilter) {
+                    return vacancyRepository
+                            .findWithFilter(searchParam, salaryMin, expFrom, pageable)
+                            .map(this::mapToDto);
+                }
+                return vacancyRepository.findAllActiveOrderBySalaryDesc(pageable).map(this::mapToDto);
+            }
+            default -> {
+                Pageable pageable = PageRequest.of(page, size,
+                        Sort.by(Sort.Direction.DESC, "updateTime"));
+                if (hasFilter) {
+                    return vacancyRepository
+                            .findWithFilter(searchParam, salaryMin, expFrom, pageable)
+                            .map(this::mapToDto);
+                }
+                return vacancyRepository.findByIsActiveTrue(pageable).map(this::mapToDto);
+            }
         }
-
-        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
-        if (hasFilter) {
-            return vacancyRepository
-                    .findWithFilter(searchParam, salaryMin, expFrom, pageable)
-                    .map(this::mapToDto);
-        }
-        return vacancyRepository.findByIsActiveTrue(pageable).map(this::mapToDto);
     }
 
     @Override
@@ -60,6 +72,7 @@ public class VacancyServiceImpl implements VacancyService {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updateTime"));
         return vacancyRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable).map(this::mapToDto);
     }
+
 
     @Override
     public void createVacancy(VacanciesDto dto) {
@@ -82,7 +95,7 @@ public class VacancyServiceImpl implements VacancyService {
         }
 
         vacancyRepository.save(v);
-        log.info("Вакансия '{}' успешно создана", dto.getName());
+        log.info("Вакансия '{}' создана", dto.getName());
     }
 
     @Override
@@ -98,20 +111,18 @@ public class VacancyServiceImpl implements VacancyService {
 
         if (dto.getCategoryId() != null) {
             Category category = categoryRepository.findById(dto.getCategoryId())
-                    .orElseThrow(() -> new RuntimeException("Категория не найдена"));
+                    .orElseThrow(() -> new RuntimeException("Категория не найдена: " + dto.getCategoryId()));
             existing.setCategory(category);
         }
 
         existing.setUpdateTime(LocalDateTime.now());
         vacancyRepository.save(existing);
-        log.info("Вакансия с id {} успешно обновлена", id);
     }
 
     @Override
     public void deleteVacancy(int id) {
-        log.warn("Удаление вакансии с id: {}", id);
+        log.warn("Удаление вакансии id={}", id);
         vacancyRepository.deleteById(id);
-        log.info("Вакансия с id {} удалена", id);
     }
 
     @Override

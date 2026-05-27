@@ -44,22 +44,27 @@ public class MessageServiceImpl implements MessageService {
         msg.setRespondedApplicants(ra);
         msg.setContent(content);
         msg.setTimeStamp(LocalDateTime.now());
+        msg.setSenderEmail(sender.getEmail());
+        msg.setSenderRole(sender.getAccountType());
         Messages saved = messageRepository.save(msg);
-
-        MessageDto dto = toDto(saved);
-        dto.setSenderName(sender.getName() + " " + sender.getSurname());
-        dto.setSenderRole(sender.getAccountType());
-
-        return dto;
+        return toDto(saved);
     }
 
 
-    private  MessageDto toDto(Messages m){
-        return MessageDto.builder()
+    private  MessageDto toDto(Messages m) {
+        MessageDto dto = MessageDto.builder()
                 .id(m.getId())
                 .respondedApplicantId(m.getRespondedApplicants().getId())
                 .content(m.getContent())
                 .timeStamp(m.getTimeStamp())
+                .senderRole(m.getSenderRole())
                 .build();
+
+        if (m.getSenderEmail() != null){
+            userRepository.findByEmail(m.getSenderEmail()).ifPresent(user ->
+                    dto.setSenderName(user.getName() + " " + user.getSurname()));
+        }
+
+        return dto;
     }
 }

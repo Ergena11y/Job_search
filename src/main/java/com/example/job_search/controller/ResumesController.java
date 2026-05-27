@@ -38,14 +38,19 @@ public class ResumesController {
     @GetMapping
     public String resumes(@RequestParam(defaultValue = "0") int page,
                           @RequestParam(defaultValue = "10") int size,
+                          @RequestParam(required = false) Integer categoryId,
                           Principal principal,
                           Model model) throws UserNotFoundException {
         addCurrentUser(principal, model);
 
         UserDto currentUser = userService.getByEmail(principal.getName());
+        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("selectedCategory", categoryId);
 
         if ("EMPLOYER".equals(currentUser.getAccountType())) {
-            Page<@Valid ResumeDto> resumePage = resumeService.getAllResumes(page, size);
+            Page<@Valid ResumeDto> resumePage = categoryId != null
+                    ? resumeService.getByCategory(categoryId, page, size)
+                    : resumeService.getAllResumes(page, size);
             model.addAttribute("resumes", resumePage.getContent());
             model.addAttribute("currentPage", page);
             model.addAttribute("totalPages", resumePage.getTotalPages());
@@ -73,7 +78,7 @@ public class ResumesController {
     @PostMapping("create")
     public String create(Model model, @Valid ResumeDto resumeDto,
                          BindingResult br, Principal principal,
-                         HttpServletRequest  request) throws UserNotFoundException {
+                         HttpServletRequest request) throws UserNotFoundException {
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
             model.addAttribute("bindingRes", br);
@@ -95,7 +100,7 @@ public class ResumesController {
     public String editForm(@PathVariable int id, Model model, Principal principal) {
         ResumeDto resume = resumeService.getById(id);
         checkOwnership(resume.getApplicantId(), principal);
-        model.addAttribute("resume", resumeService.getById(id));
+        model.addAttribute("resume", resume);
         model.addAttribute("categories", categoryRepository.findAll());
         model.addAttribute("id", id);
         addCurrentUser(principal, model);
@@ -108,7 +113,6 @@ public class ResumesController {
                        HttpServletRequest request) {
         ResumeDto existing = resumeService.getById(id);
         checkOwnership(existing.getApplicantId(), principal);
-
 
         if (br.hasErrors()) {
             model.addAttribute("resumeDto", resumeDto);
@@ -130,7 +134,6 @@ public class ResumesController {
     public String delete(@PathVariable int id, Principal principal) {
         ResumeDto resume = resumeService.getById(id);
         checkOwnership(resume.getApplicantId(), principal);
-
         resumeService.deleteResumes(id);
         return "redirect:/profile";
     }
@@ -140,39 +143,38 @@ public class ResumesController {
         ResumeDto resume = resumeService.getById(id);
         addCurrentUser(principal, model);
 
-        if (principal != null){
-            try{
-                int currentUserId = userService.getUserIdByEmail(principal.getName());
-                UserDto currentUser = userService.getByEmail(principal.getName());
+        if (principal == null) {
+            throw new ForbiddenException();
+        }
 
-                boolean isOwner = resume.getApplicantId() != null
-                        && resume.getApplicantId().intValue() == currentUserId;
-                boolean isEmployer = "EMPLOYER".equals(currentUser.getAccountType());
+        try {
+            int currentUserId = userService.getUserIdByEmail(principal.getName());
+            UserDto currentUser = userService.getByEmail(principal.getName());
 
-                if (!isOwner && !isEmployer){
-                    throw new ForbiddenException();
-                }
+            boolean isOwner = resume.getApplicantId() != null
+                    && resume.getApplicantId().intValue() == currentUserId;
+            boolean isEmployer = "EMPLOYER".equals(currentUser.getAccountType());
 
-                if (isEmployer) {
-                    respondedApplicantsRepository
-                            .findByResumeApplicantId(resume.getApplicantId().intValue())
-                            .stream()
-                            .filter(ra -> ra.getVacancy().getAuthor().getId() == currentUserId)
-                            .findFirst()
-                            .ifPresent(ra -> model.addAttribute("respondedId", ra.getId()));
-                }
-
-                if (isOwner) {
-                    List<RespondedApplicants> myResponds =
-                            respondedApplicantsRepository.findByResumeApplicantId(currentUserId);
-                    model.addAttribute("myResponds", myResponds);
-                }
-
-
-            } catch (UserNotFoundException e){
+            if (!isOwner && !isEmployer) {
                 throw new ForbiddenException();
             }
-        } else {
+
+            if (isEmployer) {
+                respondedApplicantsRepository
+                        .findByResumeApplicantId(resume.getApplicantId().intValue())
+                        .stream()
+                        .filter(ra -> ra.getVacancy().getAuthor().getId() == currentUserId)
+                        .findFirst()
+                        .ifPresent(ra -> model.addAttribute("respondedId", ra.getId()));
+            }
+
+            if (isOwner) {
+                List<RespondedApplicants> myResponds =
+                        respondedApplicantsRepository.findByResumeApplicantId(currentUserId);
+                model.addAttribute("myResponds", myResponds);
+            }
+
+        } catch (UserNotFoundException e) {
             throw new ForbiddenException();
         }
 
@@ -194,10 +196,14 @@ public class ResumesController {
     }
 
 
-    private void checkOwnership(Long applicantId, Principal principal) throws  UserNotFoundException{
-        int currentUserId = userService.getUserIdByEmail(principal.getName());
-        if (applicantId == null || applicantId.intValue() != currentUserId ){
-            throw new ForbiddenException();
+    private void checkOwnership(Long applicantId, Principal principal){
+        try {
+            int currentUserId = userService.getUserIdByEmail(principal.getName());
+            if (applicantId == null || applicantId.intValue() != currentUserId ){
+                throw new ForbiddenException();
+            }
+        }catch (UserNotFoundException e){
+            throw  new ForbiddenException();
         }
     }
 

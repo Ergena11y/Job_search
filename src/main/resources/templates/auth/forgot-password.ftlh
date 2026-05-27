@@ -5,7 +5,7 @@
         <div class="col-md-5">
             <div class="card shadow-sm">
                 <div class="card-body p-4">
-                    <h3 class="text-center mb-4">Забыли пароль?</h3>
+                    <h3 class="text-center mb-4"><@spring.message "auth.forgot.title"/></h3>
 
                     <#if message??>
                         <div class="alert alert-success">${message}</div>
@@ -19,11 +19,11 @@
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" name="email" class="form-control" required
-                                   placeholder="Введите ваш email">
+                                   placeholder="<@spring.message "auth.forgot.add.email"/>">
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Отправить ссылку</button>
+                        <button type="submit" class="btn btn-primary w-100"><@spring.message "auth.forgot.submit"/></button>
                         <div class="text-center mt-3">
-                            <a href="/auth/login">Вернуться ко входу</a>
+                            <a href="/auth/login"><@spring.message "auth.forgot.back"/></a>
                         </div>
                     </form>
                 </div>

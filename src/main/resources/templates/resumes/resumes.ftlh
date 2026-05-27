@@ -30,7 +30,7 @@
                                 <p class="text-muted small mb-2">
                                     <i class="bi bi-person me-1"></i>${resume.applicantName!'<@spring.message "common.anonymous"/>'}
                                     <span class="mx-2">·</span>
-                                    <i class="bi bi-clock me-1"></i><@spring.message "resume.updated"/>: ${resume.updateTime!''}
+                                    <i class="bi bi-clock me-1"></i><@spring.message "resume.updated"/>: ${resume.formattedUpdateTime!''}
                                 </p>
                             </div>
                             <div class="text-end ms-3">

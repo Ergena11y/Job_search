@@ -23,7 +23,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.name"/> <span class="text-danger">*</span></label>
                             <input type="text" name="name" class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('name')>is-invalid</#if>"
-                                   value="${userDto.name!''}" required>
+                                   value="${registerDto.name!''}" required>
                             <#if bindingRes?? && bindingRes.hasFieldErrors('name')>
                                 <#list bindingRes.getFieldErrors('name') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -34,7 +34,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.surname"/> <span class="text-danger">*</span></label>
                             <input type="text" name="surname" class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('surname')>is-invalid</#if>"
-                                   value="${userDto.surname!''}" required>
+                                   value="${registerDto.surname!''}" required>
                             <#if bindingRes?? && bindingRes.hasFieldErrors('surname')>
                                 <#list bindingRes.getFieldErrors('surname') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -45,7 +45,7 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.age"/> <span class="text-danger">*</span></label>
                             <input type="number" name="age" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('age')>is-invalid</#if>"
-                                   value="${userDto.age!''}" required>
+                                   value="${registerDto.age!''}" required>
                             <#if bindingRes?? && bindingRes.hasFieldErrors('age')>
                                 <#list bindingRes.getFieldErrors('age') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -56,13 +56,13 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.phone"/></label>
                             <input type="text" name="phoneNumber" class="form-control"
-                                   value="${userDto.phoneNumber!''}">
+                                   value="${registerDto.phoneNumber!''}">
                         </div>
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.email"/> <span class="text-danger">*</span></label>
                             <input type="email" name="email" class="form-control <#if bindingResult?? && bindingRes.hasFieldErrors('email')>is-invalid</#if>"
-                                   value="${userDto.email!''}" required>
+                                   value="${registerDto.email!''}" required>
                             <#if bindingResult?? && bindingRes.hasFieldErrors('email')>
                                 <#list bindingRes.getFieldErrors('email') as err>
                                     <div class="invalid-feedback">${err.defaultMessage}</div>
@@ -85,8 +85,8 @@
                         <div class="mb-4">
                             <label class="form-label fw-semibold"><@spring.message "auth.register.account.type"/> <span class="text-danger">*</span></label>
                             <select name="accountType" class="form-select" required>
-                                <option value="APPLICANT" <#if (userDto.accountType!'') == 'APPLICANT'>selected</#if>><@spring.message "auth.register.account.applicant"/></option>
-                                <option value="EMPLOYER" <#if (userDto.accountType!'') == 'EMPLOYER'>selected</#if>><@spring.message "auth.register.account.employer"/></option>
+                                <option value="APPLICANT" <#if (registerDto.accountType!'') == 'APPLICANT'>selected</#if>><@spring.message "auth.register.account.applicant"/></option>
+                                <option value="EMPLOYER" <#if (registerDto.accountType!'') == 'EMPLOYER'>selected</#if>><@spring.message "auth.register.account.employer"/></option>
                             </select>
                         </div>
 

@@ -1,7 +1,7 @@
 package com.example.job_search.controller;
 
 
-import com.example.job_search.dto.UserDto;
+import com.example.job_search.dto.RegisterDto;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import jakarta.servlet.ServletException;
@@ -26,7 +26,7 @@ public class AuthController {
 
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
-        model.addAttribute("userDto", new UserDto());
+        model.addAttribute("registerDto", new RegisterDto());
         model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
         return "auth/register";
     }
@@ -37,49 +37,49 @@ public class AuthController {
     }
 
     @PostMapping("register")
-    public String register(@Valid UserDto userDto,
+    public String register(@Valid RegisterDto registerDto,
                            BindingResult bindingResult,
                            Model model,
                            HttpServletRequest request){
         if (bindingResult.hasErrors()) {
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("registerDto", registerDto);
             model.addAttribute("bindingRes", bindingResult);
             model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
             return "auth/register";
         }
 
-        log.info("Начало регистрации для email: {}", userDto.getEmail());
+        log.info("Начало регистрации для email: {}", registerDto.getEmail());
 
         User user = new User();
-        user.setName(userDto.getName());
-        user.setSurname(userDto.getSurname());
-        user.setAge(userDto.getAge());
-        user.setPhoneNumber(userDto.getPhoneNumber());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
+        user.setName(registerDto.getName());
+        user.setSurname(registerDto.getSurname());
+        user.setAge(registerDto.getAge());
+        user.setPhoneNumber(registerDto.getPhoneNumber());
+        user.setEmail(registerDto.getEmail());
+        user.setPassword(registerDto.getPassword());
         user.setEnabled(true);
-        user.setAccountType(userDto.getAccountType() != null ? userDto.getAccountType() : "APPLICANT");
+        user.setAccountType(registerDto.getAccountType() != null ? registerDto.getAccountType() : "APPLICANT");
 
 
         try{
             userService.register(user);
-            log.info("Пользователь успешно зарегистрирован: {}", userDto.getEmail());
+            log.info("Пользователь успешно зарегистрирован: {}", registerDto.getEmail());
         }catch (Exception e){
             log.error("Ошибка при регистрации: {}", e.getMessage(), e);
-            model.addAttribute("userDto", userDto);
+            model.addAttribute("registerDto", registerDto);
             model.addAttribute("error", "Ошибка регистрации: " + e.getMessage());
             return "auth/register";
         }
 
 
         try {
-            request.login(userDto.getEmail(), userDto.getPassword());
+            request.login(registerDto.getEmail(), registerDto.getPassword());
         } catch (ServletException e) {
             log.error("Ошибка автологина: {}", e.getMessage(), e);
             return "redirect:/auth/login";
         }
 
-        String accountType = userDto.getAccountType() != null ? userDto.getAccountType() : "APPLICANT";
+        String accountType = registerDto.getAccountType() != null ? registerDto.getAccountType() : "APPLICANT";
         return "EMPLOYER".equals(accountType) ? "redirect:/resumes" : "redirect:/vacancies";
     }
 }

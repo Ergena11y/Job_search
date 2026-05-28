@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011
+      author: Ergen
+      changes:
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: surname
+            columnDataType: varchar(65)
+        - dropNotNullConstraint:
+            tableName: users
+            columnName: age
+            columnDataType: integer

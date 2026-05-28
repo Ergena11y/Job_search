@@ -1,3 +1,5 @@
+'use strict';
+
 const ResumeForm = (() => {
 
     function esc(str) {

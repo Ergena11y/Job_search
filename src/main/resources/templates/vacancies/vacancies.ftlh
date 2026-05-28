@@ -13,44 +13,45 @@
 
         <form method="get" id="filter-form" class="card bg-light border-0 p-3 mb-4">
             <div class="row align-items-end g-2">
-
                 <div class="col-md-3">
                     <label class="form-label small fw-bold mb-1"><@spring.message "vacancy.filter.search"/></label>
                     <input type="text" name="search" class="form-control"
                            placeholder="<@spring.message "vacancy.filter.search.placeholder"/>"
                            value="${search!''}">
                 </div>
-
                 <div class="col-md-2">
                     <label class="form-label small fw-bold mb-1"><@spring.message "vacancy.filter.salary.min"/></label>
                     <input type="number" name="salaryMin" class="form-control" min="0"
                            value="${salaryMin!''}">
                 </div>
-
                 <div class="col-md-2">
                     <label class="form-label small fw-bold mb-1"><@spring.message "vacancy.filter.exp"/></label>
                     <input type="number" name="expFrom" class="form-control" min="0"
                            value="${expFrom!''}">
                 </div>
-
                 <div class="col-md-2">
                     <label class="form-label small fw-bold mb-1"><@spring.message "vacancy.sort"/></label>
                     <select name="sortBy" class="form-select">
-                        <option value="date" <#if sortBy == "date">selected</#if>><@spring.message "vacancy.sort.date"/></option>
-                        <option value="responses" <#if sortBy == "responses">selected</#if>><@spring.message "vacancy.sort.responses"/></option>
+                        <option value="date" <#if sortBy == "date">selected</#if>>
+                            <@spring.message "vacancy.sort.date"/>
+                        </option>
+                        <option value="responses" <#if sortBy == "responses">selected</#if>>
+                            <@spring.message "vacancy.sort.responses"/>
+                        </option>
+
+                        <option value="salary" <#if sortBy == "salary">selected</#if>>
+                            <@spring.message "vacancy.sort.salary"/>
+                        </option>
                     </select>
                 </div>
-
                 <div class="col-md-1">
                     <button type="submit" class="btn btn-primary w-100"><@spring.message "vacancy.sort.apply"/></button>
                 </div>
-
                 <div class="col-md-1">
                     <a href="/vacancies" class="btn btn-outline-secondary w-100" id="reset-filter">
                         <@spring.message "vacancy.filter.reset"/>
                     </a>
                 </div>
-
             </div>
         </form>
 
@@ -71,7 +72,8 @@
                                     </p>
                                     <p class="mb-0 small">
                                         <span class="badge bg-light text-dark border me-2">
-                                            <i class="bi bi-briefcase me-1"></i><@spring.message "vacancy.experience"/>: ${vacancy.expFrom!0} – ${vacancy.expTo!0} <@spring.message "vacancy.experience.years"/>
+                                            <i class="bi bi-briefcase me-1"></i>
+                                            <@spring.message "vacancy.experience"/>: ${vacancy.expFrom!0} – ${vacancy.expTo!0} <@spring.message "vacancy.experience.years"/>
                                         </span>
                                         <span class="text-muted">
                                             <i class="bi bi-calendar3 me-1"></i>${vacancy.formattedCreatedDate!''}
@@ -96,31 +98,33 @@
                     </div>
                 </#list>
 
-                <nav aria-label="Page navigation" class="mt-4">
-                    <ul class="pagination justify-content-center">
-                        <#if currentPage == 0>
-                            <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
-                        <#else>
-                            <li class="page-item">
-                                <a class="page-link" href="/vacancies?page=${currentPage - 1}&sortBy=${sortBy}&search=${search!''}&salaryMin=${salaryMin!''}&expFrom=${expFrom!''}">«</a>
-                            </li>
-                        </#if>
+                <#if totalPages?? && totalPages gt 1>
+                    <nav aria-label="Page navigation" class="mt-4">
+                        <ul class="pagination justify-content-center">
+                            <#if currentPage == 0>
+                                <li class="page-item disabled"><a class="page-link" href="#">«</a></li>
+                            <#else>
+                                <li class="page-item">
+                                    <a class="page-link" href="/vacancies?page=${currentPage - 1}&sortBy=${sortBy}&search=${search!''}&salaryMin=${salaryMin!''}&expFrom=${expFrom!''}">«</a>
+                                </li>
+                            </#if>
 
-                        <#list 0..totalPages - 1 as p>
-                            <li class="page-item <#if p == currentPage>active</#if>">
-                                <a class="page-link" href="/vacancies?page=${p}&sortBy=${sortBy}&search=${search!''}&salaryMin=${salaryMin!''}&expFrom=${expFrom!''}">${p + 1}</a>
-                            </li>
-                        </#list>
+                            <#list 0..totalPages - 1 as p>
+                                <li class="page-item <#if p == currentPage>active</#if>">
+                                    <a class="page-link" href="/vacancies?page=${p}&sortBy=${sortBy}&search=${search!''}&salaryMin=${salaryMin!''}&expFrom=${expFrom!''}">${p + 1}</a>
+                                </li>
+                            </#list>
 
-                        <#if currentPage == totalPages - 1>
-                            <li class="page-item disabled"><a class="page-link" href="#">»</a></li>
-                        <#else>
-                            <li class="page-item">
-                                <a class="page-link" href="/vacancies?page=${currentPage + 1}&sortBy=${sortBy}&search=${search!''}&salaryMin=${salaryMin!''}&expFrom=${expFrom!''}">»</a>
-                            </li>
-                        </#if>
-                    </ul>
-                </nav>
+                            <#if currentPage == totalPages - 1>
+                                <li class="page-item disabled"><a class="page-link" href="#">»</a></li>
+                            <#else>
+                                <li class="page-item">
+                                    <a class="page-link" href="/vacancies?page=${currentPage + 1}&sortBy=${sortBy}&search=${search!''}&salaryMin=${salaryMin!''}&expFrom=${expFrom!''}">»</a>
+                                </li>
+                            </#if>
+                        </ul>
+                    </nav>
+                </#if>
             <#else>
                 <div class="alert alert-info"><@spring.message "vacancy.not.found"/></div>
             </#if>

@@ -8,13 +8,10 @@
         </div>
 
         <#if companies?? && companies?has_content>
-
             <#list companies as company>
                 <div class="card shadow-sm mb-3 w-100">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-
-
                             <div class="me-3">
                                 <#if company.avatar?? && company.avatar != "">
                                     <img src="/${company.avatar}"
@@ -29,7 +26,6 @@
                                     </div>
                                 </#if>
                             </div>
-
                             <div class="flex-grow-1">
                                 <h5 class="card-title mb-1">
                                     <a href="/companies/${company.id!''}" class="text-decoration-none text-dark fw-bold">
@@ -45,7 +41,6 @@
                                 </p>
                                 <span class="badge bg-warning text-dark"><@spring.message "company.employer"/></span>
                             </div>
-
                             <div class="text-end">
                                 <a href="/companies/${company.id!''}" class="btn btn-sm btn-outline-primary">
                                     <i class="bi bi-building me-1"></i><@spring.message "company.profile"/>
@@ -56,8 +51,7 @@
                 </div>
             </#list>
 
-
-            <#if totalPages gt 1>
+            <#if totalPages?? && totalPages gt 1>
                 <nav class="mt-4">
                     <ul class="pagination justify-content-center">
                         <#if currentPage == 0>
@@ -86,7 +80,7 @@
             </#if>
         <#else>
             <div class="alert alert-info">
-                <i class="bi bi-info-circle me-2"></i>Компании пока не зарегистрированы
+                <i class="bi bi-info-circle me-2"></i><@spring.message "company.not.registered"/>
             </div>
         </#if>
     </div>

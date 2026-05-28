@@ -3,16 +3,20 @@
 const FILTER_KEY = 'vacancyFilter';
 
 function saveFilter(filter) {
-    localStorage.setItem(FILTER_KEY, JSON.stringify(filter));
+    try{localStorage.setItem(FILTER_KEY, JSON.stringify(filter));}catch (e){}
 }
 
 function restoreFilter() {
-    const raw = localStorage.getItem(FILTER_KEY);
-    return raw ? JSON.parse(raw) : null;
+    try{ const raw = localStorage.getItem(FILTER_KEY);
+        return raw ? JSON.parse(raw) : null;
+    }catch (e){return null;}
+
 }
 
 function clearFilter() {
-    localStorage.removeItem(FILTER_KEY);
+    try {
+        localStorage.removeItem(FILTER_KEY);
+    }catch (e){}
 }
 
 function debounce(fn, delay) {

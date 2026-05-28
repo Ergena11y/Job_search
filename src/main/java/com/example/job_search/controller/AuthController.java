@@ -2,6 +2,7 @@ package com.example.job_search.controller;
 
 
 import com.example.job_search.dto.RegisterDto;
+import com.example.job_search.dto.RegisterEmployerDto;
 import com.example.job_search.model.User;
 import com.example.job_search.service.UserService;
 import jakarta.servlet.ServletException;
@@ -27,7 +28,7 @@ public class AuthController {
     @GetMapping("/register")
     public String showRegisterPage(Model model) {
         model.addAttribute("registerDto", new RegisterDto());
-        model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
+        model.addAttribute("employerDto", new RegisterEmployerDto());
         return "auth/register";
     }
 
@@ -36,50 +37,64 @@ public class AuthController {
         return "auth/login";
     }
 
-    @PostMapping("register")
-    public String register(@Valid RegisterDto registerDto,
-                           BindingResult bindingResult,
-                           Model model,
-                           HttpServletRequest request){
-        if (bindingResult.hasErrors()) {
+    @PostMapping("/register")
+    public String register(
+            @RequestParam String accountType,
+            @Valid @ModelAttribute("registerDto") RegisterDto registerDto,
+            BindingResult applicantBinding,
+            @Valid @ModelAttribute("employerDto") RegisterEmployerDto employerDto,
+            BindingResult employerBinding,
+            Model model,
+            HttpServletRequest request) {
+
+        boolean isEmployer = "EMPLOYER".equals(accountType);
+
+        if (isEmployer && employerBinding.hasErrors()) {
+            model.addAttribute("employerDto", employerDto);
+            model.addAttribute("bindingRes", employerBinding);
+            return "auth/register";
+        }
+        if (!isEmployer && applicantBinding.hasErrors()) {
             model.addAttribute("registerDto", registerDto);
-            model.addAttribute("bindingRes", bindingResult);
-            model.addAttribute("roles", List.of("APPLICANT", "EMPLOYER"));
+            model.addAttribute("bindingRes", applicantBinding);
             return "auth/register";
         }
 
-        log.info("Начало регистрации для email: {}", registerDto.getEmail());
-
         User user = new User();
-        user.setName(registerDto.getName());
-        user.setSurname(registerDto.getSurname());
-        user.setAge(registerDto.getAge());
-        user.setPhoneNumber(registerDto.getPhoneNumber());
-        user.setEmail(registerDto.getEmail());
-        user.setPassword(registerDto.getPassword());
         user.setEnabled(true);
-        user.setAccountType(registerDto.getAccountType() != null ? registerDto.getAccountType() : "APPLICANT");
+        user.setAccountType(accountType);
 
+        if (isEmployer) {
+            user.setName(employerDto.getName());
+            user.setSurname("");
+            user.setAge(0);
+            user.setEmail(employerDto.getEmail());
+            user.setPassword(employerDto.getPassword());
+            user.setPhoneNumber(employerDto.getPhoneNumber());
+        } else {
+            user.setName(registerDto.getName());
+            user.setSurname(registerDto.getSurname());
+            user.setAge(registerDto.getAge());
+            user.setEmail(registerDto.getEmail());
+            user.setPassword(registerDto.getPassword());
+            user.setPhoneNumber(registerDto.getPhoneNumber());
+        }
 
-        try{
+        try {
             userService.register(user);
-            log.info("Пользователь успешно зарегистрирован: {}", registerDto.getEmail());
-        }catch (Exception e){
-            log.error("Ошибка при регистрации: {}", e.getMessage(), e);
-            model.addAttribute("registerDto", registerDto);
+        } catch (Exception e) {
             model.addAttribute("error", "Ошибка регистрации: " + e.getMessage());
             return "auth/register";
         }
 
-
         try {
-            request.login(registerDto.getEmail(), registerDto.getPassword());
+            String password = isEmployer ? employerDto.getPassword() : registerDto.getPassword();
+            String email    = isEmployer ? employerDto.getEmail()    : registerDto.getEmail();
+            request.login(email, password);
         } catch (ServletException e) {
-            log.error("Ошибка автологина: {}", e.getMessage(), e);
             return "redirect:/auth/login";
         }
 
-        String accountType = registerDto.getAccountType() != null ? registerDto.getAccountType() : "APPLICANT";
-        return "EMPLOYER".equals(accountType) ? "redirect:/resumes" : "redirect:/vacancies";
+        return isEmployer ? "redirect:/resumes" : "redirect:/vacancies";
     }
 }

@@ -11,12 +11,39 @@
             </#if>
         </div>
 
+
+        <#if user?? && user.accountType == "EMPLOYER">
+            <form method="get" action="/resumes" class="card bg-light border-0 p-3 mb-4">
+                <div class="row align-items-end g-2">
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold mb-1"><@spring.message "resume.category"/></label>
+                        <select name="categoryId" class="form-select">
+                            <option value=""><@spring.message "resume.category.select"/></option>
+                            <#if categories??>
+                                <#list categories as cat>
+                                    <option value="${cat.id}"
+                                            <#if selectedCategory?? && selectedCategory == cat.id>selected</#if>>
+                                        ${cat.name}
+                                    </option>
+                                </#list>
+                            </#if>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="submit" class="btn btn-primary w-100"><@spring.message "vacancy.sort.apply"/></button>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="/resumes" class="btn btn-outline-secondary w-100"><@spring.message "vacancy.filter.reset"/></a>
+                    </div>
+                </div>
+            </form>
+        </#if>
+
         <#if error??>
             <div class="alert alert-danger">${error}</div>
         </#if>
 
         <#if resumes?has_content>
-
             <#list resumes as resume>
                 <div class="card shadow-sm mb-3 w-100">
                     <div class="card-body">
@@ -31,6 +58,10 @@
                                     <i class="bi bi-person me-1"></i>${resume.applicantName!'<@spring.message "common.anonymous"/>'}
                                     <span class="mx-2">·</span>
                                     <i class="bi bi-clock me-1"></i><@spring.message "resume.updated"/>: ${resume.formattedUpdateTime!''}
+                                    <#if resume.categoryName??>
+                                        <span class="mx-2">·</span>
+                                        <span class="badge bg-secondary">${resume.categoryName}</span>
+                                    </#if>
                                 </p>
                             </div>
                             <div class="text-end ms-3">
@@ -52,27 +83,37 @@
                 </div>
             </#list>
 
-            <nav aria-label="Page navigation" class="mt-4">
-                <ul class="pagination justify-content-center">
-                    <#if currentPage == 0>
-                        <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.prev"/></a></li>
-                    <#else>
-                        <li class="page-item"><a class="page-link" href="/resumes?page=${currentPage - 1}"><@spring.message "page.prev"/></a></li>
-                    </#if>
+            <#if totalPages?? && totalPages gt 1>
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center">
+                        <#if currentPage == 0>
+                            <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.prev"/></a></li>
+                        <#else>
+                            <li class="page-item">
+                                <a class="page-link" href="/resumes?page=${currentPage - 1}<#if selectedCategory??>&categoryId=${selectedCategory}</#if>">
+                                    <@spring.message "page.prev"/>
+                                </a>
+                            </li>
+                        </#if>
 
-                    <#list 0..totalPages - 1 as p>
-                        <li class="page-item <#if p == currentPage>active</#if>">
-                            <a class="page-link" href="/resumes?page=${p}">${p + 1}</a>
-                        </li>
-                    </#list>
+                        <#list 0..totalPages - 1 as p>
+                            <li class="page-item <#if p == currentPage>active</#if>">
+                                <a class="page-link" href="/resumes?page=${p}<#if selectedCategory??>&categoryId=${selectedCategory}</#if>">${p + 1}</a>
+                            </li>
+                        </#list>
 
-                    <#if currentPage == totalPages - 1>
-                        <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.next"/></a></li>
-                    <#else>
-                        <li class="page-item"><a class="page-link" href="/resumes?page=${currentPage + 1}"><@spring.message "page.next"/></a></li>
-                    </#if>
-                </ul>
-            </nav>
+                        <#if currentPage == totalPages - 1>
+                            <li class="page-item disabled"><a class="page-link" href="#"><@spring.message "page.next"/></a></li>
+                        <#else>
+                            <li class="page-item">
+                                <a class="page-link" href="/resumes?page=${currentPage + 1}<#if selectedCategory??>&categoryId=${selectedCategory}</#if>">
+                                    <@spring.message "page.next"/>
+                                </a>
+                            </li>
+                        </#if>
+                    </ul>
+                </nav>
+            </#if>
         <#else>
             <div class="alert alert-info"><@spring.message "resume.not.found"/></div>
         </#if>

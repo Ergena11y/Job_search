@@ -1,15 +1,15 @@
 -- Пароль для всех: Password123
 INSERT INTO users (name, surname, age, email, password, phone_number, account_type, enabled)
 VALUES
-    ('Ильяс', 'Асанов', 25, 'ilyas@mail.com', '$2a$12$6pXnUX0XgWh7vTfVpGCOvOnIidWv1r4LoxT7tPy7fecW6PAsb0Neq', '+996700015', 'APPLICANT', true),
-    ('Елена', 'Петрова', 31, 'elena@mail.com', '$2a$12$6pXnUX0XgWh7vTfVpGCOvOnIidWv1r4LoxT7tPy7fecW6PAsb0Neq', '+996700016', 'APPLICANT', true),
-    ('Алихан', 'Усенов', 23, 'alikhan@mail.com', '$2a$12$6pXnUX0XgWh7vTfVpGCOvOnIidWv1r4LoxT7tPy7fecW6PAsb0Neq', '+996700017', 'APPLICANT', true);
+    ('Ильяс', 'Асанов', 25, 'ilyas@mail.com', '$2a$10$ZvCmaOTS7.agDgKTyBGtDuNd20Ty1N9hy1H86kRCo4ENDcNpYVlsW', '+996700015', 'APPLICANT', true),
+    ('Елена', 'Петрова', 31, 'elena@mail.com', '$2a$10$ZvCmaOTS7.agDgKTyBGtDuNd20Ty1N9hy1H86kRCo4ENDcNpYVlsW', '+996700016', 'APPLICANT', true),
+    ('Алихан', 'Усенов', 23, 'alikhan@mail.com', '$2a$10$ZvCmaOTS7.agDgKTyBGtDuNd20Ty1N9hy1H86kRCo4ENDcNpYVlsW', '+996700017', 'APPLICANT', true);
 
 INSERT INTO users (name, email, password, phone_number, account_type, enabled)
 VALUES
-    ('СкайНэт Медиа',  'skynet@corp.com', '$2a$12$6pXnUX0XgWh7vTfVpGCOvOnIidWv1r4LoxT7tPy7fecW6PAsb0Neq', '+996700004', 'EMPLOYER', true),
-    ('ФинТех Решения',  'fintech@corp.com', '$2a$12$6pXnUX0XgWh7vTfVpGCOvOnIidWv1r4LoxT7tPy7fecW6PAsb0Neq', '+996700005', 'EMPLOYER', true),
-    ('ДевСтудио', 'devstudio@corp.com', '$2a$12$6pXnUX0XgWh7vTfVpGCOvOnIidWv1r4LoxT7tPy7fecW6PAsb0Neq', '+996700006', 'EMPLOYER', true);
+    ('СкайНэт Медиа',  'skynet@corp.com', '$2a$10$ZvCmaOTS7.agDgKTyBGtDuNd20Ty1N9hy1H86kRCo4ENDcNpYVlsW', '+996700004', 'EMPLOYER', true),
+    ('ФинТех Решения',  'fintech@corp.com', '$2a$10$ZvCmaOTS7.agDgKTyBGtDuNd20Ty1N9hy1H86kRCo4ENDcNpYVlsW', '+996700005', 'EMPLOYER', true),
+    ('ДевСтудио', 'devstudio@corp.com', '$2a$10$ZvCmaOTS7.agDgKTyBGtDuNd20Ty1N9hy1H86kRCo4ENDcNpYVlsW', '+996700006', 'EMPLOYER', true);
 
 
 

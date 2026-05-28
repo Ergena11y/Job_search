@@ -86,7 +86,7 @@
                                         </label>
                                         <#if isEmployer || isOwner>
                                             <span class="fw-bold">
-                                                ${resume.applicantPhone!''}<#if !resume.applicantPhone??><@spring.message "resume.contact.not.specified"/></#if>
+                                                <#assign phone = (resume.contactPhone?has_content)?then(resume.contactPhone, resume.applicantPhone!"")>${phone}<#if !phone?has_content><@spring.message "resume.contact.not.specified"/></#if>
                                             </span>
                                         <#else>
                                             <span class="fw-bold text-muted">
@@ -94,6 +94,31 @@
                                             </span>
                                         </#if>
                                     </div>
+
+                                    <#if resume.telegram?? && resume.telegram != "">
+                                        <div class="mb-2">
+                                            <label class="text-muted small d-block">Telegram</label>
+                                            <a href="${resume.telegram}" target="_blank" class="fw-bold text-decoration-none">
+                                                <i class="bi bi-telegram me-1"></i>${resume.telegram}
+                                            </a>
+                                        </div>
+                                    </#if>
+                                    <#if resume.facebook?? && resume.facebook != "">
+                                        <div class="mb-2">
+                                            <label class="text-muted small d-block">Facebook</label>
+                                            <a href="${resume.facebook}" target="_blank" class="fw-bold text-decoration-none">
+                                                <i class="bi bi-facebook me-1"></i>${resume.facebook}
+                                            </a>
+                                        </div>
+                                    </#if>
+                                    <#if resume.linkedin?? && resume.linkedin != "">
+                                        <div class="mb-2">
+                                            <label class="text-muted small d-block">LinkedIn</label>
+                                            <a href="${resume.linkedin}" target="_blank" class="fw-bold text-decoration-none">
+                                                <i class="bi bi-linkedin me-1"></i>${resume.linkedin}
+                                            </a>
+                                        </div>
+                                    </#if>
 
                                     <hr>
 

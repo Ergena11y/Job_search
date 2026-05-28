@@ -3,17 +3,12 @@ package com.example.job_search.service.impl;
 import com.example.job_search.dto.EducationDto;
 import com.example.job_search.dto.ResumeDto;
 import com.example.job_search.dto.WorkExperienceDto;
-import com.example.job_search.model.EducationInfo;
-import com.example.job_search.model.Resumes;
-import com.example.job_search.model.WorkExperienceInfo;
+import com.example.job_search.model.*;
 import com.example.job_search.repository.*;
 import com.example.job_search.service.ResumeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +26,8 @@ public class ResumeServiceImpl implements ResumeService {
     private final UserRepository userRepository;
     private final WorkExperienceRepository workExperienceRepository;
     private final EducationRepository educationRepository;
+    private final ContactsInfoRepository contactsInfoRepository;
+    private final ContactTypesRepository contactTypesRepository;
 
     @Override
     public Page<ResumeDto> getAllResumes(int page, int size) {
@@ -63,34 +60,9 @@ public class ResumeServiceImpl implements ResumeService {
 
         Resumes saved = resumeRepository.save(r);
 
-        if(workExperience != null){
-            for (WorkExperienceDto w : workExperience){
-                if(w.getCompanyName() != null && !w.getCompanyName().isBlank()){
-                    WorkExperienceInfo we = new WorkExperienceInfo();
-                    we.setResume(saved);
-                    we.setYears(w.getYears());
-                    we.setCompanyName(w.getCompanyName());
-                    we.setPosition(w.getPosition());
-                    we.setResponsibilities(w.getResponsibilities());
-                    workExperienceRepository.save(we);
-                }
-            }
-        }
-
-        if (education != null){
-            for (EducationDto e : education){
-                if (e.getInstitution() != null && !e.getInstitution().isBlank()){
-                    EducationInfo educationInfo = new EducationInfo();
-                    educationInfo.setResume(saved);
-                    educationInfo.setInstitution(e.getInstitution());
-                    educationInfo.setProgram(e.getProgram());
-                    educationInfo.setStartDate(e.getStartDate());
-                    educationInfo.setEndDate(e.getEndDate());
-                    educationInfo.setDegree(e.getDegree());
-                    educationRepository.save(educationInfo);
-                }
-            }
-        }
+        saveContacts(saved, resumeDto);
+        saveWorkExperience(saved, workExperience);
+        saveEducation(saved, education);
 
         log.info("Резюме '{}' успешно создано", resumeDto.getName());
     }
@@ -117,35 +89,17 @@ public class ResumeServiceImpl implements ResumeService {
 
         resumeRepository.save(existing);
 
+        contactsInfoRepository.deleteByResumeId(id);
+        saveContacts(existing, resumeDto);
+
         if (workExperience != null) {
             workExperienceRepository.deleteByResumeId(id);
-            for (WorkExperienceDto w : workExperience) {
-                if (w.getCompanyName() != null && !w.getCompanyName().isBlank()) {
-                    WorkExperienceInfo we = new WorkExperienceInfo();
-                    we.setResume(existing);
-                    we.setYears(w.getYears());
-                    we.setCompanyName(w.getCompanyName());
-                    we.setPosition(w.getPosition());
-                    we.setResponsibilities(w.getResponsibilities());
-                    workExperienceRepository.save(we);
-                }
-            }
+            saveWorkExperience(existing, workExperience);
         }
 
         if (education != null) {
             educationRepository.deleteByResumeId(id);
-            for (EducationDto e : education) {
-                if (e.getInstitution() != null && !e.getInstitution().isBlank()) {
-                    EducationInfo educationInfo = new EducationInfo();
-                    educationInfo.setResume(existing);
-                    educationInfo.setInstitution(e.getInstitution());
-                    educationInfo.setProgram(e.getProgram());
-                    educationInfo.setStartDate(e.getStartDate());
-                    educationInfo.setEndDate(e.getEndDate());
-                    educationInfo.setDegree(e.getDegree());
-                    educationRepository.save(educationInfo);
-                }
-            }
+            saveEducation(existing, education);
         }
 
         log.info("Резюме с id {} успешно обновлено", id);
@@ -162,8 +116,7 @@ public class ResumeServiceImpl implements ResumeService {
     public Page<ResumeDto> getByCategory(int categoryId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size,
                 Sort.by(Sort.Direction.DESC, "updateTime"));
-        return resumeRepository
-                .findByCategoryIdAndIsActiveTrue(categoryId, pageable)
+        return resumeRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable)
                 .map(this::mapToDto);
     }
 
@@ -180,6 +133,63 @@ public class ResumeServiceImpl implements ResumeService {
         return resumeRepository.findById(id)
                 .map(this::mapToDto)
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
+    }
+
+
+    private void saveContacts(Resumes resume, ResumeDto dto) {
+        saveContact(resume, "phone",    dto.getContactPhone());
+        saveContact(resume, "email",    dto.getContactEmail());
+        saveContact(resume, "telegram", dto.getTelegram());
+        saveContact(resume, "facebook", dto.getFacebook());
+        saveContact(resume, "linkedin", dto.getLinkedin());
+    }
+
+    private void saveContact(Resumes resume, String typeName, String value) {
+        if (value == null || value.isBlank()) return;
+
+        ContactTypes type = contactTypesRepository.findByType(typeName)
+                .orElseGet(() -> {
+                    ContactTypes newType = new ContactTypes();
+                    newType.setType(typeName);
+                    return contactTypesRepository.save(newType);
+                });
+
+        ContactsInfo contact = new ContactsInfo();
+        contact.setResume(resume);
+        contact.setType(type);
+        contact.setValue(value);
+        contactsInfoRepository.save(contact);
+    }
+
+    private void saveWorkExperience(Resumes resume, List<WorkExperienceDto> list) {
+        if (list == null) return;
+        for (WorkExperienceDto w : list) {
+            if (w.getCompanyName() != null && !w.getCompanyName().isBlank()) {
+                WorkExperienceInfo we = new WorkExperienceInfo();
+                we.setResume(resume);
+                we.setYears(w.getYears());
+                we.setCompanyName(w.getCompanyName());
+                we.setPosition(w.getPosition());
+                we.setResponsibilities(w.getResponsibilities());
+                workExperienceRepository.save(we);
+            }
+        }
+    }
+
+    private void saveEducation(Resumes resume, List<EducationDto> list) {
+        if (list == null) return;
+        for (EducationDto e : list) {
+            if (e.getInstitution() != null && !e.getInstitution().isBlank()) {
+                EducationInfo educationInfo = new EducationInfo();
+                educationInfo.setResume(resume);
+                educationInfo.setInstitution(e.getInstitution());
+                educationInfo.setProgram(e.getProgram());
+                educationInfo.setStartDate(e.getStartDate());
+                educationInfo.setEndDate(e.getEndDate());
+                educationInfo.setDegree(e.getDegree());
+                educationRepository.save(educationInfo);
+            }
+        }
     }
 
     private ResumeDto mapToDto(Resumes resume) {
@@ -214,12 +224,9 @@ public class ResumeServiceImpl implements ResumeService {
                 .isActive(resume.getIsActive())
                 .createdDate(resume.getCreatedDate())
                 .updateTime(resume.getUpdateTime())
-                .categoryId(resume.getCategory() != null
-                        ? resume.getCategory().getId() : null)
-                .categoryName(resume.getCategory() != null
-                        ? resume.getCategory().getName() : null)
-                .applicantId(resume.getApplicant() != null
-                        ? (long) resume.getApplicant().getId() : null)
+                .categoryId(resume.getCategory() != null ? resume.getCategory().getId() : null)
+                .categoryName(resume.getCategory() != null ? resume.getCategory().getName() : null)
+                .applicantId(resume.getApplicant() != null ? (long) resume.getApplicant().getId() : null)
                 .workExperience(workList)
                 .education(eduList)
                 .build();
@@ -229,6 +236,18 @@ public class ResumeServiceImpl implements ResumeService {
                     + " " + resume.getApplicant().getSurname());
             dto.setApplicantEmail(resume.getApplicant().getEmail());
             dto.setApplicantPhone(resume.getApplicant().getPhoneNumber());
+        }
+
+        List<ContactsInfo> contacts = contactsInfoRepository.findByResumeId(resume.getId());
+        for (ContactsInfo c : contacts) {
+            if (c.getType() == null) continue;
+            switch (c.getType().getType()) {
+                case "phone"    -> dto.setContactPhone(c.getValue());
+                case "email"    -> dto.setContactEmail(c.getValue());
+                case "telegram" -> dto.setTelegram(c.getValue());
+                case "facebook" -> dto.setFacebook(c.getValue());
+                case "linkedin" -> dto.setLinkedin(c.getValue());
+            }
         }
 
         return dto;

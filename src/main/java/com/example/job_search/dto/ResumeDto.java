@@ -50,6 +50,12 @@ public class ResumeDto {
 
     private List<EducationDto> education;
 
+    private String contactPhone;
+    private String contactEmail;
+    private String telegram;
+    private String facebook;
+    private String linkedin;
+
     public String getFormattedUpdateTime() {
         if (updateTime == null) return "";
         return updateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));

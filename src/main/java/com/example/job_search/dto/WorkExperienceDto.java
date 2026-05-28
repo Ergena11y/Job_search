@@ -1,8 +1,6 @@
 package com.example.job_search.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class WorkExperienceDto {
+    @Min(value = 0, message = "Опыт работы не может быть отрицательным")
     private Integer years;
 
     private String companyName;

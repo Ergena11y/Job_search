@@ -1,6 +1,7 @@
 package com.example.job_search.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,8 @@ public class Resumes {
 
 
     private String name;
-    private float salary;
+    @PositiveOrZero
+    private Float salary;
 
     @Column(columnDefinition = "TEXT")
     private String description;

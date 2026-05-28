@@ -43,17 +43,17 @@ public class ResumeServiceImpl implements ResumeService {
         log.info("Создание нового резюме: {}", resumeDto.getName());
         Resumes r = new Resumes();
         r.setName(resumeDto.getName());
-        r.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0 );
+        r.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0f);
         r.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : true);
         r.setDescription(resumeDto.getDescription());
         r.setCreatedDate(LocalDateTime.now());
         r.setUpdateTime(LocalDateTime.now());
 
-        if (resumeDto.getCategoryId() != null){
+        if (resumeDto.getCategoryId() != null) {
             categoryRepository.findById(resumeDto.getCategoryId())
                     .ifPresent(r::setCategory);
         }
-        if (resumeDto.getApplicantId() != null){
+        if (resumeDto.getApplicantId() != null) {
             userRepository.findById(resumeDto.getApplicantId().intValue())
                     .ifPresent(r::setApplicant);
         }
@@ -77,14 +77,17 @@ public class ResumeServiceImpl implements ResumeService {
                 .orElseThrow(() -> new RuntimeException("Resume not found: " + id));
 
         existing.setName(resumeDto.getName());
-        existing.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0);
-        existing.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : true);
+        existing.setSalary(resumeDto.getSalary() != null ? resumeDto.getSalary() : 0f);
+        existing.setIsActive(resumeDto.getIsActive() != null ? resumeDto.getIsActive() : existing.getIsActive());
         existing.setDescription(resumeDto.getDescription());
         existing.setUpdateTime(LocalDateTime.now());
+
 
         if (resumeDto.getCategoryId() != null) {
             categoryRepository.findById(resumeDto.getCategoryId())
                     .ifPresent(existing::setCategory);
+        } else {
+            existing.setCategory(null);
         }
 
         resumeRepository.save(existing);
@@ -135,7 +138,6 @@ public class ResumeServiceImpl implements ResumeService {
                 .orElseThrow(() -> new RuntimeException("Resume not found"));
     }
 
-
     private void saveContacts(Resumes resume, ResumeDto dto) {
         saveContact(resume, "phone",    dto.getContactPhone());
         saveContact(resume, "email",    dto.getContactEmail());
@@ -165,6 +167,9 @@ public class ResumeServiceImpl implements ResumeService {
         if (list == null) return;
         for (WorkExperienceDto w : list) {
             if (w.getCompanyName() != null && !w.getCompanyName().isBlank()) {
+                if (w.getYears() != null && w.getYears() < 0) {
+                    w.setYears(0);
+                }
                 WorkExperienceInfo we = new WorkExperienceInfo();
                 we.setResume(resume);
                 we.setYears(w.getYears());

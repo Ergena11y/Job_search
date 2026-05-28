@@ -6,7 +6,7 @@
     <div class="container mt-4" style="max-width: 700px;">
         <div class="card shadow-sm" style="border-radius: 16px; border: 2px solid #e0e0e0;">
             <div class="card-body p-4">
-                <h3 class="text-center mb-4" style="color: var(--bs-primary);">
+                <h3 class="text-center mb-4 text-primary">
                     <@spring.message "resume.edit.title"/>
                 </h3>
 
@@ -54,7 +54,7 @@
                         <label class="form-label"><@spring.message "resume.salary"/>:</label>
                         <input type="number" name="salary"
                                class="form-control <#if bindingRes?? && bindingRes.hasFieldErrors('salary')>is-invalid</#if>"
-                               placeholder="0" min="0" step="0.01" value="${resume.salary!''}">
+                               placeholder="0" min="0" step="0.01" value="${resume.salary?c!''}">
                         <#if bindingRes?? && bindingRes.hasFieldErrors('salary')>
                             <#list bindingRes.getFieldErrors('salary') as err>
                                 <div class="invalid-feedback">${err.defaultMessage}</div>

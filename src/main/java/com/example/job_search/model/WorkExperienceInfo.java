@@ -1,6 +1,7 @@
 package com.example.job_search.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import lombok.*;
 
 
@@ -20,6 +21,7 @@ public class WorkExperienceInfo {
     @JoinColumn(name = "resume_id", nullable = false)
     private Resumes resume;
 
+    @Min(value = 0, message = "Опыт работы не может быть отрицательным")
     private Integer years;
 
 
